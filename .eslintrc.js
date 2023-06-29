@@ -36,7 +36,12 @@ module.exports = {
     },
   },
   rules: {
-    'prettier/prettier': 1,
+    'prettier/prettier': [
+      1,
+      {
+        'endOfLine': 'auto'
+      }
+    ],
     // Vue: Recommended rules to be closed or modify
     'vue/require-default-prop': 0,
     'vue/singleline-html-element-content-newline': 0,
