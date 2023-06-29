@@ -24,7 +24,7 @@ export interface LoginLogListRes {
 }
 
 export function queryLoginLogList(params: LoginLogParams) {
-  return axios.get<LoginLogListRes>('/api/v1/log/login', {
+  return axios.get<LoginLogListRes>('/api/v1/logs/login', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);

@@ -19,9 +19,9 @@ export function logout() {
 }
 
 export function getUserInfo() {
-  return axios.get<UserState>('/api/v1/user/info');
+  return axios.get<UserState>('/api/v1/users/me');
 }
 
 export function getMenuList() {
-  return axios.get<RouteRecordNormalized[]>('/api/v1/menu/sidebar');
+  return axios.get<RouteRecordNormalized[]>('/api/v1/menus/sidebar');
 }
