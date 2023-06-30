@@ -1,6 +1,6 @@
 import { useUserStore } from '@/store';
 import { RouteLocationNormalized, RouteRecordRaw } from 'vue-router';
-import { MenuState } from "@/store/modules/app/types";
+import { MenuState } from '@/store/modules/app/types';
 
 export default function usePermission() {
   const userStore = useUserStore();
