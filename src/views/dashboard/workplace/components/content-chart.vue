@@ -1,17 +1,17 @@
 <template>
   <a-spin :loading="loading" style="width: 100%">
     <a-card
-      class="general-card"
-      :header-style="{ paddingBottom: 0 }"
       :body-style="{
         paddingTop: '20px',
       }"
+      :header-style="{ paddingBottom: 0 }"
       :title="$t('workplace.contentData')"
+      class="general-card"
     >
       <template #extra>
         <a-link>{{ $t('workplace.viewMore') }}</a-link>
       </template>
-      <Chart height="289px" :option="chartOption" />
+      <Chart :option="chartOption" height="289px" />
     </a-card>
   </a-spin>
 </template>
@@ -20,7 +20,7 @@
   import { ref } from 'vue';
   import { graphic } from 'echarts';
   import useLoading from '@/hooks/loading';
-  import { queryContentData, ContentDataRecord } from '@/api/dashboard';
+  import { ContentDataRecord, queryContentData } from '@/api/dashboard';
   import useChartOption from '@/hooks/chart-option';
   import { ToolTipFormatterParams } from '@/types/echarts';
   import { AnyObject } from '@/types/global';
@@ -38,6 +38,7 @@
       },
     };
   }
+
   const { loading, setLoading } = useLoading(true);
   const xAxis = ref<string[]>([]);
   const chartsData = ref<number[]>([]);
@@ -197,4 +198,4 @@
   fetchData();
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

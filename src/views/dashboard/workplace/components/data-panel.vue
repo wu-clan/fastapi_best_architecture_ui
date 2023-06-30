@@ -1,8 +1,8 @@
 <template>
   <a-grid :cols="24" :row-gap="16" class="panel">
     <a-grid-item
-      class="panel-col"
       :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
+      class="panel-col"
     >
       <a-space>
         <a-avatar :size="54" class="col-avatar">
@@ -12,9 +12,9 @@
           />
         </a-avatar>
         <a-statistic
+          :precision="1"
           :title="$t('workplace.onlineContent')"
           :value="373.5"
-          :precision="1"
           :value-from="0"
           animation
           show-group-separator
@@ -26,8 +26,8 @@
       </a-space>
     </a-grid-item>
     <a-grid-item
-      class="panel-col"
       :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
+      class="panel-col"
     >
       <a-space>
         <a-avatar :size="54" class="col-avatar">
@@ -50,8 +50,8 @@
       </a-space>
     </a-grid-item>
     <a-grid-item
-      class="panel-col"
       :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
+      class="panel-col"
     >
       <a-space>
         <a-avatar :size="54" class="col-avatar">
@@ -74,8 +74,8 @@
       </a-space>
     </a-grid-item>
     <a-grid-item
-      class="panel-col"
       :span="{ xs: 12, sm: 12, md: 12, lg: 12, xl: 12, xxl: 6 }"
+      class="panel-col"
       style="border-right: none"
     >
       <a-space>
@@ -86,13 +86,16 @@
           />
         </a-avatar>
         <a-statistic
+          :precision="1"
           :title="$t('workplace.newFromYesterday')"
           :value="2.8"
-          :precision="1"
           :value-from="0"
           animation
         >
-          <template #suffix> % <icon-caret-up class="up-icon" /> </template>
+          <template #suffix>
+            %
+            <icon-caret-up class="up-icon" />
+          </template>
         </a-statistic>
       </a-space>
     </a-grid-item>
@@ -109,22 +112,27 @@
     margin-bottom: 0;
     padding: 16px 20px 0 20px;
   }
+
   .panel-col {
     padding-left: 43px;
     border-right: 1px solid rgb(var(--gray-2));
   }
+
   .col-avatar {
     margin-right: 12px;
     background-color: var(--color-fill-2);
   }
+
   .up-icon {
     color: rgb(var(--red-6));
   }
+
   .unit {
     margin-left: 8px;
     color: rgb(var(--gray-8));
     font-size: 12px;
   }
+
   :deep(.panel-border) {
     margin: 4px 0 0 0;
   }

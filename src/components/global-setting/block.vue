@@ -4,9 +4,9 @@
     <div v-for="option in options" :key="option.name" class="switch-wrapper">
       <span>{{ $t(option.name) }}</span>
       <form-wrapper
-        :type="option.type || 'switch'"
-        :name="option.key"
         :default-value="option.defaultVal"
+        :name="option.key"
+        :type="option.type || 'switch'"
         @input-change="handleChange"
       />
     </div>
@@ -24,6 +24,7 @@
     type?: string;
     defaultVal?: boolean | string | number;
   }
+
   defineProps({
     title: {
       type: String,
@@ -59,7 +60,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .block {
     margin-bottom: 24px;
   }

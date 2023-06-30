@@ -1,9 +1,9 @@
 import { computed } from 'vue';
-import { RouteRecordRaw, RouteRecordNormalized } from 'vue-router';
 import usePermission from '@/hooks/permission';
 import { useAppStore } from '@/store';
 import appClientMenus from '@/router/app-menus';
 import { cloneDeep } from 'lodash';
+import { MenuState } from '@/store/modules/app/types';
 
 export default function useMenuTree() {
   const permission = usePermission();
@@ -15,11 +15,12 @@ export default function useMenuTree() {
     return appClientMenus;
   });
   const menuTree = computed(() => {
-    const copyRouter = cloneDeep(appRoute.value) as RouteRecordNormalized[];
-    copyRouter.sort((a: RouteRecordNormalized, b: RouteRecordNormalized) => {
+    const copyRouter = cloneDeep(appRoute.value) as MenuState[];
+    copyRouter.sort((a: MenuState, b: MenuState) => {
       return (a.meta.order || 0) - (b.meta.order || 0);
     });
-    function travel(_routes: RouteRecordRaw[], layer: number) {
+
+    function travel(_routes: MenuState[], layer: number) {
       if (!_routes) return null;
 
       const collector: any = _routes.map((element) => {
@@ -29,7 +30,8 @@ export default function useMenuTree() {
         }
 
         // leaf node
-        if (element.meta?.hideChildrenInMenu || !element.children) {
+        // if (element.meta?.hideChildrenInMenu || !element.children) {
+        if (!element.children) {
           element.children = [];
           return element;
         }
@@ -60,6 +62,7 @@ export default function useMenuTree() {
       });
       return collector.filter(Boolean);
     }
+
     return travel(copyRouter, 0);
   });
 

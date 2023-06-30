@@ -1,9 +1,9 @@
 <template>
   <a-card
-    class="general-card"
-    :title="$t('workplace.quick.operation')"
-    :header-style="{ paddingBottom: '0' }"
     :body-style="{ padding: '24px 20px 0 20px' }"
+    :header-style="{ paddingBottom: '0' }"
+    :title="$t('workplace.quick.operation')"
+    class="general-card"
   >
     <template #extra>
       <a-link>{{ $t('workplace.quickOperation.setup') }}</a-link>
@@ -32,4 +32,4 @@
   ];
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

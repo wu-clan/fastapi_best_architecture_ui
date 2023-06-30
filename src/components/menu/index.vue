@@ -1,11 +1,12 @@
 <script lang="tsx">
-  import { defineComponent, ref, h, compile, computed } from 'vue';
+  import { compile, computed, defineComponent, h, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import { useRoute, useRouter, RouteRecordRaw } from 'vue-router';
   import type { RouteMeta } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/utils/route-listener';
   import { openWindow, regexUrl } from '@/utils';
+  import { MenuState } from '@/store/modules/app/types';
   import useMenuTree from './use-menu-tree';
 
   export default defineComponent({
@@ -30,7 +31,7 @@
       const openKeys = ref<string[]>([]);
       const selectedKey = ref<string[]>([]);
 
-      const goto = (item: RouteRecordRaw) => {
+      const goto = (item: MenuState) => {
         // Open external link
         if (regexUrl.test(item.path)) {
           openWindow(item.path);
@@ -48,10 +49,11 @@
           name: item.name,
         });
       };
+
       const findMenuOpenKeys = (target: string) => {
         const result: string[] = [];
         let isFind = false;
-        const backtrack = (item: RouteRecordRaw, keys: string[]) => {
+        const backtrack = (item: MenuState, keys: string[]) => {
           if (item.name === target) {
             isFind = true;
             result.push(...keys);
@@ -63,12 +65,13 @@
             });
           }
         };
-        menuTree.value.forEach((el: RouteRecordRaw) => {
+        menuTree.value.forEach((el: MenuState) => {
           if (isFind) return; // Performance optimization
           backtrack(el, [el.name as string]);
         });
         return result;
       };
+
       listenerRouteChange((newRoute) => {
         const { requiresAuth, activeMenu, hideInMenu } = newRoute.meta;
         if (requiresAuth && (!hideInMenu || activeMenu)) {
@@ -84,13 +87,14 @@
           ];
         }
       }, true);
+
       const setCollapse = (val: boolean) => {
         if (appStore.device === 'desktop')
           appStore.updateSettings({ menuCollapse: val });
       };
 
       const renderSubMenu = () => {
-        function travel(_route: RouteRecordRaw[], nodes = []) {
+        function travel(_route: MenuState[], nodes = []) {
           if (_route) {
             _route.forEach((element) => {
               // This is demo, modify nodes as needed
@@ -122,8 +126,11 @@
           }
           return nodes;
         }
+
         return travel(menuTree.value);
       };
+
+      console.log('menuTree', menuTree.value);
 
       return () => (
         <a-menu
@@ -135,7 +142,7 @@
           selected-keys={selectedKey.value}
           auto-open-selected={true}
           level-indent={34}
-          style="height: 100%;width:100%;"
+          style="height: 100%; width:100%;"
           onCollapse={setCollapse}
         >
           {renderSubMenu()}
@@ -151,6 +158,7 @@
       display: flex;
       align-items: center;
     }
+
     .arco-icon {
       &:not(.arco-icon-down) {
         font-size: 18px;

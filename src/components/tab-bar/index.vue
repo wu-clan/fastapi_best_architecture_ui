@@ -19,7 +19,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, computed, watch, onUnmounted } from 'vue';
+  import { computed, onUnmounted, ref, watch } from 'vue';
   import type { RouteLocationNormalized } from 'vue-router';
   import {
     listenerRouteChange,
@@ -59,19 +59,22 @@
   });
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .tab-bar-container {
     position: relative;
     background-color: var(--color-bg-2);
+
     .tab-bar-box {
       display: flex;
       padding: 0 0 0 20px;
       background-color: var(--color-bg-2);
       border-bottom: 1px solid var(--color-border);
+
       .tab-bar-scroll {
         height: 32px;
         flex: 1;
         overflow: hidden;
+
         .tags-wrap {
           padding: 4px 0;
           height: 48px;
@@ -83,6 +86,7 @@
             align-items: center;
             margin-right: 6px;
             cursor: pointer;
+
             &:first-child {
               .arco-tag-close-btn {
                 display: none;

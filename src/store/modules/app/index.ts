@@ -1,10 +1,46 @@
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
 import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
-import type { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
-import { getMenuList } from '@/api/user';
-import { AppState } from './types';
+import { getUserMenuList } from '@/api/user';
+import convertToCamelCase from '@/utils/string';
+import { AppState, MenuItem, MenuState } from './types';
+
+export function generateMenu(data: MenuItem[], parentName?: string) {
+  const menuData: MenuState[] = [];
+  const views = import.meta.glob('@/views/**/*.vue');
+
+  data.forEach((menu) => {
+    const localeName = convertToCamelCase(menu.name);
+    const menuItem: MenuState = {
+      name: menu.name,
+      path: !menu.path ? `/${menu.name}` : menu.path,
+      component: !menu.component
+        ? () => import('@/layout/default-layout.vue')
+        : views[`/src/views${menu.component}`],
+      children: [],
+      meta: {
+        icon: menu.icon,
+        hideInMenu: menu.show === 0,
+        ignoreCache: menu.cache === 0,
+        order: menu.sort,
+        // roles: menu.perms ? menu.perms.split(',') : [],
+        roles: ['*'],
+        locale: parentName
+          ? `menu.${parentName}.${localeName}`
+          : `menu.${localeName}`,
+      },
+    };
+
+    if (menu.children && menu.children.length > 0) {
+      menuItem.children = generateMenu(menu.children, localeName);
+    }
+
+    menuData.push(menuItem);
+  });
+
+  return menuData;
+}
 
 const useAppStore = defineStore('app', {
   state: (): AppState => ({ ...defaultSettings }),
@@ -16,8 +52,8 @@ const useAppStore = defineStore('app', {
     appDevice(state: AppState) {
       return state.device;
     },
-    appAsyncMenus(state: AppState): RouteRecordNormalized[] {
-      return state.serverMenu as unknown as RouteRecordNormalized[];
+    appAsyncMenus(state: AppState): MenuState[] {
+      return state.serverMenu as unknown as MenuState[];
     },
   },
 
@@ -52,8 +88,8 @@ const useAppStore = defineStore('app', {
           content: 'loading',
           closable: true,
         });
-        const { data } = await getMenuList();
-        this.serverMenu = data;
+        const { data } = await getUserMenuList();
+        this.serverMenu = generateMenu(data);
         notifyInstance = Notification.success({
           id: 'menuNotice',
           content: 'success',

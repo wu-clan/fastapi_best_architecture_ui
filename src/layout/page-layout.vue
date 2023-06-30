@@ -1,6 +1,6 @@
 <template>
   <router-view v-slot="{ Component, route }">
-    <transition name="fade" mode="out-in" appear>
+    <transition appear mode="out-in" name="fade">
       <component
         :is="Component"
         v-if="route.meta.ignoreCache"
@@ -22,4 +22,4 @@
   const cacheList = computed(() => tabBarStore.getCacheList);
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

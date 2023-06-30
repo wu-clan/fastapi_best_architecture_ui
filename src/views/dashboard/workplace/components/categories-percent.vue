@@ -1,16 +1,16 @@
 <template>
   <a-spin :loading="loading" style="width: 100%">
     <a-card
-      class="general-card"
-      :header-style="{ paddingBottom: '0' }"
       :body-style="{
         padding: '20px',
       }"
+      :header-style="{ paddingBottom: '0' }"
+      class="general-card"
     >
       <template #title>
         {{ $t('workplace.categoriesPercent') }}
       </template>
-      <Chart height="310px" :option="chartOption" />
+      <Chart :option="chartOption" height="310px" />
     </a-card>
   </a-spin>
 </template>
@@ -111,4 +111,4 @@
   });
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

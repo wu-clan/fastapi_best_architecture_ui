@@ -1,9 +1,9 @@
 <template>
   <a-card
-    class="general-card"
-    :title="$t('workplace.docs')"
-    :header-style="{ paddingBottom: 0 }"
     :body-style="{ paddingTop: 0 }"
+    :header-style="{ paddingBottom: 0 }"
+    :title="$t('workplace.docs')"
+    class="general-card"
     style="height: 166px"
   >
     <template #extra>

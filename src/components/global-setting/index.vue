@@ -7,15 +7,15 @@
     </a-button>
   </div>
   <a-drawer
-    :width="300"
-    unmount-on-close
-    :visible="visible"
     :cancel-text="$t('settings.close')"
     :ok-text="$t('settings.copySettings')"
-    @ok="copySettings"
+    :visible="visible"
+    :width="300"
+    unmount-on-close
     @cancel="cancel"
+    @ok="copySettings"
   >
-    <template #title> {{ $t('settings.title') }} </template>
+    <template #title> {{ $t('settings.title') }}</template>
     <Block :options="contentOpts" :title="$t('settings.content')" />
     <Block :options="othersOpts" :title="$t('settings.otherSettings')" />
     <a-alert>{{ $t('settings.alertContent') }}</a-alert>
@@ -84,7 +84,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .fixed-settings {
     position: fixed;
     top: 280px;

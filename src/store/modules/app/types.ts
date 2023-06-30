@@ -1,5 +1,3 @@
-import type { RouteRecordNormalized } from 'vue-router';
-
 export interface AppState {
   theme: string;
   colorWeak: boolean;
@@ -15,6 +13,41 @@ export interface AppState {
   device: string;
   tabBar: boolean;
   menuFromServer: boolean;
-  serverMenu: RouteRecordNormalized[];
+  // eslint-disable-next-line no-use-before-define
+  serverMenu: MenuState[];
+
   [key: string]: unknown;
+}
+
+export interface MenuItem {
+  id: number;
+  name: string;
+  level: number;
+  sort: number;
+  icon?: string;
+  path?: string;
+  menu_type: number;
+  component?: string;
+  perms?: string;
+  status: 0 | 1;
+  remark?: string;
+  show: 0 | 1;
+  cache: 0 | 1;
+  parent_id?: number;
+  children: MenuItem[] | [];
+}
+
+export interface MenuState {
+  name: string;
+  path?: string;
+  component: any;
+  children: MenuState[];
+  meta: {
+    icon?: string;
+    hideInMenu: boolean;
+    ignoreCache: boolean;
+    order: number;
+    roles?: string[];
+    locale: string;
+  };
 }

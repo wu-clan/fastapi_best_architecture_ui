@@ -1,9 +1,9 @@
 <template>
   <a-spin :loading="loading" style="width: 100%">
     <a-card
-      class="general-card"
-      :header-style="{ paddingBottom: '0' }"
       :body-style="{ padding: '17px 20px 21px 20px' }"
+      :header-style="{ paddingBottom: '0' }"
+      class="general-card"
     >
       <template #title>
         {{ $t('workplace.popularContent') }}
@@ -11,7 +11,7 @@
       <template #extra>
         <a-link>{{ $t('workplace.viewMore') }}</a-link>
       </template>
-      <a-space direction="vertical" :size="10" fill>
+      <a-space :size="10" direction="vertical" fill>
         <a-radio-group
           v-model:model-value="type"
           type="button"
@@ -28,14 +28,14 @@
           </a-radio>
         </a-radio-group>
         <a-table
+          :bordered="false"
           :data="renderList"
           :pagination="false"
-          :bordered="false"
           :scroll="{ x: '100%', y: '264px' }"
         >
           <template #columns>
-            <a-table-column title="排名" data-index="key"></a-table-column>
-            <a-table-column title="内容标题" data-index="title">
+            <a-table-column data-index="key" title="排名"></a-table-column>
+            <a-table-column data-index="title" title="内容标题">
               <template #cell="{ record }">
                 <a-typography-paragraph
                   :ellipsis="{
@@ -46,14 +46,14 @@
                 </a-typography-paragraph>
               </template>
             </a-table-column>
-            <a-table-column title="点击量" data-index="clickNumber">
+            <a-table-column data-index="clickNumber" title="点击量">
             </a-table-column>
             <a-table-column
-              title="日涨幅"
-              data-index="increases"
               :sortable="{
                 sortDirections: ['ascend', 'descend'],
               }"
+              data-index="increases"
+              title="日涨幅"
             >
               <template #cell="{ record }">
                 <div class="increases-cell">
@@ -98,19 +98,23 @@
   fetchData('text');
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .general-card {
     min-height: 395px;
   }
+
   :deep(.arco-table-tr) {
     height: 44px;
+
     .arco-typography {
       margin-bottom: 0;
     }
   }
+
   .increases-cell {
     display: flex;
     align-items: center;
+
     span {
       margin-right: 4px;
     }

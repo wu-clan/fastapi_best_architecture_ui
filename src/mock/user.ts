@@ -1,7 +1,7 @@
 import Mock from 'mockjs';
 import setupMock, {
-  successResponseWrap,
   failResponseWrap,
+  successResponseWrap,
 } from '@/utils/setup-mock';
 
 import { MockParams } from '@/types/mock';

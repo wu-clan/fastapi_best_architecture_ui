@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts" setup>
-  import { useRouter, useRoute } from 'vue-router';
+  import { useRoute, useRouter } from 'vue-router';
 
   const router = useRouter();
   const route = useRoute();
@@ -13,4 +13,4 @@
   router.replace({ path: gotoPath });
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

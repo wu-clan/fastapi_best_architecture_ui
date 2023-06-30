@@ -3,7 +3,7 @@ module.exports = {
   semi: true,
   printWidth: 80,
   singleQuote: true,
-  quoteProps: 'consistent',
-  htmlWhitespaceSensitivity: 'strict',
-  vueIndentScriptAndStyle: true,
+  quoteProps: "consistent",
+  htmlWhitespaceSensitivity: "strict",
+  vueIndentScriptAndStyle: true
 };

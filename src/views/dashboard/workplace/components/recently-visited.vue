@@ -1,9 +1,9 @@
 <template>
   <a-card
-    class="general-card"
-    :title="$t('workplace.recently.visited')"
-    :header-style="{ paddingBottom: '0' }"
     :body-style="{ paddingTop: '26px' }"
+    :header-style="{ paddingBottom: '0' }"
+    :title="$t('workplace.recently.visited')"
+    class="general-card"
   >
     <div style="margin-bottom: -1rem">
       <a-row :gutter="8">

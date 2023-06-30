@@ -4,7 +4,6 @@
 
 同时仅仅提供最基本的功能，后续进行优化及更改。
 
-
 ## Component description
 
 The component unofficial final design specification exists as a separate component.

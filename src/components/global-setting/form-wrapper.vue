@@ -1,9 +1,9 @@
 <template>
   <a-input-number
     v-if="type === 'number'"
+    :default-value="(defaultValue as number)"
     :style="{ width: '80px' }"
     size="small"
-    :default-value="(defaultValue as number)"
     @change="handleChange"
   />
   <a-switch

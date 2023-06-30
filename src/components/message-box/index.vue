@@ -1,12 +1,12 @@
 <template>
-  <a-spin style="display: block" :loading="loading">
-    <a-tabs v-model:activeKey="messageType" type="rounded" destroy-on-hide>
+  <a-spin :loading="loading" style="display: block">
+    <a-tabs v-model:activeKey="messageType" destroy-on-hide type="rounded">
       <a-tab-pane v-for="item in tabList" :key="item.key">
         <template #title>
           <span> {{ item.title }}{{ formatUnreadLength(item.key) }} </span>
         </template>
         <a-result v-if="!renderList.length" status="404">
-          <template #subtitle> {{ $t('messageBox.noContent') }} </template>
+          <template #subtitle> {{ $t('messageBox.noContent') }}</template>
         </a-result>
         <List
           :render-list="renderList"
@@ -24,13 +24,13 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, reactive, toRefs, computed } from 'vue';
+  import { computed, reactive, ref, toRefs } from 'vue';
   import { useI18n } from 'vue-i18n';
   import {
+    MessageListType,
+    MessageRecord,
     queryMessageList,
     setMessageStatus,
-    MessageRecord,
-    MessageListType,
   } from '@/api/message';
   import useLoading from '@/hooks/loading';
   import List from './list.vue';
@@ -40,6 +40,7 @@
     title: string;
     avatar?: string;
   }
+
   const { loading, setLoading } = useLoading(true);
   const messageType = ref('message');
   const { t } = useI18n();
@@ -65,6 +66,7 @@
       title: t('messageBox.tab.title.todo'),
     },
   ];
+
   async function fetchSourceData() {
     setLoading(true);
     try {
@@ -76,11 +78,13 @@
       setLoading(false);
     }
   }
+
   async function readMessage(data: MessageListType) {
     const ids = data.map((item) => item.id);
     await setMessageStatus({ ids });
     fetchSourceData();
   }
+
   const renderList = computed(() => {
     return messageData.messageList.filter(
       (item) => messageType.value === item.type
@@ -108,7 +112,7 @@
   fetchSourceData();
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   :deep(.arco-popover-popup-content) {
     padding: 0;
   }
@@ -116,12 +120,15 @@
   :deep(.arco-list-item-meta) {
     align-items: flex-start;
   }
+
   :deep(.arco-tabs-nav) {
     padding: 14px 0 12px 16px;
     border-bottom: 1px solid var(--color-neutral-3);
   }
+
   :deep(.arco-tabs-content) {
     padding-top: 0;
+
     .arco-result-subtitle {
       color: rgb(var(--gray-6));
     }

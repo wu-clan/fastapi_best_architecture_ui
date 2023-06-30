@@ -1,8 +1,8 @@
 <template>
   <div class="content">
-    <a-result class="result" status="404" :subtitle="'not found'"> </a-result>
+    <a-result :subtitle="'not found'" class="result" status="404"></a-result>
     <div class="operation-row">
-      <a-button key="back" type="primary" @click="back"> back </a-button>
+      <a-button key="back" type="primary" @click="back"> back</a-button>
     </div>
   </div>
 </template>
@@ -17,7 +17,7 @@
   };
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .content {
     // padding-top: 100px;
     position: absolute;

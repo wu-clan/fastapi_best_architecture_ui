@@ -1,14 +1,14 @@
 <template>
   <VCharts
     v-if="renderChart"
-    :option="options"
     :autoresize="autoResize"
+    :option="options"
     :style="{ width, height }"
   />
 </template>
 
 <script lang="ts" setup>
-  import { ref, nextTick } from 'vue';
+  import { nextTick, ref } from 'vue';
   import VCharts from 'vue-echarts';
   // import { useAppStore } from '@/store';
 
@@ -44,4 +44,4 @@
   });
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

@@ -1,20 +1,20 @@
 <template>
   <div class="container">
     <Breadcrumb :items="['menu.log', 'menu.log.login']"></Breadcrumb>
-    <a-card class="general-card" :title="$t('menu.log.login')">
+    <a-card :title="$t('menu.log.login')" class="general-card">
       <a-row>
         <a-col :flex="1">
           <a-form
-            :model="formModel"
             :label-col-props="{ span: 6 }"
+            :model="formModel"
             :wrapper-col-props="{ span: 18 }"
             label-align="left"
           >
             <a-row :gutter="16">
               <a-col :span="8">
                 <a-form-item
-                  field="username"
                   :label="$t('log.login.form.username')"
+                  field="username"
                 >
                   <a-input
                     v-model="formModel.username"
@@ -23,7 +23,7 @@
                 </a-form-item>
               </a-col>
               <a-col :span="8">
-                <a-form-item field="ip" :label="$t('log.login.form.ip')">
+                <a-form-item :label="$t('log.login.form.ip')" field="ip">
                   <a-input
                     v-model="formModel.ip"
                     :placeholder="$t('log.login.form.ip.placeholder')"
@@ -32,14 +32,14 @@
               </a-col>
               <a-col :span="8">
                 <a-form-item
-                  field="status"
                   :label="$t('log.login.form.status')"
+                  field="status"
                 >
                   <a-select
                     v-model="formModel.status"
-                    allow-clear
                     :options="statusOptions"
                     :placeholder="$t('log.login.form.selectDefault')"
+                    allow-clear
                     @clear="resetStatus"
                   />
                 </a-form-item>
@@ -47,9 +47,9 @@
             </a-row>
           </a-form>
         </a-col>
-        <a-divider style="height: 84px" direction="vertical" />
+        <a-divider direction="vertical" style="height: 84px" />
         <a-col :flex="'86px'" style="text-align: right">
-          <a-space direction="vertical" :size="18">
+          <a-space :size="18" direction="vertical">
             <a-button type="primary" @click="search">
               <template #icon>
                 <icon-search />
@@ -66,13 +66,13 @@
         </a-col>
       </a-row>
       <a-table
-        row-key="id"
-        :loading="loading"
-        :pagination="pagination"
+        :bordered="false"
         :columns="(cloneColumns as TableColumnData[])"
         :data="renderData"
-        :bordered="false"
+        :loading="loading"
+        :pagination="pagination"
         :size="size"
+        row-key="id"
         @page-change="onPageChange"
       >
         <template #index="{ rowIndex }">
@@ -88,7 +88,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
   import { computed, reactive, ref, watch } from 'vue';
@@ -237,4 +237,4 @@
   };
 </script>
 
-<style scoped lang="less"></style>
+<style lang="less" scoped></style>

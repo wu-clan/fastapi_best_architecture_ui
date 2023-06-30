@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
 import {
-  login as userLogin,
-  logout as userLogout,
   getUserInfo,
+  login as userLogin,
   LoginData,
+  logout as userLogout,
 } from '@/api/user';
-import { setToken, clearToken } from '@/utils/auth';
+import { clearToken, setToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
 import { UserState } from './types';
 import useAppStore from '../app';
@@ -44,7 +44,6 @@ const useUserStore = defineStore('user', {
     // Get user's information
     async info() {
       const res = await getUserInfo();
-
       this.setInfo(res.data);
     },
 
@@ -65,6 +64,7 @@ const useUserStore = defineStore('user', {
       removeRouteListener();
       appStore.clearServerMenu();
     },
+
     // Logout
     async logout() {
       try {

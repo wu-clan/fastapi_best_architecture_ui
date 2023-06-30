@@ -7,8 +7,8 @@
           src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
         />
         <a-typography-title
-          :style="{ margin: 0, fontSize: '18px' }"
           :heading="5"
+          :style="{ margin: 0, fontSize: '18px' }"
         >
           Arco Pro
         </a-typography-title>
@@ -25,7 +25,7 @@
     <ul class="right-side">
       <li>
         <a-tooltip :content="$t('settings.search')">
-          <a-button class="nav-btn" type="outline" :shape="'circle'">
+          <a-button :shape="'circle'" class="nav-btn" type="outline">
             <template #icon>
               <icon-search />
             </template>
@@ -35,9 +35,9 @@
       <li>
         <a-tooltip :content="$t('settings.language')">
           <a-button
+            :shape="'circle'"
             class="nav-btn"
             type="outline"
-            :shape="'circle'"
             @click="setDropDownVisible"
           >
             <template #icon>
@@ -70,9 +70,9 @@
           "
         >
           <a-button
+            :shape="'circle'"
             class="nav-btn"
             type="outline"
-            :shape="'circle'"
             @click="handleToggleTheme"
           >
             <template #icon>
@@ -87,9 +87,9 @@
           <div class="message-box-trigger">
             <a-badge :count="9" dot>
               <a-button
+                :shape="'circle'"
                 class="nav-btn"
                 type="outline"
-                :shape="'circle'"
                 @click="setPopoverVisible"
               >
                 <icon-notification />
@@ -98,10 +98,10 @@
           </div>
         </a-tooltip>
         <a-popover
-          trigger="click"
           :arrow-style="{ display: 'none' }"
           :content-style="{ padding: 0, minWidth: '400px' }"
           content-class="message-popover"
+          trigger="click"
         >
           <div ref="refBtn" class="ref-btn"></div>
           <template #content>
@@ -118,9 +118,9 @@
           "
         >
           <a-button
+            :shape="'circle'"
             class="nav-btn"
             type="outline"
-            :shape="'circle'"
             @click="toggleFullScreen"
           >
             <template #icon>
@@ -133,9 +133,9 @@
       <li>
         <a-tooltip :content="$t('settings.title')">
           <a-button
+            :shape="'circle'"
             class="nav-btn"
             type="outline"
-            :shape="'circle'"
             @click="setVisible"
           >
             <template #icon>
@@ -150,7 +150,7 @@
             :size="32"
             :style="{ marginRight: '8px', cursor: 'pointer' }"
           >
-            <img alt="avatar" :src="avatar" />
+            <img :src="avatar" alt="avatar" />
           </a-avatar>
           <template #content>
             <a-doption>
@@ -193,8 +193,8 @@
 </template>
 
 <script lang="ts" setup>
-  import { computed, ref, inject } from 'vue';
-  import { useDark, useToggle, useFullscreen } from '@vueuse/core';
+  import { computed, inject, ref } from 'vue';
+  import { useDark, useFullscreen, useToggle } from '@vueuse/core';
   import { useAppStore, useUserStore } from '@/store';
   import { LOCALE_OPTIONS } from '@/locale';
   import useLocale from '@/hooks/locale';
@@ -261,7 +261,7 @@
   const toggleDrawerMenu = inject('toggleDrawerMenu') as () => void;
 </script>
 
-<style scoped lang="less">
+<style lang="less" scoped>
   .navbar {
     display: flex;
     justify-content: space-between;
@@ -284,9 +284,11 @@
     display: flex;
     padding-right: 20px;
     list-style: none;
+
     :deep(.locale-select) {
       border-radius: 20px;
     }
+
     li {
       display: flex;
       align-items: center;
@@ -297,16 +299,19 @@
       color: var(--color-text-1);
       text-decoration: none;
     }
+
     .nav-btn {
       border-color: rgb(var(--gray-2));
       color: rgb(var(--gray-8));
       font-size: 16px;
     }
+
     .trigger-btn,
     .ref-btn {
       position: absolute;
       bottom: 14px;
     }
+
     .trigger-btn {
       margin-left: 14px;
     }
