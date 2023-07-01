@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import {
+  getCaptcha,
   getUserInfo,
   login as userLogin,
   LoginData,
@@ -7,7 +8,7 @@ import {
 } from '@/api/user';
 import { clearToken, setToken } from '@/utils/auth';
 import { removeRouteListener } from '@/utils/route-listener';
-import { UserState } from './types';
+import { UserState } from '@/store/modules/user/types';
 import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
@@ -45,6 +46,12 @@ const useUserStore = defineStore('user', {
     async info() {
       const res = await getUserInfo();
       this.setInfo(res.data);
+    },
+
+    // Get captcha
+    async captcha() {
+      const res = await getCaptcha();
+      return res.data.image;
     },
 
     // Login

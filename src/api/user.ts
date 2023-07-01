@@ -5,10 +5,15 @@ import { MenuItem } from '@/store/modules/app/types';
 export interface LoginData {
   username: string;
   password: string;
+  captcha: string;
 }
 
 export interface LoginRes {
   access_token: string;
+}
+
+export function getCaptcha() {
+  return axios.get('/api/v1/auth/captcha');
 }
 
 export function login(data: LoginData) {

@@ -41,6 +41,23 @@
           </template>
         </a-input-password>
       </a-form-item>
+      <a-form-item
+        :rules="[{ required: true, message: $t('login.form.captcha.errMsg') }]"
+        :validate-trigger="['change', 'blur']"
+        field="captcha"
+        hide-label
+      >
+        <a-input
+          v-model="userInfo.captcha"
+          class="captcha-input"
+          :placeholder="$t('login.form.captcha.placeholder')"
+          allow-clear
+        >
+        </a-input>
+        <div class="captcha-wrapper" @click="refreshCaptcha">
+          <a-image width="125" height="30" :preview="false" :src="imageSrc" />
+        </div>
+      </a-form-item>
       <a-space :size="16" direction="vertical">
         <div class="login-form-password-actions">
           <a-checkbox
@@ -84,11 +101,26 @@
     rememberPassword: true,
     username: 'admin', // 演示默认值
     password: 'admin', // demo default value
+    captcha: '',
   });
+
   const userInfo = reactive({
     username: loginConfig.value.username,
     password: loginConfig.value.password,
+    captcha: loginConfig.value.captcha,
   });
+
+  const imageSrc = ref('');
+  const refreshCaptcha = async () => {
+    try {
+      const captcha = await userStore.captcha();
+      imageSrc.value = `data:image/png;base64, ${captcha}`;
+    } catch (err) {
+      console.log(err);
+      errorMessage.value = (err as Error).message;
+    }
+  };
+  refreshCaptcha();
 
   const handleSubmit = async ({
     errors,
@@ -103,7 +135,7 @@
       try {
         await userStore.login(values as LoginData);
         const { redirect, ...othersQuery } = router.currentRoute.value.query;
-        router.push({
+        await router.push({
           name: (redirect as string) || 'Workplace',
           query: {
             ...othersQuery,
@@ -111,11 +143,12 @@
         });
         Message.success(t('login.form.login.success'));
         const { rememberPassword } = loginConfig.value;
-        const { username, password } = values;
+        const { username, password, captcha } = values;
         // 实际生产环境需要进行加密存储。
         // The actual production environment requires encrypted storage.
         loginConfig.value.username = rememberPassword ? username : '';
         loginConfig.value.password = rememberPassword ? password : '';
+        loginConfig.value.captcha = rememberPassword ? captcha : '';
       } catch (err) {
         errorMessage.value = (err as Error).message;
       } finally {
@@ -123,6 +156,7 @@
       }
     }
   };
+
   const setRememberPassword = (value: boolean) => {
     loginConfig.value.rememberPassword = value;
   };
@@ -161,5 +195,15 @@
     &-register-btn {
       color: var(--color-text-3) !important;
     }
+  }
+  .captcha-input {
+    width: 60%;
+  }
+  .captcha-wrapper {
+    width: 130px;
+    height: 30px;
+    border: 1px solid var(--color-border-1);
+    border-radius: 2px;
+    margin-left: auto;
   }
 </style>
