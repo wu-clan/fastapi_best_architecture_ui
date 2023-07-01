@@ -130,8 +130,6 @@
         return travel(menuTree.value);
       };
 
-      console.log('menuTree', menuTree.value);
-
       return () => (
         <a-menu
           mode={topMenu.value ? 'horizontal' : 'vertical'}
