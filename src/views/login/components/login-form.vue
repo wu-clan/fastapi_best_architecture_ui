@@ -116,7 +116,6 @@
       const captcha = await userStore.captcha();
       imageSrc.value = `data:image/png;base64, ${captcha}`;
     } catch (err) {
-      console.log(err);
       errorMessage.value = (err as Error).message;
     }
   };
