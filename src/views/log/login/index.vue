@@ -1,91 +1,100 @@
 <template>
   <div class="container">
-    <Breadcrumb :items="['menu.log', 'menu.log.login']"></Breadcrumb>
-    <a-card :title="$t('menu.log.login')" class="general-card">
-      <a-row>
-        <a-col :flex="1">
-          <a-form
-            :label-col-props="{ span: 6 }"
-            :model="formModel"
-            :wrapper-col-props="{ span: 18 }"
-            label-align="left"
-          >
-            <a-row :gutter="16">
-              <a-col :span="8">
-                <a-form-item
-                  :label="$t('log.login.form.username')"
-                  field="username"
-                >
-                  <a-input
-                    v-model="formModel.username"
-                    :placeholder="$t('log.login.form.username.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item :label="$t('log.login.form.ip')" field="ip">
-                  <a-input
-                    v-model="formModel.ip"
-                    :placeholder="$t('log.login.form.ip.placeholder')"
-                  />
-                </a-form-item>
-              </a-col>
-              <a-col :span="8">
-                <a-form-item
-                  :label="$t('log.login.form.status')"
-                  field="status"
-                >
-                  <a-select
-                    v-model="formModel.status"
-                    :options="statusOptions"
-                    :placeholder="$t('log.login.form.selectDefault')"
-                    allow-clear
-                    @clear="resetStatus"
-                  />
-                </a-form-item>
-              </a-col>
-            </a-row>
-          </a-form>
-        </a-col>
-        <a-divider direction="vertical" style="height: 84px" />
-        <a-col :flex="'86px'" style="text-align: right">
-          <a-space :size="18" direction="vertical">
-            <a-button type="primary" @click="search">
-              <template #icon>
-                <icon-search />
-              </template>
-              {{ $t('log.login.form.search') }}
-            </a-button>
-            <a-button @click="reset">
-              <template #icon>
-                <icon-refresh />
-              </template>
-              {{ $t('log.login.form.reset') }}
-            </a-button>
-          </a-space>
-        </a-col>
-      </a-row>
-      <a-table
-        :bordered="false"
-        :columns="(cloneColumns as TableColumnData[])"
-        :data="renderData"
-        :loading="loading"
-        :pagination="pagination"
-        :size="size"
-        row-key="id"
-        @page-change="onPageChange"
-        @page-size-change="onPageSizeChange"
-      >
-        <template #index="{ rowIndex }">
-          {{ rowIndex + 1 }}
-        </template>
-        <template #status="{ record }">
-          <a-badge v-if="record.status === 1" status="success" />
-          <a-badge v-else status="danger" />
-          {{ $t(`log.login.form.status.${record.status}`) }}
-        </template>
-      </a-table>
-    </a-card>
+    <a-layout style="padding: 0 24px">
+      <a-breadcrumb :style="{ margin: '16px 0' }">
+        <a-breadcrumb-item>
+          <icon-apps />
+        </a-breadcrumb-item>
+        <a-breadcrumb-item>{{ $t('menu.log') }}</a-breadcrumb-item>
+        <a-breadcrumb-item>{{ $t('menu.log.login') }}</a-breadcrumb-item>
+      </a-breadcrumb>
+      <a-card :title="$t('menu.log.login')" class="general-card">
+        <a-row>
+          <a-col :flex="66">
+            <a-form
+              :label-col-props="{ span: 6 }"
+              :model="formModel"
+              label-align="left"
+              :auto-label-width="true"
+            >
+              <a-row :gutter="16">
+                <a-col :span="8">
+                  <a-form-item
+                    :label="$t('log.login.form.username')"
+                    field="username"
+                  >
+                    <a-input
+                      v-model="formModel.username"
+                      :placeholder="$t('log.login.form.username.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                  <a-form-item :label="$t('log.login.form.ip')" field="ip">
+                    <a-input
+                      v-model="formModel.ip"
+                      :placeholder="$t('log.login.form.ip.placeholder')"
+                    />
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                  <a-form-item
+                    :label="$t('log.login.form.status')"
+                    field="status"
+                  >
+                    <a-select
+                      v-model="formModel.status"
+                      :options="statusOptions"
+                      :placeholder="$t('log.login.form.selectDefault')"
+                      allow-clear
+                      @clear="resetStatus"
+                    />
+                  </a-form-item>
+                </a-col>
+              </a-row>
+            </a-form>
+          </a-col>
+          <a-divider direction="vertical" style="height: 30px" />
+          <a-col :flex="8">
+            <a-space :size="'medium'" direction="horizontal">
+              <a-button type="primary" @click="search">
+                <template #icon>
+                  <icon-search />
+                </template>
+                {{ $t('log.login.form.search') }}
+              </a-button>
+              <a-button @click="reset">
+                <template #icon>
+                  <icon-refresh />
+                </template>
+                {{ $t('log.login.form.reset') }}
+              </a-button>
+            </a-space>
+          </a-col>
+        </a-row>
+        <a-table
+          :bordered="false"
+          :columns="(cloneColumns as TableColumnData[])"
+          :data="renderData"
+          :loading="loading"
+          :pagination="pagination"
+          :size="size"
+          row-key="id"
+          @page-change="onPageChange"
+          @page-size-change="onPageSizeChange"
+        >
+          <template #index="{ rowIndex }">
+            {{ rowIndex + 1 }}
+          </template>
+          <template #status="{ record }">
+            <a-badge v-if="record.status === 1" status="success" />
+            <a-badge v-else status="danger" />
+            {{ $t(`log.login.form.status.${record.status}`) }}
+          </template>
+        </a-table>
+      </a-card>
+      <Footer />
+    </a-layout>
   </div>
 </template>
 
@@ -97,6 +106,7 @@
   import { useI18n } from 'vue-i18n';
   import { cloneDeep } from 'lodash';
   import { Pagination } from '@/types/global';
+  import Footer from '@/components/footer/index.vue';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
