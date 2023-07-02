@@ -74,6 +74,7 @@
         :size="size"
         row-key="id"
         @page-change="onPageChange"
+        @page-size-change="onPageSizeChange"
       >
         <template #index="{ rowIndex }">
           {{ rowIndex + 1 }}
@@ -90,12 +91,12 @@
 
 <script lang="ts" setup>
   import useLoading from '@/hooks/loading';
-  import { Pagination } from '@/types/global';
   import { computed, reactive, ref, watch } from 'vue';
   import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { LoginLogParams, LoginLogRecord, queryLoginLogList } from '@/api/log';
   import { useI18n } from 'vue-i18n';
   import { cloneDeep } from 'lodash';
+  import { Pagination } from '@/types/global';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -116,9 +117,12 @@
   const size = ref<SizeProps>('medium');
   const basePagination: Pagination = {
     current: 1,
-    pageSize: 20,
+    defaultPageSize: 20,
+    showTotal: true,
+    showPageSize: true,
+    bufferSize: 3,
   };
-  const pagination = reactive({
+  const pagination: Pagination = reactive({
     ...basePagination,
   });
   const columns = computed<TableColumnData[]>(() => [
@@ -194,9 +198,16 @@
     }
   };
   fetchData();
+
   // 事件: 分页
   const onPageChange = (current: number) => {
-    fetchData({ page: current, size: basePagination.pageSize });
+    fetchData({ page: current, size: pagination.pageSize });
+  };
+
+  // 事件: 分页大小
+  const onPageSizeChange = (pageSize: number) => {
+    pagination.pageSize = pageSize;
+    fetchData({ page: 1, size: pageSize });
   };
 
   // 事件: 搜索

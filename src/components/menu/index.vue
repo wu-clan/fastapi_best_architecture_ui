@@ -33,8 +33,9 @@
 
       const goto = (item: MenuState) => {
         // Open external link
-        if (regexUrl.test(item.path)) {
-          openWindow(item.path);
+        const path = item.path ? (item.path as string) : '';
+        if (regexUrl.test(path)) {
+          openWindow(path);
           selectedKey.value = [item.name as string];
           return;
         }

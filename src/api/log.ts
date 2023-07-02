@@ -14,8 +14,8 @@ export interface LoginLogRecord {
 }
 
 export interface LoginLogParams extends Partial<LoginLogRecord> {
-  page: number;
-  size: number;
+  page?: number;
+  size?: number;
 }
 
 export interface LoginLogListRes {
