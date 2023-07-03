@@ -20,5 +20,5 @@ export default {
   'log.login.columns.city': '城市',
   'log.login.columns.status': '状态',
   'log.login.columns.msg': '消息',
-  'log.login.columns.created_time': '登录时间',
+  'log.login.columns.login_time': '登录时间',
 };

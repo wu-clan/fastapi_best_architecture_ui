@@ -20,5 +20,5 @@ export default {
   'log.login.columns.city': 'City',
   'log.login.columns.status': 'Status',
   'log.login.columns.msg': 'Message',
-  'log.login.columns.created_time': 'Login time',
+  'log.login.columns.login_time': 'Login time',
 };

@@ -1,23 +1,17 @@
 <template>
   <div class="container">
-    <a-layout style="padding: 0 24px">
-      <a-breadcrumb :style="{ margin: '16px 0' }">
-        <a-breadcrumb-item>
-          <icon-apps />
-        </a-breadcrumb-item>
-        <a-breadcrumb-item>{{ $t('menu.log') }}</a-breadcrumb-item>
-        <a-breadcrumb-item>{{ $t('menu.log.login') }}</a-breadcrumb-item>
-      </a-breadcrumb>
+    <a-layout style="padding: 0 18px">
+      <Breadcrumb :items="[$t('menu.log'), $t('menu.log.login')]" />
       <a-card :title="$t('menu.log.login')" class="general-card">
         <a-row>
-          <a-col :flex="66">
+          <a-col :flex="62">
             <a-form
               :label-col-props="{ span: 6 }"
               :model="formModel"
-              label-align="left"
+              label-align="right"
               :auto-label-width="true"
             >
-              <a-row :gutter="16">
+              <a-row>
                 <a-col :span="8">
                   <a-form-item
                     :label="$t('log.login.form.username')"
@@ -72,29 +66,37 @@
             </a-space>
           </a-col>
         </a-row>
-        <a-table
-          :bordered="false"
-          :columns="(cloneColumns as TableColumnData[])"
-          :data="renderData"
-          :loading="loading"
-          :pagination="pagination"
-          :size="size"
-          row-key="id"
-          @page-change="onPageChange"
-          @page-size-change="onPageSizeChange"
-        >
-          <template #index="{ rowIndex }">
-            {{ rowIndex + 1 }}
-          </template>
-          <template #status="{ record }">
-            <a-badge v-if="record.status === 1" status="success" />
-            <a-badge v-else status="danger" />
-            {{ $t(`log.login.form.status.${record.status}`) }}
-          </template>
-        </a-table>
+        <a-divider />
+        <div class="content">
+          <a-table
+            :bordered="false"
+            :columns="(cloneColumns as TableColumnData[])"
+            :data="renderData"
+            :loading="loading"
+            :pagination="pagination"
+            :size="size"
+            row-key="id"
+            @page-change="onPageChange"
+            @page-size-change="onPageSizeChange"
+          >
+            <template #index="{ rowIndex }">
+              {{ rowIndex + 1 }}
+            </template>
+            <template #status="{ record }">
+              <a-tag v-if="record.status === 1" :color="`green`" bordered>
+                {{ $t(`log.login.form.status.${record.status}`) }}
+              </a-tag>
+              <a-tag v-else :color="`red`" bordered>
+                {{ $t(`log.login.form.status.${record.status}`) }}
+              </a-tag>
+            </template>
+          </a-table>
+        </div>
       </a-card>
-      <Footer />
     </a-layout>
+  </div>
+  <div class="footer">
+    <Footer />
   </div>
 </template>
 
@@ -177,7 +179,7 @@
       slotName: 'msg',
     },
     {
-      title: t('log.login.columns.created_time'),
+      title: t('log.login.columns.login_time'),
       dataIndex: 'created_time',
       slotName: 'created_time',
     },

@@ -1,0 +1,32 @@
+export default {
+  'menu.system.sysMenu': 'Menu manage',
+  // form
+  'system.menu.form.name': 'Menu name',
+  'system.menu.form.name.placeholder': 'Please enter a menu name',
+  'system.menu.form.status': 'Status',
+  'system.menu.form.status.1': 'Normal',
+  'system.menu.form.status.0': 'Deactivate',
+  'system.menu.form.selectDefault': 'All',
+  'system.menu.form.search': 'Search',
+  'system.menu.form.reset': 'Reset',
+  // button
+  'system.menu.button.create': 'New',
+  'system.menu.button.collapse': 'Expand/collapse',
+  // columns
+  'system.menu.columns.name': 'Menu name',
+  'system.menu.columns.type': 'Type',
+  'system.menu.columns.type.0': 'Directory',
+  'system.menu.columns.type.1': 'Menu',
+  'system.menu.columns.type.2': 'Button',
+  'system.menu.columns.icon': 'Icon',
+  'system.menu.columns.perms': 'Permissions',
+  'system.menu.columns.sort': 'Sort',
+  'system.menu.columns.show': 'Is show',
+  'system.menu.columns.status': 'Status',
+  'system.menu.columns.remark': 'Remark',
+  'system.menu.columns.created_time': 'Created time',
+  'system.menu.columns.operate': 'Operate',
+  'system.menu.columns.new': 'New',
+  'system.menu.columns.edit': 'Edit',
+  'system.menu.columns.delete': 'Delete',
+};

@@ -10,7 +10,7 @@ export interface LoginLogRecord {
   city: string;
   status: 0 | 1;
   msg: string;
-  created_time: string;
+  login_time: string;
 }
 
 export interface LoginLogParams extends Partial<LoginLogRecord> {
