@@ -1,7 +1,5 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
-import { Message, Modal } from '@arco-design/web-vue';
-import { useUserStore } from '@/store';
 import { getToken } from '@/utils/auth';
 
 export interface HttpResponse<T = unknown> {
@@ -9,6 +7,11 @@ export interface HttpResponse<T = unknown> {
   msg: string;
   code: number;
   data: T;
+}
+
+export interface HttpError {
+  msg: string;
+  code: number;
 }
 
 if (import.meta.env.VITE_API_BASE_URL) {
@@ -38,40 +41,21 @@ axios.interceptors.request.use(
 // add response interceptors
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
-    const res = response.data;
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 200) {
-      Message.error({
-        content: res.msg || 'Error',
-        duration: 5 * 1000,
-      });
-      // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (
-        [50008, 50012, 50014].includes(res.code) &&
-        response.config.url !== '/api/user/info'
-      ) {
-        Modal.error({
-          title: 'Confirm logout',
-          content:
-            'You have been logged out, you can cancel to stay on this page, or log in again',
-          okText: 'Re-Login',
-          async onOk() {
-            const userStore = useUserStore();
-
-            await userStore.logout();
-            window.location.reload();
-          },
-        });
-      }
-      return Promise.reject(new Error(res.msg || 'Error'));
-    }
-    return res;
+    const { data } = response.data;
+    return data || response.data;
   },
   (error) => {
-    Message.error({
-      content: error.msg || 'Request Error',
-      duration: 5 * 1000,
-    });
-    return Promise.reject(error);
+    let res: HttpError = {
+      msg: '请求失败，请稍后再试',
+      code: 500,
+    };
+    if (error.response) {
+      res = error.response.data;
+    } else if (error.message === 'Network Error') {
+      res.msg = '网络连接断开';
+    } else if (error.code === 'ECONNABORTED') {
+      res.msg = '请求超时，请稍后重试';
+    }
+    return Promise.reject(res);
   }
 );

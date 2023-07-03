@@ -90,6 +90,7 @@
   import { useUserStore } from '@/store';
   import useLoading from '@/hooks/loading';
   import type { LoginData } from '@/api/user';
+  import type { HttpError } from '@/api/interceptor';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -116,7 +117,7 @@
       const captcha = await userStore.captcha();
       imageSrc.value = `data:image/png;base64, ${captcha}`;
     } catch (err) {
-      errorMessage.value = (err as Error).message;
+      errorMessage.value = (err as HttpError).msg;
     }
   };
   refreshCaptcha();
@@ -149,7 +150,7 @@
         loginConfig.value.password = rememberPassword ? password : '';
         loginConfig.value.captcha = rememberPassword ? captcha : '';
       } catch (err) {
-        errorMessage.value = (err as Error).message;
+        errorMessage.value = (err as HttpError).msg;
       } finally {
         setLoading(false);
       }

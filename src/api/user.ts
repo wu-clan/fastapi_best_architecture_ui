@@ -12,22 +12,27 @@ export interface LoginRes {
   access_token: string;
 }
 
-export function getCaptcha() {
+export interface CaptchaRes {
+  image: string;
+  image_type: string;
+}
+
+export function getCaptcha(): Promise<CaptchaRes> {
   return axios.get('/api/v1/auth/captcha');
 }
 
-export function login(data: LoginData) {
-  return axios.post<LoginRes>('/api/v1/auth/login', data);
+export function login(data: LoginData): Promise<LoginRes> {
+  return axios.post('/api/v1/auth/login', data);
 }
 
-export function logout() {
-  return axios.post<LoginRes>('/api/v1/auth/logout');
+export function logout(): Promise<LoginRes> {
+  return axios.post('/api/v1/auth/logout');
 }
 
-export function getUserInfo() {
-  return axios.get<UserState>('/api/v1/users/me');
+export function getUserInfo(): Promise<UserState> {
+  return axios.get('/api/v1/users/me');
 }
 
-export function getUserMenuList() {
-  return axios.get<MenuItem[]>('/api/v1/menus/sidebar');
+export function getUserMenuList(): Promise<MenuItem[]> {
+  return axios.get('/api/v1/menus/sidebar');
 }

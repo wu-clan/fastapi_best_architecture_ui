@@ -23,8 +23,10 @@ export interface LoginLogListRes {
   total: number;
 }
 
-export function queryLoginLogList(params: LoginLogParams) {
-  return axios.get<LoginLogListRes>('/api/v1/logs/login', {
+export function queryLoginLogList(
+  params: LoginLogParams
+): Promise<LoginLogListRes> {
+  return axios.get('/api/v1/logs/login', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);

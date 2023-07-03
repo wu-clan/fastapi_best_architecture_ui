@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import {
+  CaptchaRes,
   getCaptcha,
   getUserInfo,
   login as userLogin,
@@ -45,20 +46,20 @@ const useUserStore = defineStore('user', {
     // Get user's information
     async info() {
       const res = await getUserInfo();
-      this.setInfo(res.data);
+      this.setInfo(res);
     },
 
     // Get captcha
     async captcha() {
-      const res = await getCaptcha();
-      return res.data.image;
+      const res: CaptchaRes = await getCaptcha();
+      return res.image;
     },
 
     // Login
     async login(loginForm: LoginData) {
       try {
         const res = await userLogin(loginForm);
-        setToken(res.data.access_token);
+        setToken(res.access_token);
       } catch (err) {
         clearToken();
         throw err;

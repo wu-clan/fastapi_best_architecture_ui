@@ -183,7 +183,7 @@
   const fetchData = async (params: LoginLogParams = { page: 1, size: 20 }) => {
     setLoading(true);
     try {
-      const { data } = await queryLoginLogList(params);
+      const data = await queryLoginLogList(params);
       renderData.value = data.items;
       pagination.total = data.total;
       pagination.current = params.page;
