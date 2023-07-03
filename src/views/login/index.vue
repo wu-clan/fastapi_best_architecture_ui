@@ -43,6 +43,13 @@
       justify-content: center;
       padding-bottom: 40px;
     }
+
+    .footer {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+    }
   }
 
   .logo {
