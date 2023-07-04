@@ -13,6 +13,7 @@ export default {
   'system.menu.button.create': '新增',
   'system.menu.button.collapse': '展开/收起',
   // columns
+  'system.menu.columns.title': '菜单标题',
   'system.menu.columns.name': '菜单名称',
   'system.menu.columns.type': '类型',
   'system.menu.columns.type.0': '目录',

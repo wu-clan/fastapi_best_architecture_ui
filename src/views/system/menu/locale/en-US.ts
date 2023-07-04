@@ -13,6 +13,7 @@ export default {
   'system.menu.button.create': 'New',
   'system.menu.button.collapse': 'Expand/collapse',
   // columns
+  'system.menu.columns.title': 'Menu title',
   'system.menu.columns.name': 'Menu name',
   'system.menu.columns.type': 'Type',
   'system.menu.columns.type.0': 'Directory',

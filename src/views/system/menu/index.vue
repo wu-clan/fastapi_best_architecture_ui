@@ -78,15 +78,22 @@
             row-key="id"
             :pagination="false"
           >
+            <template #icon="{ record }">
+              <component :is="record.icon" :size="20"></component>
+            </template>
             <template #menu_type="{ record }">
-              <a-tag v-if="record.status === 0" :color="`orange`" bordered>
-                {{ $t(`system.menu.columns.type.${record.status}`) }}
+              <a-tag v-if="record.menu_type === 0" :color="`orange`" bordered>
+                {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
-              <a-tag v-if="record.status === 1" :color="`purple`" bordered>
-                {{ $t(`system.menu.columns.type.${record.status}`) }}
+              <a-tag
+                v-else-if="record.menu_type === 1"
+                :color="`purple`"
+                bordered
+              >
+                {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
               <a-tag v-else :color="`blue`" bordered>
-                {{ $t(`system.menu.columns.type.${record.status}`) }}
+                {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
             </template>
             <template #show="{ record }">
@@ -139,7 +146,7 @@
   const { loading, setLoading } = useLoading(true);
   const generateFormModel = () => {
     return {
-      name: undefined,
+      title: undefined,
       status: undefined,
     };
   };
@@ -149,6 +156,11 @@
   const renderData = ref<SysMenuRecord[]>([]);
   const size = ref<SizeProps>('medium');
   const columns = computed<TableColumnData[]>(() => [
+    {
+      title: t('system.menu.columns.title'),
+      dataIndex: 'title',
+      slotName: 'title',
+    },
     {
       title: t('system.menu.columns.name'),
       dataIndex: 'name',
@@ -163,6 +175,7 @@
       title: t('system.menu.columns.icon'),
       dataIndex: 'icon',
       slotName: 'icon',
+      align: 'center',
     },
     {
       title: t('system.menu.columns.perms'),

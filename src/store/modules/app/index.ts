@@ -13,6 +13,7 @@ export function generateMenu(data: MenuItem[], parentName?: string) {
   data.forEach((menu) => {
     const localeName = convertToCamelCase(menu.name);
     const menuItem: MenuState = {
+      title: menu.title,
       name: menu.name,
       path: !menu.path ? `/${menu.name}` : menu.path,
       component: !menu.component

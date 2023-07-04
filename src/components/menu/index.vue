@@ -98,9 +98,8 @@
         function travel(_route: MenuState[], nodes = []) {
           if (_route) {
             _route.forEach((element) => {
-              // This is demo, modify nodes as needed
               const icon = element?.meta?.icon
-                ? () => h(compile(`<${element?.meta?.icon}/>`))
+                ? () => h(compile(`<${element?.meta?.icon} />`))
                 : null;
               const node =
                 element?.children && element?.children.length !== 0 ? (
@@ -108,7 +107,12 @@
                     key={element?.name}
                     v-slots={{
                       icon,
-                      title: () => h(compile(t(element?.meta?.locale || ''))),
+                      title: () =>
+                        h(
+                          compile(
+                            element?.title || t(element?.meta?.locale || '')
+                          )
+                        ),
                     }}
                   >
                     {travel(element?.children)}
@@ -119,7 +123,7 @@
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {t(element?.meta?.locale || '')}
+                    {element?.title || t(element?.meta?.locale || '')}
                   </a-menu-item>
                 );
               nodes.push(node as never);

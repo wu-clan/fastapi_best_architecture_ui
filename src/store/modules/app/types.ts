@@ -21,6 +21,7 @@ export interface AppState {
 
 export interface MenuItem {
   id: number;
+  title: string;
   name: string;
   level: number;
   sort: number;
@@ -38,6 +39,7 @@ export interface MenuItem {
 }
 
 export interface MenuState {
+  title: string;
   name: string;
   path?: string;
   component: any;

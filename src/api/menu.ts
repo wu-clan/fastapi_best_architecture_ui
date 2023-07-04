@@ -18,7 +18,7 @@ export interface SysMenuRecord {
 type SysMenuTreeRes = SysMenuRecord[];
 
 export interface SysMenuTreeParams {
-  name?: string;
+  title?: string;
   status?: boolean;
 }
 
