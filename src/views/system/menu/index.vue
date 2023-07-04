@@ -66,10 +66,13 @@
             </template>
             {{ $t('system.menu.button.create') }}
           </a-button>
-          <a-button> {{ $t('system.menu.button.collapse') }}</a-button>
+          <a-button @click="expand">
+            {{ $t('system.menu.button.collapse') }}
+          </a-button>
         </a-space>
         <div class="content">
           <a-table
+            ref="tableRef"
             :bordered="false"
             :columns="(cloneColumns as TableColumnData[])"
             :data="renderData"
@@ -78,9 +81,6 @@
             row-key="id"
             :pagination="false"
           >
-            <template #icon="{ record }">
-              <component :is="record.icon" :size="20"></component>
-            </template>
             <template #menu_type="{ record }">
               <a-tag v-if="record.menu_type === 0" :color="`orange`" bordered>
                 {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
@@ -95,6 +95,9 @@
               <a-tag v-else :color="`blue`" bordered>
                 {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
+            </template>
+            <template #icon="{ record }">
+              <component :is="record.icon" :size="20"></component>
             </template>
             <template #show="{ record }">
               <a-badge v-if="record.show === 1" :status="'success'" />
@@ -155,6 +158,8 @@
   const showColumns = ref<Column[]>([]);
   const renderData = ref<SysMenuRecord[]>([]);
   const size = ref<SizeProps>('medium');
+  const tableRef = ref();
+  const expandAll = ref<boolean>(false);
   const columns = computed<TableColumnData[]>(() => [
     {
       title: t('system.menu.columns.title'),
@@ -253,6 +258,12 @@
   // 事件: 重置状态
   const resetStatus = () => {
     formModel.value.status = undefined;
+  };
+
+  // 展开/收起
+  const expand = () => {
+    expandAll.value = !expandAll.value;
+    tableRef.value.expandAll(expandAll.value);
   };
 
   // 监听columns变化

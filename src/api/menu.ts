@@ -3,6 +3,7 @@ import qs from 'query-string';
 
 export interface SysMenuRecord {
   id: number;
+  title: string;
   name: string;
   menu_type: number;
   icon?: string;
