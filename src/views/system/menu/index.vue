@@ -97,7 +97,7 @@
               </a-tag>
             </template>
             <template #show="{ record }">
-              <a-badge v-if="record.status === 1" :status="'success'" />
+              <a-badge v-if="record.show === 1" :status="'success'" />
               <a-badge v-else :status="'danger'" />
             </template>
             <template #status="{ record }">
