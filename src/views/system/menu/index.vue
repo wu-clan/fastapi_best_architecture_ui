@@ -18,7 +18,7 @@
                     field="name"
                   >
                     <a-input
-                      v-model="formModel.name"
+                      v-model="formModel.title"
                       :placeholder="$t('system.menu.form.name.placeholder')"
                     />
                   </a-form-item>
