@@ -23,6 +23,8 @@ export default {
   'menu.faq': 'FAQ',
   'navbar.docs': 'Docs',
   'navbar.action.locale': 'Switch to English',
+  'modal.title.tips': 'Warm Tips',
+  'modal.title.tips.delete': 'Are you sure you want to delete it？',
   ...localeSettings,
   ...localeMessageBox,
   ...localeLogin,

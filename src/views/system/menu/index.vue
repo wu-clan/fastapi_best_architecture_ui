@@ -60,7 +60,7 @@
         </a-row>
         <a-divider />
         <a-space :size="'medium'">
-          <a-button type="primary">
+          <a-button type="primary" @click="NewMenu">
             <template #icon>
               <icon-plus />
             </template>
@@ -113,17 +113,148 @@
             </template>
             <template #operate>
               <a-space>
-                <a-link>{{ $t(`system.menu.columns.new`) }}</a-link>
-                <a-link>{{ $t(`system.menu.columns.edit`) }}</a-link>
-                <a-link :status="'danger'">{{
-                  $t(`system.menu.columns.delete`)
-                }}</a-link>
+                <a-link @click="NewMenu">
+                  {{ $t(`system.menu.columns.new`) }}
+                </a-link>
+                <a-link @click="EditMenu">
+                  {{ $t(`system.menu.columns.edit`) }}
+                </a-link>
+                <a-link :status="'danger'" @click="DeleteMenu">
+                  {{ $t(`system.menu.columns.delete`) }}
+                </a-link>
               </a-space>
             </template>
           </a-table>
         </div>
       </a-card>
     </a-layout>
+  </div>
+  <div class="content-drawer">
+    <a-modal
+      :visible="openNewOrEdit"
+      :title="drawerTitle"
+      :closable="false"
+      :width="550"
+      @ok="submitNewOrEdit"
+      @cancel="cancelReq"
+    >
+      <a-form>
+        <a-form-item :label="$t('system.menu.columns.type')" field="menu_type">
+          <a-radio-group v-model:model-value="menuType">
+            <a-radio :value="0">
+              {{ $t('system.menu.columns.type.0') }}
+            </a-radio>
+            <a-radio :value="1" :default-checked="true">
+              {{ $t('system.menu.columns.type.1') }}
+            </a-radio>
+            <a-radio :value="2">
+              {{ $t('system.menu.columns.type.2') }}
+            </a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item
+          :label="$t('system.menu.columns.parent_name')"
+          field="parent_id"
+        >
+          <a-select></a-select>
+        </a-form-item>
+        <a-form-item
+          :label="$t('system.menu.columns.title')"
+          field="title"
+          :required="true"
+        >
+          <a-input></a-input>
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 0 || menuType === 1"
+          :label="$t('system.menu.columns.name')"
+          field="name"
+          :required="true"
+        >
+          <a-input></a-input>
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 0 || menuType === 1"
+          :label="$t('system.menu.columns.icon')"
+          field="icon"
+        >
+          <a-select></a-select>
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 0 || menuType === 1"
+          :label="$t('system.menu.columns.path')"
+          field="path"
+        >
+          <a-input></a-input>
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 1"
+          :label="$t('system.menu.columns.component')"
+          field="component"
+        >
+          <a-input></a-input>
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 1 || menuType === 2"
+          :label="$t('system.menu.columns.perms')"
+          field="perms"
+        >
+          <a-input></a-input>
+        </a-form-item>
+        <a-form-item :label="$t('system.menu.columns.remark')" field="remark">
+          <a-textarea></a-textarea>
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 1"
+          :label="$t('system.menu.columns.cache')"
+          field="cache"
+          :required="true"
+        >
+          <a-switch />
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 0 || menuType === 1"
+          :label="$t('system.menu.columns.show')"
+          field="show"
+          :required="true"
+        >
+          <a-switch />
+        </a-form-item>
+        <a-form-item
+          v-if="menuType === 0 || menuType === 1"
+          :label="$t('system.menu.columns.status')"
+          field="status"
+          :required="true"
+        >
+          <a-switch />
+        </a-form-item>
+        <a-form-item
+          :label="$t('system.menu.columns.sort')"
+          field="sort"
+          :required="true"
+        >
+          <a-input-number
+            :placeholder="$t('system.menu.columns.sort')"
+            :default-value="0"
+            :mode="'button'"
+            style="width: 35%"
+          />
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <a-modal
+      :visible="openDelete"
+      :title="`${$t('modal.title.tips')}`"
+      :closable="false"
+      :width="360"
+      @ok="submitDelete"
+      @cancel="cancelReq"
+    >
+      <a-space>
+        <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+        {{ $t('modal.title.tips.delete') }}
+      </a-space>
+    </a-modal>
   </div>
   <div class="footer">
     <Footer />
@@ -147,6 +278,8 @@
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
+
+  // 表单
   const generateFormModel = () => {
     return {
       title: undefined,
@@ -154,12 +287,36 @@
     };
   };
   const formModel = ref(generateFormModel());
+  const statusOptions = computed<SelectOptionData[]>(() => [
+    {
+      label: t('system.menu.form.status.1'),
+      value: 1,
+    },
+    {
+      label: t('system.menu.form.status.0'),
+      value: 0,
+    },
+  ]);
+
+  // 表格
   const cloneColumns = ref<Column[]>([]);
   const showColumns = ref<Column[]>([]);
   const renderData = ref<SysMenuRecord[]>([]);
   const size = ref<SizeProps>('medium');
   const tableRef = ref();
   const expandAll = ref<boolean>(false);
+  const NewMenu = () => {
+    drawerTitle.value = t('system.menu.columns.new.drawer');
+    openNewOrEdit.value = true;
+  };
+  const EditMenu = () => {
+    drawerTitle.value = t('system.menu.columns.edit.drawer');
+    openNewOrEdit.value = true;
+  };
+  const DeleteMenu = () => {
+    drawerTitle.value = t('system.menu.columns.delete.drawer');
+    openDelete.value = true;
+  };
   const columns = computed<TableColumnData[]>(() => [
     {
       title: t('system.menu.columns.title'),
@@ -219,16 +376,18 @@
       slotName: 'operate',
     },
   ]);
-  const statusOptions = computed<SelectOptionData[]>(() => [
-    {
-      label: t('system.menu.form.status.1'),
-      value: 1,
-    },
-    {
-      label: t('system.menu.form.status.0'),
-      value: 0,
-    },
-  ]);
+
+  // 对话框
+  const openNewOrEdit = ref<boolean>(false);
+  const openDelete = ref<boolean>(false);
+  const drawerTitle = ref<string>('');
+  const submitNewOrEdit = ref<() => void>(() => {});
+  const submitDelete = ref<() => void>(() => {});
+  const cancelReq = () => {
+    openNewOrEdit.value = false;
+    openDelete.value = false;
+  };
+  const menuType = ref<number>(1);
 
   // 请求数据
   const fetchData = async (params: SysMenuTreeParams = {}) => {

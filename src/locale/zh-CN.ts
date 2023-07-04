@@ -23,6 +23,8 @@ export default {
   'menu.faq': '常见问题',
   'navbar.docs': '文档中心',
   'navbar.action.locale': '切换为中文',
+  'modal.title.tips': '温馨提示',
+  'modal.title.tips.delete': '确定要删除吗？',
   ...localeSettings,
   ...localeMessageBox,
   ...localeLogin,
