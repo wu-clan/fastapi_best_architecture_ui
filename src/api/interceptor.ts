@@ -41,7 +41,6 @@ axios.interceptors.request.use(
 // add response interceptors
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
-    const { data }: { data: HttpResponse } = response.data;
     const { msg }: { msg: string } = response.data;
     const { code }: { code: number } = response.data;
 
@@ -58,7 +57,7 @@ axios.interceptors.response.use(
       });
     }
 
-    return data || response.data;
+    return response.data;
   },
   (error) => {
     let res: HttpError = {
