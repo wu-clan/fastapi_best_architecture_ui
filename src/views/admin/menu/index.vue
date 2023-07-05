@@ -13,10 +13,7 @@
             >
               <a-row>
                 <a-col :span="12">
-                  <a-form-item
-                    :label="$t('admin.menu.form.name')"
-                    field="name"
-                  >
+                  <a-form-item :label="$t('admin.menu.form.name')" field="name">
                     <a-input
                       v-model="formModel.title"
                       :placeholder="$t('admin.menu.form.name.placeholder')"
@@ -190,8 +187,17 @@
           v-if="menuType === 0 || menuType === 1"
           :label="$t('admin.menu.columns.icon')"
           field="icon"
+          prop="menuIcon"
         >
-          <a-select></a-select>
+          <a-popover trigger="click" position="bottom">
+            <!--TODO: 自定义 icon 显示组件-->
+            <a-input
+              v-model="form.icon"
+              :placeholder="$t('admin.menu.form.icon.placeholder')"
+            >
+              {{ form.icon }}
+            </a-input>
+          </a-popover>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
@@ -364,6 +370,7 @@
   const NewMenu = (pk?: number) => {
     buttonStatus.value = 'new';
     drawerTitle.value = t('admin.menu.columns.new.drawer');
+    resetForm(formDefaultValues);
     form.parent_id = pk;
     openNewOrEdit.value = true;
   };
@@ -371,7 +378,6 @@
     buttonStatus.value = 'edit';
     operateRow.value = pk;
     drawerTitle.value = t('admin.menu.columns.edit.drawer');
-    resetForm();
     await fetchMenuDetail(pk);
     openNewOrEdit.value = true;
   };
@@ -534,7 +540,7 @@
     setLoading(true);
     try {
       const res = await querySysMenuDetail(pk);
-      Object.assign(form, res);
+      resetForm(res);
       switchStatus.value = Boolean(form.status);
       switchShow.value = Boolean(form.show);
       switchCache.value = Boolean(form.cache);
@@ -569,8 +575,11 @@
   };
 
   // 重置表单
-  const resetForm = () => {
-    Object.assign(form, formDefaultValues);
+  const resetForm = (data: Record<any, any>) => {
+    Object.keys(data).forEach((key) => {
+      // @ts-ignore
+      form[key] = data[key];
+    });
   };
 
   // 转换菜单数据结构

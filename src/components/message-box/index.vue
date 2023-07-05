@@ -82,7 +82,7 @@
   async function readMessage(data: MessageListType) {
     const ids = data.map((item) => item.id);
     await setMessageStatus({ ids });
-    fetchSourceData();
+    await fetchSourceData();
   }
 
   const renderList = computed(() => {
@@ -94,10 +94,9 @@
     return renderList.value.filter((item) => !item.status).length;
   });
   const getUnreadList = (type: string) => {
-    const list = messageData.messageList.filter(
+    return messageData.messageList.filter(
       (item) => item.type === type && !item.status
     );
-    return list;
   };
   const formatUnreadLength = (type: string) => {
     const list = getUnreadList(type);

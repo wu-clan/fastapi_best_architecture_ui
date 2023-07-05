@@ -11,6 +11,7 @@ export default {
   'admin.menu.form.reset': 'Reset',
   'admin.menu.form.title.placeholder': 'Please enter a title',
   'admin.menu.form.path.name': 'Please enter a route name',
+  'admin.menu.form.icon.placeholder': 'Click to select an icon',
   'admin.menu.form.path.placeholder': 'Please enter the routing path',
   'admin.menu.form.component.placeholder': 'Please enter the component path',
   'admin.menu.form.perms.placeholder': 'Please enter permission characters',
