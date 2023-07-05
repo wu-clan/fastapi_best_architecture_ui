@@ -367,12 +367,12 @@
     form.parent_id = pk;
     openNewOrEdit.value = true;
   };
-  const EditMenu = (pk: number) => {
+  const EditMenu = async (pk: number) => {
     buttonStatus.value = 'edit';
     operateRow.value = pk;
     drawerTitle.value = t('system.menu.columns.edit.drawer');
     resetForm();
-    fetchMenuDetail(pk);
+    await fetchMenuDetail(pk);
     openNewOrEdit.value = true;
   };
   const DeleteMenu = (pk: number) => {
@@ -479,34 +479,36 @@
 
   // 提交按钮
   const submitNewOrEdit = async () => {
-    if (buttonStatus.value === 'new') {
-      await createSysMenu(form).then((response) => {
-        if (response.code === 200) {
-          Message.success(response.msg);
-          cancelReq();
-          fetchMenuTree();
-        }
-      });
-    } else {
-      await updateSysMenu(operateRow.value, form).then((response) => {
-        if (response.code === 200) {
-          Message.success(response.msg);
-          cancelReq();
-          fetchMenuTree();
-        }
-      });
+    setLoading(true);
+    try {
+      if (buttonStatus.value === 'new') {
+        await createSysMenu(form);
+        cancelReq();
+        await fetchMenuTree();
+      } else {
+        await updateSysMenu(operateRow.value, form);
+        cancelReq();
+        await fetchMenuTree();
+      }
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   // 删除按钮
   const submitDelete = async () => {
-    await deleteSysMenu(operateRow.value).then((response) => {
-      if (response.code === 200) {
-        Message.success(response.msg);
-        cancelReq();
-        fetchMenuTree();
-      }
-    });
+    setLoading(true);
+    try {
+      await deleteSysMenu(operateRow.value);
+      cancelReq();
+      await fetchMenuTree();
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   // 请求目录树
@@ -522,7 +524,7 @@
       setLoading(false);
     }
   };
-  fetchMenuTree();
+  await fetchMenuTree();
 
   // 请求目录详情
   const fetchMenuDetail = async (pk: number) => {
@@ -541,8 +543,8 @@
   };
 
   // 搜索
-  const search = () => {
-    fetchMenuTree({
+  const search = async () => {
+    await fetchMenuTree({
       ...formModel.value,
     } as unknown as SysMenuTreeParams);
   };

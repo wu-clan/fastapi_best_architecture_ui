@@ -209,22 +209,22 @@
       setLoading(false);
     }
   };
-  fetchData();
+  await fetchData();
 
   // 事件: 分页
-  const onPageChange = (current: number) => {
-    fetchData({ page: current, size: pagination.pageSize });
+  const onPageChange = async (current: number) => {
+    await fetchData({ page: current, size: pagination.pageSize });
   };
 
   // 事件: 分页大小
-  const onPageSizeChange = (pageSize: number) => {
+  const onPageSizeChange = async (pageSize: number) => {
     pagination.pageSize = pageSize;
-    fetchData({ page: 1, size: pageSize });
+    await fetchData({ page: 1, size: pageSize });
   };
 
   // 事件: 搜索
-  const search = () => {
-    fetchData({
+  const search = async () => {
+    await fetchData({
       ...basePagination,
       ...formModel.value,
     } as unknown as LoginLogParams);

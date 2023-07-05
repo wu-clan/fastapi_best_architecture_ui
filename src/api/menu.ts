@@ -1,6 +1,5 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { HttpResponse } from '@/api/interceptor';
 
 export interface SysMenuTreeRes {
   id: number;
@@ -42,10 +41,6 @@ export interface SysMenuTreeParams {
   status?: boolean;
 }
 
-interface SysMenuTreeAllRes extends HttpResponse {
-  data: SysMenuTreeRes[];
-}
-
 export function querySysMenuTree(
   params: SysMenuTreeParams
 ): Promise<SysMenuTreeRes[]> {
@@ -61,17 +56,14 @@ export function querySysMenuDetail(pk: number): Promise<SysMenuTreeRes> {
   return axios.get(`/api/v1/menus/${pk}`);
 }
 
-export function createSysMenu(data: SysMenuReq): Promise<SysMenuTreeAllRes> {
+export function createSysMenu(data: SysMenuReq) {
   return axios.post('/api/v1/menus', data);
 }
 
-export function updateSysMenu(
-  pk: number,
-  data: SysMenuReq
-): Promise<SysMenuTreeAllRes> {
+export function updateSysMenu(pk: number, data: SysMenuReq) {
   return axios.put(`/api/v1/menus/${pk}`, data);
 }
 
-export function deleteSysMenu(pk: number): Promise<SysMenuTreeAllRes> {
+export function deleteSysMenu(pk: number) {
   return axios.delete(`/api/v1/menus/${pk}`);
 }

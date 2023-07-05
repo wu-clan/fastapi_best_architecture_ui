@@ -25,7 +25,7 @@ export function login(data: LoginData): Promise<LoginRes> {
   return axios.post('/api/v1/auth/login', data);
 }
 
-export function logout(): Promise<LoginRes> {
+export function logout() {
   return axios.post('/api/v1/auth/logout');
 }
 
