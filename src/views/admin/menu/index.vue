@@ -485,10 +485,12 @@
         await createSysMenu(form);
         cancelReq();
         await fetchMenuTree();
+        Message.success(t('submit.create.success'));
       } else {
         await updateSysMenu(operateRow.value, form);
         cancelReq();
         await fetchMenuTree();
+        Message.success(t('submit.update.success'));
       }
     } catch (error) {
       // console.log(error);
@@ -504,6 +506,7 @@
       await deleteSysMenu(operateRow.value);
       cancelReq();
       await fetchMenuTree();
+      Message.success(t('submit.delete.success'));
     } catch (error) {
       // console.log(error);
     } finally {
