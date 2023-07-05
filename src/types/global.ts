@@ -33,3 +33,10 @@ export interface GeneralChart {
   xAxis: string[];
   data: Array<{ name: string; value: number[] }>;
 }
+
+export interface treeSelectDataType<T = any> {
+  id?: number | null;
+  title: string;
+  disabled?: boolean;
+  children: T[];
+}

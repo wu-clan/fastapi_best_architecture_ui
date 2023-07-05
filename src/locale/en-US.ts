@@ -25,6 +25,8 @@ export default {
   'navbar.action.locale': 'Switch to English',
   'modal.title.tips': 'Warm Tips',
   'modal.title.tips.delete': 'Are you sure you want to delete it？',
+  'switch.open': 'Enable',
+  'switch.close': 'Disable',
   ...localeSettings,
   ...localeMessageBox,
   ...localeLogin,

@@ -9,6 +9,19 @@ export default {
   'system.menu.form.selectDefault': 'All',
   'system.menu.form.search': 'Search',
   'system.menu.form.reset': 'Reset',
+  'system.menu.form.title.placeholder': 'Please enter a title',
+  'system.menu.form.path.name': 'Please enter a route name',
+  'system.menu.form.path.placeholder': 'Please enter the routing path',
+  'system.menu.form.component.placeholder': 'Please enter the component path',
+  'system.menu.form.perms.placeholder': 'Please enter permission characters',
+  'system.menu.form.remark.placeholder': 'Please enter a comment',
+  'system.menu.form.parent_id.placeholder': 'Top',
+  'system.menu.form.path.help':
+    'The access route address, such as: `admin`, if the external network address requires internal link access, it starts with `http(s)://`',
+  'system.menu.form.component.help':
+    'The access route address, the access component path, such as: `/log/login/index.vue`, defaults to the `views` directory',
+  'system.menu.form.perms.help':
+    'At present, the role menu authentication is being used, which will be used as a server-side API authentication, such as `system:admin:list`, and the `,` (comma) interval is used when multiple permissions, please modify it carefully',
   // button
   'system.menu.button.create': 'New',
   'system.menu.button.collapse': 'Expand/collapse',

@@ -9,6 +9,19 @@ export default {
   'system.menu.form.selectDefault': '全部',
   'system.menu.form.search': '搜索',
   'system.menu.form.reset': '重置',
+  'system.menu.form.title.placeholder': '请输入标题',
+  'system.menu.form.path.name': '请输入路由名称',
+  'system.menu.form.path.placeholder': '请输入路由路径',
+  'system.menu.form.component.placeholder': '请输入组件路径',
+  'system.menu.form.perms.placeholder': '请输入权限字符',
+  'system.menu.form.remark.placeholder': '请输入备注',
+  'system.menu.form.parent_id.placeholder': '顶级',
+  'system.menu.form.path.help':
+    '访问的路由地址，如：`admin`，如外网地址需内链访问则以`http(s)://`开头',
+  'system.menu.form.component.help':
+    '访问的路由地址，访问的组件路径，如：`/log/login/index.vue`，默认在`views`目录下',
+  'system.menu.form.perms.help':
+    '当前正在使用角色菜单验权，将作为 server 端 API 验权使用，如`system:admin:list`，多个权限时使用 `,`(英文逗号) 间隔，请谨慎修改',
   // button
   'system.menu.button.create': '新增',
   'system.menu.button.collapse': '展开/收起',

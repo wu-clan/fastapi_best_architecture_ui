@@ -25,6 +25,8 @@ export default {
   'navbar.action.locale': '切换为中文',
   'modal.title.tips': '温馨提示',
   'modal.title.tips.delete': '确定要删除吗？',
+  'switch.open': '开启',
+  'switch.close': '关闭',
   ...localeSettings,
   ...localeMessageBox,
   ...localeLogin,

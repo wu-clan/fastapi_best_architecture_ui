@@ -49,7 +49,7 @@
                 </template>
                 {{ $t('system.menu.form.search') }}
               </a-button>
-              <a-button @click="reset">
+              <a-button @click="resetSelect">
                 <template #icon>
                   <icon-refresh />
                 </template>
@@ -60,7 +60,7 @@
         </a-row>
         <a-divider />
         <a-space :size="'medium'">
-          <a-button type="primary" @click="NewMenu">
+          <a-button type="primary" @click="NewMenu()">
             <template #icon>
               <icon-plus />
             </template>
@@ -111,15 +111,15 @@
                 {{ $t(`system.menu.form.status.${record.status}`) }}
               </a-tag>
             </template>
-            <template #operate>
+            <template #operate="{ record }">
               <a-space>
-                <a-link @click="NewMenu">
+                <a-link @click="NewMenu(record.id)">
                   {{ $t(`system.menu.columns.new`) }}
                 </a-link>
-                <a-link @click="EditMenu">
+                <a-link @click="EditMenu(record.id)">
                   {{ $t(`system.menu.columns.edit`) }}
                 </a-link>
-                <a-link :status="'danger'" @click="DeleteMenu">
+                <a-link :status="'danger'" @click="DeleteMenu(record.id)">
                   {{ $t(`system.menu.columns.delete`) }}
                 </a-link>
               </a-space>
@@ -138,7 +138,7 @@
       @ok="submitNewOrEdit"
       @cancel="cancelReq"
     >
-      <a-form>
+      <a-form :model="form">
         <a-form-item :label="$t('system.menu.columns.type')" field="menu_type">
           <a-radio-group v-model:model-value="menuType">
             <a-radio :value="0">
@@ -156,14 +156,24 @@
           :label="$t('system.menu.columns.parent_name')"
           field="parent_id"
         >
-          <a-select></a-select>
+          <a-tree-select
+            v-model:model-value="form.parent_id"
+            :placeholder="$t('system.menu.form.parent_id.placeholder')"
+            :data="treeSelectData"
+            :allow-search="true"
+            :allow-clear="true"
+            :field-names="selectTreeFieldNames"
+          ></a-tree-select>
         </a-form-item>
         <a-form-item
           :label="$t('system.menu.columns.title')"
           field="title"
           :required="true"
         >
-          <a-input></a-input>
+          <a-input
+            v-model="form.title"
+            :placeholder="$t('system.menu.form.title.placeholder')"
+          ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
@@ -171,7 +181,10 @@
           field="name"
           :required="true"
         >
-          <a-input></a-input>
+          <a-input
+            v-model="form.name"
+            :placeholder="$t('system.menu.form.name.placeholder')"
+          ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
@@ -184,25 +197,40 @@
           v-if="menuType === 0 || menuType === 1"
           :label="$t('system.menu.columns.path')"
           field="path"
+          :tooltip="$t('system.menu.form.path.help')"
         >
-          <a-input></a-input>
+          <a-input
+            v-model="form.path"
+            :placeholder="$t('system.menu.form.path.placeholder')"
+          ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 1"
           :label="$t('system.menu.columns.component')"
           field="component"
+          :tooltip="$t('system.menu.form.component.help')"
         >
-          <a-input></a-input>
+          <a-input
+            v-model="form.component"
+            :placeholder="$t('system.menu.form.component.placeholder')"
+          ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 1 || menuType === 2"
           :label="$t('system.menu.columns.perms')"
           field="perms"
+          :tooltip="$t('system.menu.form.perms.help')"
         >
-          <a-input></a-input>
+          <a-input
+            v-model="form.perms"
+            :placeholder="$t('system.menu.form.perms.placeholder')"
+          ></a-input>
         </a-form-item>
         <a-form-item :label="$t('system.menu.columns.remark')" field="remark">
-          <a-textarea></a-textarea>
+          <a-textarea
+            v-model="form.remark"
+            :placeholder="$t('system.menu.form.remark.placeholder')"
+          ></a-textarea>
         </a-form-item>
         <a-form-item
           v-if="menuType === 1"
@@ -210,7 +238,12 @@
           field="cache"
           :required="true"
         >
-          <a-switch />
+          <a-switch
+            v-model:model-value="form.cache"
+            v-model="switchCache"
+            :checked-text="$t('switch.open')"
+            :unchecked-text="$t('switch.close')"
+          />
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
@@ -218,7 +251,12 @@
           field="show"
           :required="true"
         >
-          <a-switch />
+          <a-switch
+            v-model:model-value="form.show"
+            v-model="switchShow"
+            :checked-text="$t('switch.open')"
+            :unchecked-text="$t('switch.close')"
+          />
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
@@ -226,7 +264,12 @@
           field="status"
           :required="true"
         >
-          <a-switch />
+          <a-switch
+            v-model:model-value="form.status"
+            v-model="switchStatus"
+            :checked-text="$t('switch.open')"
+            :unchecked-text="$t('switch.close')"
+          />
         </a-form-item>
         <a-form-item
           :label="$t('system.menu.columns.sort')"
@@ -234,6 +277,7 @@
           :required="true"
         >
           <a-input-number
+            v-model:model-value="form.sort"
             :placeholder="$t('system.menu.columns.sort')"
             :default-value="0"
             :mode="'button'"
@@ -263,16 +307,27 @@
 
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
-  import { computed, ref, watch } from 'vue';
-  import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
+  import { computed, reactive, ref, watch } from 'vue';
+  import {
+    Message,
+    SelectOptionData,
+    TableColumnData,
+    TreeFieldNames,
+  } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
   import {
+    createSysMenu,
+    deleteSysMenu,
+    querySysMenuDetail,
     querySysMenuTree,
-    SysMenuRecord,
+    SysMenuReq,
     SysMenuTreeParams,
+    SysMenuTreeRes,
+    updateSysMenu,
   } from '@/api/menu';
   import { cloneDeep } from 'lodash';
+  import { treeSelectDataType } from '@/types/global';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -301,19 +356,27 @@
   // 表格
   const cloneColumns = ref<Column[]>([]);
   const showColumns = ref<Column[]>([]);
-  const renderData = ref<SysMenuRecord[]>([]);
+  const renderData = ref<SysMenuTreeRes[]>([]);
   const size = ref<SizeProps>('medium');
   const tableRef = ref();
   const expandAll = ref<boolean>(false);
-  const NewMenu = () => {
+  const operateRow = ref<number>(0);
+  const NewMenu = (pk?: number) => {
+    buttonStatus.value = 'new';
     drawerTitle.value = t('system.menu.columns.new.drawer');
+    form.parent_id = pk;
     openNewOrEdit.value = true;
   };
-  const EditMenu = () => {
+  const EditMenu = (pk: number) => {
+    buttonStatus.value = 'edit';
+    operateRow.value = pk;
     drawerTitle.value = t('system.menu.columns.edit.drawer');
+    resetForm();
+    fetchMenuDetail(pk);
     openNewOrEdit.value = true;
   };
-  const DeleteMenu = () => {
+  const DeleteMenu = (pk: number) => {
+    operateRow.value = pk;
     drawerTitle.value = t('system.menu.columns.delete.drawer');
     openDelete.value = true;
   };
@@ -381,40 +444,121 @@
   const openNewOrEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
   const drawerTitle = ref<string>('');
-  const submitNewOrEdit = ref<() => void>(() => {});
-  const submitDelete = ref<() => void>(() => {});
   const cancelReq = () => {
     openNewOrEdit.value = false;
     openDelete.value = false;
   };
   const menuType = ref<number>(1);
+  const formDefaultValues: SysMenuReq = {
+    title: '',
+    name: '',
+    parent_id: undefined,
+    sort: 0,
+    icon: undefined,
+    path: undefined,
+    menu_type: menuType.value,
+    component: undefined,
+    perms: undefined,
+    status: 1,
+    show: 1,
+    cache: 1,
+    remark: undefined,
+  };
+  const form = reactive<SysMenuReq>({ ...formDefaultValues });
+  const switchStatus = ref<boolean>(Boolean(form.status));
+  const switchShow = ref<boolean>(Boolean(form.show));
+  const switchCache = ref<boolean>(Boolean(form.cache));
+  const treeSelectData = ref();
+  const selectTreeFieldNames: TreeFieldNames = {
+    key: 'id',
+    title: 'title',
+    children: 'children',
+    icon: 'iconRender',
+  };
+  const buttonStatus = ref<string>();
 
-  // 请求数据
-  const fetchData = async (params: SysMenuTreeParams = {}) => {
+  // 提交按钮
+  const submitNewOrEdit = async () => {
+    if (buttonStatus.value === 'new') {
+      await createSysMenu(form).then((response) => {
+        if (response.code === 200) {
+          Message.success(response.msg);
+          cancelReq();
+          fetchMenuTree();
+        } else {
+          Message.error(response.msg);
+        }
+      });
+    } else {
+      await updateSysMenu(operateRow.value, form).then((response) => {
+        if (response.code === 200) {
+          Message.success(response.msg);
+          cancelReq();
+          fetchMenuTree();
+        } else {
+          Message.error(response.msg);
+        }
+      });
+    }
+  };
+
+  // 删除按钮
+  const submitDelete = async () => {
+    await deleteSysMenu(operateRow.value).then((response) => {
+      if (response.code === 200) {
+        Message.success(response.msg);
+        cancelReq();
+        fetchMenuTree();
+      } else {
+        Message.error(response.msg);
+      }
+    });
+  };
+
+  // 请求目录树
+  const fetchMenuTree = async (params: SysMenuTreeParams = {}) => {
     setLoading(true);
     try {
-      renderData.value = await querySysMenuTree(params);
+      const res = await querySysMenuTree(params);
+      renderData.value = res;
+      treeSelectData.value = transformMenuData(res);
     } catch (error) {
       // console.log(error);
     } finally {
       setLoading(false);
     }
   };
-  fetchData();
+  fetchMenuTree();
 
-  // 事件: 搜索
+  // 请求目录详情
+  const fetchMenuDetail = async (pk: number) => {
+    setLoading(true);
+    try {
+      const res = await querySysMenuDetail(pk);
+      Object.assign(form, res);
+      switchStatus.value = Boolean(form.status);
+      switchShow.value = Boolean(form.show);
+      switchCache.value = Boolean(form.cache);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 搜索
   const search = () => {
-    fetchData({
+    fetchMenuTree({
       ...formModel.value,
     } as unknown as SysMenuTreeParams);
   };
 
-  // 事件: 重置
-  const reset = () => {
+  // 重置
+  const resetSelect = () => {
     formModel.value = generateFormModel();
   };
 
-  // 事件: 重置状态
+  // 重置状态
   const resetStatus = () => {
     formModel.value.status = undefined;
   };
@@ -423,6 +567,27 @@
   const expand = () => {
     expandAll.value = !expandAll.value;
     tableRef.value.expandAll(expandAll.value);
+  };
+
+  // 重置表单
+  const resetForm = () => {
+    Object.assign(form, formDefaultValues);
+  };
+
+  // 转换菜单数据结构
+  const transformMenuData = (data: SysMenuTreeRes[]) => {
+    const result: treeSelectDataType[] = [
+      {
+        id: null,
+        title: '顶级',
+        disabled: true,
+        children: [],
+      },
+    ];
+    data.forEach((item) => {
+      result[0].children.push(item);
+    });
+    return result;
   };
 
   // 监听columns变化

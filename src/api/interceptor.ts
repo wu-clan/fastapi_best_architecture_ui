@@ -1,9 +1,9 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
 import { getToken } from '@/utils/auth';
+import { Message } from '@arco-design/web-vue';
 
-export interface HttpResponse<T = unknown> {
-  status: number;
+export interface HttpResponse<T = any> {
   msg: string;
   code: number;
   data: T;
@@ -41,7 +41,23 @@ axios.interceptors.request.use(
 // add response interceptors
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
-    const { data } = response.data;
+    const { data }: { data: HttpResponse } = response.data;
+    const { msg }: { msg: string } = data;
+    const { code }: { code: number } = data;
+
+    if (code === 401) {
+      Message.error({
+        content: msg,
+        duration: 5 * 1000,
+      });
+      // TODO: token 监听，自动刷新，重新登录
+    } else if (code !== 200) {
+      Message.error({
+        content: msg,
+        duration: 5 * 1000,
+      });
+    }
+
     return data || response.data;
   },
   (error) => {
@@ -49,13 +65,20 @@ axios.interceptors.response.use(
       msg: '请求失败，请稍后再试',
       code: 500,
     };
+
     if (error.response) {
       res = error.response.data;
     } else if (error.message === 'Network Error') {
-      res.msg = '网络连接断开';
+      res.msg = '服务器连接异常，请稍后重试';
     } else if (error.code === 'ECONNABORTED') {
       res.msg = '请求超时，请稍后重试';
     }
+
+    Message.error({
+      content: res.msg,
+      duration: 5 * 1000,
+    });
+
     return Promise.reject(res);
   }
 );
