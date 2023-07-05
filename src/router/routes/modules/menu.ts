@@ -2,8 +2,8 @@ import { AppRouteRecordRaw } from '@/router/routes/types';
 import { DEFAULT_LAYOUT } from '@/router/routes/base';
 
 const SYSTEM: AppRouteRecordRaw = {
-  path: '/system',
-  name: 'system',
+  path: '/admin',
+  name: 'admin',
   component: DEFAULT_LAYOUT,
   meta: {
     locale: 'menu.system',
@@ -13,9 +13,9 @@ const SYSTEM: AppRouteRecordRaw = {
   },
   children: [
     {
-      path: 'sysmenu',
+      path: 'sys-menu',
       name: 'SysMenu',
-      component: () => import('@/views/system/menu/index.vue'),
+      component: () => import('@/views/admin/menu/index.vue'),
       meta: {
         locale: 'menu.system.sysMenu',
         requiresAuth: true,

@@ -14,24 +14,24 @@
               <a-row>
                 <a-col :span="12">
                   <a-form-item
-                    :label="$t('system.menu.form.name')"
+                    :label="$t('admin.menu.form.name')"
                     field="name"
                   >
                     <a-input
                       v-model="formModel.title"
-                      :placeholder="$t('system.menu.form.name.placeholder')"
+                      :placeholder="$t('admin.menu.form.name.placeholder')"
                     />
                   </a-form-item>
                 </a-col>
                 <a-col :span="12">
                   <a-form-item
-                    :label="$t('system.menu.form.status')"
+                    :label="$t('admin.menu.form.status')"
                     field="status"
                   >
                     <a-select
                       v-model="formModel.status"
                       :options="statusOptions"
-                      :placeholder="$t('system.menu.form.selectDefault')"
+                      :placeholder="$t('admin.menu.form.selectDefault')"
                       allow-clear
                       @clear="resetStatus"
                     />
@@ -47,13 +47,13 @@
                 <template #icon>
                   <icon-search />
                 </template>
-                {{ $t('system.menu.form.search') }}
+                {{ $t('admin.menu.form.search') }}
               </a-button>
               <a-button @click="resetSelect">
                 <template #icon>
                   <icon-refresh />
                 </template>
-                {{ $t('system.menu.form.reset') }}
+                {{ $t('admin.menu.form.reset') }}
               </a-button>
             </a-space>
           </a-col>
@@ -64,10 +64,10 @@
             <template #icon>
               <icon-plus />
             </template>
-            {{ $t('system.menu.button.create') }}
+            {{ $t('admin.menu.button.create') }}
           </a-button>
           <a-button @click="expand">
-            {{ $t('system.menu.button.collapse') }}
+            {{ $t('admin.menu.button.collapse') }}
           </a-button>
         </a-space>
         <div class="content">
@@ -83,17 +83,17 @@
           >
             <template #menu_type="{ record }">
               <a-tag v-if="record.menu_type === 0" :color="`orange`" bordered>
-                {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
+                {{ $t(`admin.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
               <a-tag
                 v-else-if="record.menu_type === 1"
                 :color="`purple`"
                 bordered
               >
-                {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
+                {{ $t(`admin.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
               <a-tag v-else :color="`blue`" bordered>
-                {{ $t(`system.menu.columns.type.${record.menu_type}`) }}
+                {{ $t(`admin.menu.columns.type.${record.menu_type}`) }}
               </a-tag>
             </template>
             <template #icon="{ record }">
@@ -105,22 +105,22 @@
             </template>
             <template #status="{ record }">
               <a-tag v-if="record.status === 1" :color="`green`" bordered>
-                {{ $t(`system.menu.form.status.${record.status}`) }}
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
               </a-tag>
               <a-tag v-else :color="`red`" bordered>
-                {{ $t(`system.menu.form.status.${record.status}`) }}
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
               </a-tag>
             </template>
             <template #operate="{ record }">
               <a-space>
                 <a-link @click="NewMenu(record.id)">
-                  {{ $t(`system.menu.columns.new`) }}
+                  {{ $t(`admin.menu.columns.new`) }}
                 </a-link>
                 <a-link @click="EditMenu(record.id)">
-                  {{ $t(`system.menu.columns.edit`) }}
+                  {{ $t(`admin.menu.columns.edit`) }}
                 </a-link>
                 <a-link :status="'danger'" @click="DeleteMenu(record.id)">
-                  {{ $t(`system.menu.columns.delete`) }}
+                  {{ $t(`admin.menu.columns.delete`) }}
                 </a-link>
               </a-space>
             </template>
@@ -139,26 +139,26 @@
       @cancel="cancelReq"
     >
       <a-form :model="form">
-        <a-form-item :label="$t('system.menu.columns.type')" field="menu_type">
+        <a-form-item :label="$t('admin.menu.columns.type')" field="menu_type">
           <a-radio-group v-model:model-value="menuType">
             <a-radio :value="0">
-              {{ $t('system.menu.columns.type.0') }}
+              {{ $t('admin.menu.columns.type.0') }}
             </a-radio>
             <a-radio :value="1" :default-checked="true">
-              {{ $t('system.menu.columns.type.1') }}
+              {{ $t('admin.menu.columns.type.1') }}
             </a-radio>
             <a-radio :value="2">
-              {{ $t('system.menu.columns.type.2') }}
+              {{ $t('admin.menu.columns.type.2') }}
             </a-radio>
           </a-radio-group>
         </a-form-item>
         <a-form-item
-          :label="$t('system.menu.columns.parent_name')"
+          :label="$t('admin.menu.columns.parent_name')"
           field="parent_id"
         >
           <a-tree-select
             v-model:model-value="form.parent_id"
-            :placeholder="$t('system.menu.form.parent_id.placeholder')"
+            :placeholder="$t('admin.menu.form.parent_id.placeholder')"
             :data="treeSelectData"
             :allow-search="true"
             :allow-clear="true"
@@ -166,75 +166,75 @@
           ></a-tree-select>
         </a-form-item>
         <a-form-item
-          :label="$t('system.menu.columns.title')"
+          :label="$t('admin.menu.columns.title')"
           field="title"
           :required="true"
         >
           <a-input
             v-model="form.title"
-            :placeholder="$t('system.menu.form.title.placeholder')"
+            :placeholder="$t('admin.menu.form.title.placeholder')"
           ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
-          :label="$t('system.menu.columns.name')"
+          :label="$t('admin.menu.columns.name')"
           field="name"
           :required="true"
         >
           <a-input
             v-model="form.name"
-            :placeholder="$t('system.menu.form.name.placeholder')"
+            :placeholder="$t('admin.menu.form.name.placeholder')"
           ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
-          :label="$t('system.menu.columns.icon')"
+          :label="$t('admin.menu.columns.icon')"
           field="icon"
         >
           <a-select></a-select>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
-          :label="$t('system.menu.columns.path')"
+          :label="$t('admin.menu.columns.path')"
           field="path"
-          :tooltip="$t('system.menu.form.path.help')"
+          :tooltip="$t('admin.menu.form.path.help')"
         >
           <a-input
             v-model="form.path"
-            :placeholder="$t('system.menu.form.path.placeholder')"
+            :placeholder="$t('admin.menu.form.path.placeholder')"
           ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 1"
-          :label="$t('system.menu.columns.component')"
+          :label="$t('admin.menu.columns.component')"
           field="component"
-          :tooltip="$t('system.menu.form.component.help')"
+          :tooltip="$t('admin.menu.form.component.help')"
         >
           <a-input
             v-model="form.component"
-            :placeholder="$t('system.menu.form.component.placeholder')"
+            :placeholder="$t('admin.menu.form.component.placeholder')"
           ></a-input>
         </a-form-item>
         <a-form-item
           v-if="menuType === 1 || menuType === 2"
-          :label="$t('system.menu.columns.perms')"
+          :label="$t('admin.menu.columns.perms')"
           field="perms"
-          :tooltip="$t('system.menu.form.perms.help')"
+          :tooltip="$t('admin.menu.form.perms.help')"
         >
           <a-input
             v-model="form.perms"
-            :placeholder="$t('system.menu.form.perms.placeholder')"
+            :placeholder="$t('admin.menu.form.perms.placeholder')"
           ></a-input>
         </a-form-item>
-        <a-form-item :label="$t('system.menu.columns.remark')" field="remark">
+        <a-form-item :label="$t('admin.menu.columns.remark')" field="remark">
           <a-textarea
             v-model="form.remark"
-            :placeholder="$t('system.menu.form.remark.placeholder')"
+            :placeholder="$t('admin.menu.form.remark.placeholder')"
           ></a-textarea>
         </a-form-item>
         <a-form-item
           v-if="menuType === 1"
-          :label="$t('system.menu.columns.cache')"
+          :label="$t('admin.menu.columns.cache')"
           field="cache"
           :required="true"
         >
@@ -247,7 +247,7 @@
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
-          :label="$t('system.menu.columns.show')"
+          :label="$t('admin.menu.columns.show')"
           field="show"
           :required="true"
         >
@@ -260,7 +260,7 @@
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
-          :label="$t('system.menu.columns.status')"
+          :label="$t('admin.menu.columns.status')"
           field="status"
           :required="true"
         >
@@ -272,13 +272,13 @@
           />
         </a-form-item>
         <a-form-item
-          :label="$t('system.menu.columns.sort')"
+          :label="$t('admin.menu.columns.sort')"
           field="sort"
           :required="true"
         >
           <a-input-number
             v-model:model-value="form.sort"
-            :placeholder="$t('system.menu.columns.sort')"
+            :placeholder="$t('admin.menu.columns.sort')"
             :default-value="0"
             :mode="'button'"
             style="width: 35%"
@@ -344,11 +344,11 @@
   const formModel = ref(generateFormModel());
   const statusOptions = computed<SelectOptionData[]>(() => [
     {
-      label: t('system.menu.form.status.1'),
+      label: t('admin.menu.form.status.1'),
       value: 1,
     },
     {
-      label: t('system.menu.form.status.0'),
+      label: t('admin.menu.form.status.0'),
       value: 0,
     },
   ]);
@@ -363,78 +363,78 @@
   const operateRow = ref<number>(0);
   const NewMenu = (pk?: number) => {
     buttonStatus.value = 'new';
-    drawerTitle.value = t('system.menu.columns.new.drawer');
+    drawerTitle.value = t('admin.menu.columns.new.drawer');
     form.parent_id = pk;
     openNewOrEdit.value = true;
   };
   const EditMenu = async (pk: number) => {
     buttonStatus.value = 'edit';
     operateRow.value = pk;
-    drawerTitle.value = t('system.menu.columns.edit.drawer');
+    drawerTitle.value = t('admin.menu.columns.edit.drawer');
     resetForm();
     await fetchMenuDetail(pk);
     openNewOrEdit.value = true;
   };
   const DeleteMenu = (pk: number) => {
     operateRow.value = pk;
-    drawerTitle.value = t('system.menu.columns.delete.drawer');
+    drawerTitle.value = t('admin.menu.columns.delete.drawer');
     openDelete.value = true;
   };
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: t('system.menu.columns.title'),
+      title: t('admin.menu.columns.title'),
       dataIndex: 'title',
       slotName: 'title',
     },
     {
-      title: t('system.menu.columns.name'),
+      title: t('admin.menu.columns.name'),
       dataIndex: 'name',
       slotName: 'name',
     },
     {
-      title: t('system.menu.columns.type'),
+      title: t('admin.menu.columns.type'),
       dataIndex: 'menu_type',
       slotName: 'menu_type',
     },
     {
-      title: t('system.menu.columns.icon'),
+      title: t('admin.menu.columns.icon'),
       dataIndex: 'icon',
       slotName: 'icon',
       align: 'center',
     },
     {
-      title: t('system.menu.columns.perms'),
+      title: t('admin.menu.columns.perms'),
       dataIndex: 'perms',
       slotName: 'perms',
     },
     {
-      title: t('system.menu.columns.sort'),
+      title: t('admin.menu.columns.sort'),
       dataIndex: 'sort',
       slotName: 'sort',
     },
     {
-      title: t('system.menu.columns.show'),
+      title: t('admin.menu.columns.show'),
       dataIndex: 'show',
       slotName: 'show',
       align: 'center',
     },
     {
-      title: t('system.menu.columns.status'),
+      title: t('admin.menu.columns.status'),
       dataIndex: 'status',
       slotName: 'status',
     },
     {
-      title: t('system.menu.columns.remark'),
+      title: t('admin.menu.columns.remark'),
       dataIndex: 'remark',
       slotName: 'remark',
     },
     {
-      title: t('system.menu.columns.created_time'),
+      title: t('admin.menu.columns.created_time'),
       dataIndex: 'created_time',
       slotName: 'created_time',
     },
     {
-      title: t('system.menu.columns.operate'),
+      title: t('admin.menu.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
     },
