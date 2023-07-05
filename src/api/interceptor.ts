@@ -42,8 +42,8 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
     const { data }: { data: HttpResponse } = response.data;
-    const { msg }: { msg: string } = data;
-    const { code }: { code: number } = data;
+    const { msg }: { msg: string } = response.data;
+    const { code }: { code: number } = response.data;
 
     if (code === 401) {
       Message.error({

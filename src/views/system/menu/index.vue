@@ -485,8 +485,6 @@
           Message.success(response.msg);
           cancelReq();
           fetchMenuTree();
-        } else {
-          Message.error(response.msg);
         }
       });
     } else {
@@ -495,8 +493,6 @@
           Message.success(response.msg);
           cancelReq();
           fetchMenuTree();
-        } else {
-          Message.error(response.msg);
         }
       });
     }
@@ -509,8 +505,6 @@
         Message.success(response.msg);
         cancelReq();
         fetchMenuTree();
-      } else {
-        Message.error(response.msg);
       }
     });
   };
