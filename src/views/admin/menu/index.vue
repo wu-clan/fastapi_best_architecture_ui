@@ -527,7 +527,7 @@
       setLoading(false);
     }
   };
-  await fetchMenuTree();
+  fetchMenuTree();
 
   // 请求目录详情
   const fetchMenuDetail = async (pk: number) => {

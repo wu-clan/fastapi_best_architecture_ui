@@ -209,7 +209,7 @@
       setLoading(false);
     }
   };
-  await fetchData();
+  fetchData();
 
   // 事件: 分页
   const onPageChange = async (current: number) => {
