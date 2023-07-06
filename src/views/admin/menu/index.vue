@@ -132,10 +132,11 @@
       :title="drawerTitle"
       :closable="false"
       :width="550"
+      :on-before-ok="beforeSubmit"
       @ok="submitNewOrEdit"
       @cancel="cancelReq"
     >
-      <a-form :model="form">
+      <a-form ref="formRef" :model="form">
         <a-form-item :label="$t('admin.menu.columns.type')" field="menu_type">
           <a-radio-group v-model:model-value="menuType">
             <a-radio :value="0">
@@ -168,7 +169,7 @@
           :rules="[
             { required: true, message: $t('admin.menu.form.name.help') },
           ]"
-          feedback
+          :feedback="true"
         >
           <a-input
             v-model="form.title"
@@ -182,7 +183,7 @@
           :rules="[
             { required: true, message: $t('admin.menu.form.name.help') },
           ]"
-          feedback
+          :feedback="true"
         >
           <a-input
             v-model="form.name"
@@ -481,6 +482,16 @@
     icon: 'iconRender',
   };
   const buttonStatus = ref<string>();
+  const formRef = ref();
+
+  // 表单校验
+  const beforeSubmit = async (done: any) => {
+    const res = await formRef.value?.validate();
+    if (!res) {
+      done(true);
+    }
+    done(false);
+  };
 
   // 提交按钮
   const submitNewOrEdit = async () => {
@@ -489,17 +500,16 @@
       if (buttonStatus.value === 'new') {
         await createSysMenu(form);
         cancelReq();
-        await fetchMenuTree();
         Message.success(t('submit.create.success'));
       } else {
         await updateSysMenu(operateRow.value, form);
         cancelReq();
-        await fetchMenuTree();
         Message.success(t('submit.update.success'));
       }
     } catch (error) {
       // console.log(error);
     } finally {
+      await fetchMenuTree();
       setLoading(false);
     }
   };
@@ -510,11 +520,11 @@
     try {
       await deleteSysMenu(operateRow.value);
       cancelReq();
-      await fetchMenuTree();
       Message.success(t('submit.delete.success'));
     } catch (error) {
       // console.log(error);
     } finally {
+      await fetchMenuTree();
       setLoading(false);
     }
   };
