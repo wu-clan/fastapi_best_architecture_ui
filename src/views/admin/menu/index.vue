@@ -165,7 +165,10 @@
         <a-form-item
           :label="$t('admin.menu.columns.title')"
           field="title"
-          :required="true"
+          :rules="[
+            { required: true, message: $t('admin.menu.form.name.help') },
+          ]"
+          feedback
         >
           <a-input
             v-model="form.title"
@@ -176,7 +179,10 @@
           v-if="menuType === 0 || menuType === 1"
           :label="$t('admin.menu.columns.name')"
           field="name"
-          :required="true"
+          :rules="[
+            { required: true, message: $t('admin.menu.form.name.help') },
+          ]"
+          feedback
         >
           <a-input
             v-model="form.name"
