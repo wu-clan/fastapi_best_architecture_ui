@@ -138,7 +138,10 @@
     >
       <a-form ref="formRef" :model="form">
         <a-form-item :label="$t('admin.menu.columns.type')" field="menu_type">
-          <a-radio-group v-model:model-value="menuType">
+          <a-radio-group
+            v-model="form.menu_type"
+            v-model:model-value="menuType"
+          >
             <a-radio :value="0">
               {{ $t('admin.menu.columns.type.0') }}
             </a-radio>
@@ -371,6 +374,7 @@
     buttonStatus.value = 'new';
     drawerTitle.value = t('admin.menu.columns.new.drawer');
     resetForm(formDefaultValues);
+    menuType.value = 1;
     form.parent_id = pk;
     openNewOrEdit.value = true;
   };
@@ -462,7 +466,7 @@
     sort: 0,
     icon: undefined,
     path: undefined,
-    menu_type: menuType.value,
+    menu_type: 1,
     component: undefined,
     perms: undefined,
     status: 1,
@@ -550,6 +554,7 @@
     try {
       const res = await querySysMenuDetail(pk);
       resetForm(res);
+      menuType.value = res.menu_type;
       switchStatus.value = Boolean(form.status);
       switchShow.value = Boolean(form.show);
       switchCache.value = Boolean(form.cache);
