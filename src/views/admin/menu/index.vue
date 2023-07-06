@@ -189,15 +189,7 @@
           field="icon"
           prop="menuIcon"
         >
-          <a-popover trigger="click" position="bottom">
-            <!--TODO: 自定义 icon 显示组件-->
-            <a-input
-              v-model="form.icon"
-              :placeholder="$t('admin.menu.form.icon.placeholder')"
-            >
-              {{ form.icon }}
-            </a-input>
-          </a-popover>
+          <IconPicker v-model:icon-value="form.icon"></IconPicker>
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
@@ -313,6 +305,7 @@
 
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
+  import IconPicker from '@/components/icon-picker/index.vue';
   import { computed, reactive, ref, watch } from 'vue';
   import {
     Message,

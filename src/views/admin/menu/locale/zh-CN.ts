@@ -12,7 +12,6 @@ export default {
   'admin.menu.form.title.placeholder': '请输入标题',
   'admin.menu.form.path.name': '请输入路由名称',
   'admin.menu.form.path.placeholder': '请输入路由路径',
-  'admin.menu.form.icon.placeholder': '点击选择图标',
   'admin.menu.form.component.placeholder': '请输入组件路径',
   'admin.menu.form.perms.placeholder': '请输入权限字符',
   'admin.menu.form.remark.placeholder': '请输入备注',

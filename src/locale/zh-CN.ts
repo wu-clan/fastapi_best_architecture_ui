@@ -3,6 +3,7 @@ import localeLogin from '@/views/login/locale/zh-CN';
 import localeMenu from '@/views/admin/menu/locale/zh-CN';
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 import localeLogLogin from '@/views/log/login/locale/zh-CN';
+import localeIconPicker from '@/components/icon-picker/locale/zh-CN';
 import localeSettings from './zh-CN/settings';
 
 export default {
@@ -36,4 +37,5 @@ export default {
   ...localeWorkplace,
   ...localeLogLogin,
   ...localeMenu,
+  ...localeIconPicker,
 };
