@@ -494,6 +494,7 @@
     if (!res) {
       done(true);
     }
+    // 关闭对话框
     done(false);
   };
 
@@ -505,15 +506,16 @@
         await createSysMenu(form);
         cancelReq();
         Message.success(t('submit.create.success'));
+        await fetchMenuTree();
       } else {
         await updateSysMenu(operateRow.value, form);
         cancelReq();
         Message.success(t('submit.update.success'));
+        await fetchMenuTree();
       }
     } catch (error) {
       // console.log(error);
     } finally {
-      await fetchMenuTree();
       setLoading(false);
     }
   };
@@ -525,10 +527,12 @@
       await deleteSysMenu(operateRow.value);
       cancelReq();
       Message.success(t('submit.delete.success'));
+      await fetchMenuTree();
     } catch (error) {
+      openDelete.value = false;
       // console.log(error);
     } finally {
-      await fetchMenuTree();
+      openDelete.value = false;
       setLoading(false);
     }
   };
