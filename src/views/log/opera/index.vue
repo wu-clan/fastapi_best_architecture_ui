@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <a-layout style="padding: 0 18px">
-      <Breadcrumb :items="[$t('menu.log'), $t('menu.log.login')]" />
-      <a-card :title="$t('menu.log.login')" class="general-card">
+      <Breadcrumb :items="[$t('menu.log'), $t('menu.log.opera')]" />
+      <a-card :title="$t('menu.log.opera')" class="general-card">
         <a-row>
           <a-col :flex="62">
             <a-form
@@ -14,32 +14,32 @@
               <a-row>
                 <a-col :span="8">
                   <a-form-item
-                    :label="$t('log.login.form.username')"
+                    :label="$t('log.opera.form.username')"
                     field="username"
                   >
                     <a-input
                       v-model="formModel.username"
-                      :placeholder="$t('log.login.form.username.placeholder')"
+                      :placeholder="$t('log.opera.form.username.placeholder')"
                     />
                   </a-form-item>
                 </a-col>
                 <a-col :span="8">
-                  <a-form-item :label="$t('log.login.form.ip')" field="ip">
+                  <a-form-item :label="$t('log.opera.form.ip')" field="ip">
                     <a-input
                       v-model="formModel.ip"
-                      :placeholder="$t('log.login.form.ip.placeholder')"
+                      :placeholder="$t('log.opera.form.ip.placeholder')"
                     />
                   </a-form-item>
                 </a-col>
                 <a-col :span="8">
                   <a-form-item
-                    :label="$t('log.login.form.status')"
+                    :label="$t('log.opera.form.status')"
                     field="status"
                   >
                     <a-select
                       v-model="formModel.status"
                       :options="statusOptions"
-                      :placeholder="$t('log.login.form.selectDefault')"
+                      :placeholder="$t('log.opera.form.selectDefault')"
                       allow-clear
                       @clear="resetStatus"
                     />
@@ -55,13 +55,13 @@
                 <template #icon>
                   <icon-search />
                 </template>
-                {{ $t('log.login.form.search') }}
+                {{ $t('log.opera.form.search') }}
               </a-button>
               <a-button @click="reset">
                 <template #icon>
                   <icon-refresh />
                 </template>
-                {{ $t('log.login.form.reset') }}
+                {{ $t('log.opera.form.reset') }}
               </a-button>
             </a-space>
           </a-col>
@@ -82,12 +82,46 @@
             <template #index="{ rowIndex }">
               {{ rowIndex + 1 }}
             </template>
+            <template #method="{ record }">
+              <a-tag
+                v-if="record.method === 'GET'"
+                :color="`arcoblue`"
+                bordered
+              >
+                {{ record.method }}
+              </a-tag>
+              <a-tag
+                v-else-if="record.method === 'POST'"
+                :color="`magenta`"
+                bordered
+              >
+                {{ record.method }}
+              </a-tag>
+              <a-tag
+                v-else-if="record.method === 'DELETE'"
+                :color="`red`"
+                bordered
+              >
+                {{ record.method }}
+              </a-tag>
+              <a-tag v-else :color="`cyan`" bordered>
+                {{ record.method }}
+              </a-tag>
+            </template>
+            <template #code="{ record }">
+              <a-tag v-if="record.code == 200" :color="`green`" bordered>
+                {{ record.code }}
+              </a-tag>
+              <a-tag v-else :color="`orange`" bordered>
+                {{ record.code }}
+              </a-tag>
+            </template>
             <template #status="{ record }">
               <a-tag v-if="record.status === 1" :color="`green`" bordered>
-                {{ $t(`log.login.form.status.${record.status}`) }}
+                {{ $t(`log.opera.form.status.${record.status}`) }}
               </a-tag>
               <a-tag v-else :color="`red`" bordered>
-                {{ $t(`log.login.form.status.${record.status}`) }}
+                {{ $t(`log.opera.form.status.${record.status}`) }}
               </a-tag>
             </template>
           </a-table>
@@ -104,11 +138,11 @@
   import useLoading from '@/hooks/loading';
   import { computed, reactive, ref, watch } from 'vue';
   import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
-  import { LoginLogParams, LoginLogRes, queryLoginLogList } from '@/api/log';
   import { useI18n } from 'vue-i18n';
   import { cloneDeep } from 'lodash';
   import { Pagination } from '@/types/global';
   import Footer from '@/components/footer/index.vue';
+  import { OperaLogParams, OperaLogRes, queryOperaLogList } from '@/api/log';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -124,7 +158,7 @@
   const { loading, setLoading } = useLoading(true);
   const cloneColumns = ref<Column[]>([]);
   const showColumns = ref<Column[]>([]);
-  const renderData = ref<LoginLogRes[]>([]);
+  const renderData = ref<OperaLogRes[]>([]);
   const formModel = ref(generateFormModel());
   const size = ref<SizeProps>('medium');
   const basePagination: Pagination = {
@@ -139,67 +173,139 @@
   });
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: t('log.login.columns.index'),
+      title: t('log.opera.columns.index'),
       dataIndex: 'index',
       slotName: 'index',
+      ellipsis: true,
+      tooltip: true,
+      width: 50,
     },
     {
-      title: t('log.login.columns.username'),
+      title: t('log.opera.columns.username'),
       dataIndex: 'username',
       slotName: 'username',
+      ellipsis: true,
+      tooltip: true,
+      width: 100,
     },
     {
-      title: t('log.login.columns.ip'),
+      title: t('log.opera.columns.method'),
+      dataIndex: 'method',
+      slotName: 'method',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: t('log.opera.columns.title'),
+      dataIndex: 'title',
+      slotName: 'title',
+      ellipsis: true,
+      tooltip: true,
+      width: 200,
+    },
+    {
+      title: t('log.opera.columns.path'),
+      dataIndex: 'path',
+      slotName: 'path',
+      ellipsis: true,
+      tooltip: true,
+      width: 200,
+    },
+    {
+      title: t('log.opera.columns.code'),
+      dataIndex: 'code',
+      slotName: 'code',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: t('log.opera.columns.ip'),
       dataIndex: 'ip',
       slotName: 'ip',
+      width: 120,
     },
     {
-      title: t('log.login.columns.browser'),
-      dataIndex: 'browser',
-      slotName: 'browser',
-    },
-    {
-      title: t('log.login.columns.device'),
-      dataIndex: 'device',
-      slotName: 'device',
-    },
-    {
-      title: t('log.login.columns.city'),
+      title: t('log.opera.columns.city'),
       dataIndex: 'city',
       slotName: 'city',
+      width: 100,
     },
     {
-      title: t('log.login.columns.status'),
+      title: t('log.opera.columns.browser'),
+      dataIndex: 'browser',
+      slotName: 'browser',
+      width: 150,
+    },
+    {
+      title: t('log.opera.columns.device'),
+      dataIndex: 'device',
+      slotName: 'device',
+      align: 'center',
+      width: 100,
+    },
+    {
+      title: t('log.opera.columns.status'),
       dataIndex: 'status',
       slotName: 'status',
+      align: 'center',
+      width: 100,
     },
     {
-      title: t('log.login.columns.msg'),
+      title: t('log.opera.columns.msg'),
       dataIndex: 'msg',
       slotName: 'msg',
+      ellipsis: true,
+      tooltip: true,
+      width: 180,
     },
     {
-      title: t('log.login.columns.login_time'),
-      dataIndex: 'created_time',
-      slotName: 'created_time',
+      title: t('log.opera.columns.args'),
+      dataIndex: 'args',
+      slotName: 'args',
+      ellipsis: true,
+      tooltip: true,
+      width: 200,
+    },
+    {
+      title: t('log.opera.columns.cost_time'),
+      dataIndex: 'cost_time',
+      slotName: 'cost_time',
+      width: 100,
+    },
+    {
+      title: t('log.opera.columns.opera_time'),
+      dataIndex: 'opera_time',
+      slotName: 'opera_time',
+      width: 180,
     },
   ]);
   const statusOptions = computed<SelectOptionData[]>(() => [
     {
-      label: t('log.login.form.status.1'),
+      label: t('log.opera.form.status.1'),
       value: 1,
     },
     {
-      label: t('log.login.form.status.0'),
+      label: t('log.opera.form.status.0'),
       value: 0,
     },
   ]);
 
   // 请求数据
-  const fetchData = async (params: LoginLogParams = { page: 1, size: 20 }) => {
+  const fetchData = async (params: OperaLogParams = { page: 1, size: 20 }) => {
     setLoading(true);
     try {
-      const data = await queryLoginLogList(params);
+      const data = await queryOperaLogList(params);
+      if (data.items.length !== 0) {
+        data.items.forEach((item) => {
+          if (item?.args) {
+            try {
+              item.args = JSON.stringify(item.args, null, 2);
+            } catch (error) {
+              // console.log(error);
+            }
+          }
+        });
+      }
       renderData.value = data.items;
       pagination.total = data.total;
       pagination.current = params.page;
@@ -226,7 +332,7 @@
   const search = async () => {
     await fetchData({
       ...formModel.value,
-    } as unknown as LoginLogParams);
+    } as unknown as OperaLogParams);
   };
 
   // 事件: 重置
@@ -255,7 +361,7 @@
 
 <script lang="ts">
   export default {
-    name: 'Login',
+    name: 'Opera',
   };
 </script>
 

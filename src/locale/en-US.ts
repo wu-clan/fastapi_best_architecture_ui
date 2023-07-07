@@ -4,6 +4,7 @@ import localeMenu from '@/views/admin/menu/locale/en-US';
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
 import localeLogLogin from '@/views/log/login/locale/en-US';
 import localeIconPicker from '@/components/icon-picker/locale/en-US';
+import localeLogOpera from '@/views/log/opera/locale/en-US';
 import localeSettings from './en-US/settings';
 
 export default {
@@ -38,4 +39,5 @@ export default {
   ...localeLogLogin,
   ...localeMenu,
   ...localeIconPicker,
+  ...localeLogOpera,
 };

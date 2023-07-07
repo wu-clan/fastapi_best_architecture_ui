@@ -22,6 +22,16 @@ const LOG: AppRouteRecordRaw = {
         roles: ['*'],
       },
     },
+    {
+      path: 'opera',
+      name: 'Opera',
+      component: () => import('@/views/log/opera/index.vue'),
+      meta: {
+        locale: 'menu.log.opera',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
   ],
 };
 
