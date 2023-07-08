@@ -1,3 +1,37 @@
 export default {
   'menu.system.sysDept': 'Dept manage',
+  // form
+  'admin.dept.form.name': 'Dept name',
+  'admin.dept.form.name.placeholder': 'Please enter the department name',
+  'admin.dept.form.leader': 'Leader',
+  'admin.dept.form.leader.placeholder': 'Please enter the leader',
+  'admin.dept.form.phone': 'Phone',
+  'admin.dept.form.phone.placeholder': 'Please enter the phone',
+  'admin.dept.form.status': 'Status',
+  'admin.dept.form.status.1': 'Enable',
+  'admin.dept.form.status.0': 'Disable',
+  'admin.dept.form.selectDefault': 'All',
+  'admin.dept.form.search': 'Search',
+  'admin.dept.form.reset': 'Reset',
+  'admin.dept.form.parent_name': 'Parent dept',
+  'admin.dept.form.parent_name.placeholder': 'Top',
+  'admin.dept.form.name.help': 'The department name is required',
+  'admin.dept.form.email.placeholder': 'Please enter the email',
+  'admin.dept.form.sort.placeholder': 'Please enter',
+  // button
+  'admin.dept.button.create': 'Create',
+  'admin.dept.button.collapse': 'Expand/collapse',
+  // drawer
+  'admin.dept.columns.new.drawer': 'New dept',
+  'admin.dept.columns.edit.drawer': 'Edit dept',
+  'admin.dept.columns.delete.drawer': 'Delete dept',
+  // columns
+  'admin.dept.columns.name': 'Dept name',
+  'admin.dept.columns.parent_name': 'Parent dept',
+  'admin.dept.columns.sort': 'Sort',
+  'admin.dept.columns.leader': 'Leader',
+  'admin.dept.columns.phone': 'Phone',
+  'admin.dept.columns.email': 'Email',
+  'admin.dept.columns.status': 'Status',
+  'admin.dept.columns.created_time': 'Created time',
 };
