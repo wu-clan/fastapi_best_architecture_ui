@@ -9,6 +9,7 @@ export default {
   'admin.menu.form.selectDefault': 'All',
   'admin.menu.form.search': 'Search',
   'admin.menu.form.reset': 'Reset',
+  'admin.menu.form.title': 'Menu title',
   'admin.menu.form.title.placeholder': 'Please enter a title',
   'admin.menu.form.title.help': 'The menu title is required',
   'admin.menu.form.path.name': 'Please enter a route name',

@@ -36,7 +36,8 @@ export interface GeneralChart {
 
 export interface treeSelectDataType<T = any> {
   id?: number | null;
-  title: string;
+  title?: string;
+  name?: string;
   disabled?: boolean;
   children: T[];
 }

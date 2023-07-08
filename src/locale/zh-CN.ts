@@ -1,10 +1,11 @@
 import localeMessageBox from '@/components/message-box/locale/zh-CN';
 import localeLogin from '@/views/login/locale/zh-CN';
-import localeMenu from '@/views/admin/menu/locale/zh-CN';
+import localeSysMenu from '@/views/admin/menu/locale/zh-CN';
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
 import localeLogLogin from '@/views/log/login/locale/zh-CN';
 import localeIconPicker from '@/components/icon-picker/locale/zh-CN';
 import localeLogOpera from '@/views/log/opera/locale/zh-CN';
+import localeSysDept from '@/views/admin/dept/locale/zh-CN';
 import localeSettings from './zh-CN/settings';
 
 export default {
@@ -37,7 +38,8 @@ export default {
   ...localeLogin,
   ...localeWorkplace,
   ...localeLogLogin,
-  ...localeMenu,
+  ...localeSysMenu,
   ...localeIconPicker,
   ...localeLogOpera,
+  ...localeSysDept,
 };

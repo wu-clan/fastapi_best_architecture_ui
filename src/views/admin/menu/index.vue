@@ -6,17 +6,20 @@
         <a-row>
           <a-col :span="12">
             <a-form
+              :auto-label-width="true"
               :label-col-props="{ span: 6 }"
               :model="formModel"
               label-align="right"
-              :auto-label-width="true"
             >
               <a-row>
                 <a-col :span="12">
-                  <a-form-item :label="$t('admin.menu.form.name')" field="name">
+                  <a-form-item
+                    :label="$t('admin.menu.form.title')"
+                    field="name"
+                  >
                     <a-input
                       v-model="formModel.title"
-                      :placeholder="$t('admin.menu.form.name.placeholder')"
+                      :placeholder="$t('admin.menu.form.title.placeholder')"
                     />
                   </a-form-item>
                 </a-col>
@@ -74,9 +77,9 @@
             :columns="(cloneColumns as TableColumnData[])"
             :data="renderData"
             :loading="loading"
+            :pagination="false"
             :size="size"
             row-key="id"
-            :pagination="false"
           >
             <template #menu_type="{ record }">
               <a-tag v-if="record.menu_type === 0" :color="`orange`" bordered>
@@ -126,15 +129,15 @@
       </a-card>
     </a-layout>
   </div>
-  <div class="content-drawer">
+  <div class="content-modal">
     <a-modal
-      :visible="openNewOrEdit"
-      :title="drawerTitle"
       :closable="false"
-      :width="550"
       :on-before-ok="beforeSubmit"
-      @ok="submitNewOrEdit"
+      :title="drawerTitle"
+      :visible="openNewOrEdit"
+      :width="550"
       @cancel="cancelReq"
+      @ok="submitNewOrEdit"
     >
       <a-form ref="formRef" :model="form">
         <a-form-item :label="$t('admin.menu.columns.type')" field="menu_type">
@@ -145,7 +148,7 @@
             <a-radio :value="0">
               {{ $t('admin.menu.columns.type.0') }}
             </a-radio>
-            <a-radio :value="1" :default-checked="true">
+            <a-radio :default-checked="true" :value="1">
               {{ $t('admin.menu.columns.type.1') }}
             </a-radio>
             <a-radio :value="2">
@@ -158,21 +161,22 @@
           field="parent_id"
         >
           <a-tree-select
+            v-model="form.parent_id"
             v-model:model-value="form.parent_id"
-            :placeholder="$t('admin.menu.form.parent_id.placeholder')"
-            :data="treeSelectData"
-            :allow-search="true"
             :allow-clear="true"
+            :allow-search="true"
+            :data="treeSelectData"
             :field-names="selectTreeFieldNames"
+            :placeholder="$t('admin.menu.form.parent_id.placeholder')"
           ></a-tree-select>
         </a-form-item>
         <a-form-item
-          :label="$t('admin.menu.columns.title')"
-          field="title"
-          :rules="[
-            { required: true, message: $t('admin.menu.form.name.help') },
-          ]"
           :feedback="true"
+          :label="$t('admin.menu.columns.title')"
+          :rules="[
+            { required: true, message: $t('admin.menu.form.title.help') },
+          ]"
+          field="title"
         >
           <a-input
             v-model="form.title"
@@ -181,12 +185,12 @@
         </a-form-item>
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
+          :feedback="true"
           :label="$t('admin.menu.columns.name')"
-          field="name"
           :rules="[
             { required: true, message: $t('admin.menu.form.name.help') },
           ]"
-          :feedback="true"
+          field="name"
         >
           <a-input
             v-model="form.name"
@@ -204,8 +208,8 @@
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
           :label="$t('admin.menu.columns.path')"
-          field="path"
           :tooltip="$t('admin.menu.form.path.help')"
+          field="path"
         >
           <a-input
             v-model="form.path"
@@ -215,8 +219,8 @@
         <a-form-item
           v-if="menuType === 1"
           :label="$t('admin.menu.columns.component')"
-          field="component"
           :tooltip="$t('admin.menu.form.component.help')"
+          field="component"
         >
           <a-input
             v-model="form.component"
@@ -226,8 +230,8 @@
         <a-form-item
           v-if="menuType === 1 || menuType === 2"
           :label="$t('admin.menu.columns.perms')"
-          field="perms"
           :tooltip="$t('admin.menu.form.perms.help')"
+          field="perms"
         >
           <a-input
             v-model="form.perms"
@@ -243,12 +247,12 @@
         <a-form-item
           v-if="menuType === 1"
           :label="$t('admin.menu.columns.cache')"
-          field="cache"
           :required="true"
+          field="cache"
         >
           <a-switch
-            v-model:model-value="form.cache"
-            v-model="switchCache"
+            v-model="form.cache"
+            v-model:model-value="switchCache"
             :checked-text="$t('switch.open')"
             :unchecked-text="$t('switch.close')"
           />
@@ -256,12 +260,12 @@
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
           :label="$t('admin.menu.columns.show')"
-          field="show"
           :required="true"
+          field="show"
         >
           <a-switch
-            v-model:model-value="form.show"
-            v-model="switchShow"
+            v-model="form.show"
+            v-model:model-value="switchShow"
             :checked-text="$t('switch.open')"
             :unchecked-text="$t('switch.close')"
           />
@@ -269,38 +273,39 @@
         <a-form-item
           v-if="menuType === 0 || menuType === 1"
           :label="$t('admin.menu.columns.status')"
-          field="status"
           :required="true"
+          field="status"
         >
           <a-switch
-            v-model:model-value="form.status"
-            v-model="switchStatus"
+            v-model="form.status"
+            v-model:model-value="switchStatus"
             :checked-text="$t('switch.open')"
             :unchecked-text="$t('switch.close')"
           />
         </a-form-item>
         <a-form-item
           :label="$t('admin.menu.columns.sort')"
-          field="sort"
           :required="true"
+          field="sort"
         >
           <a-input-number
+            v-model="form.sort"
             v-model:model-value="form.sort"
-            :placeholder="$t('admin.menu.columns.sort')"
             :default-value="0"
             :mode="'button'"
+            :placeholder="$t('admin.menu.columns.sort')"
             style="width: 35%"
           />
         </a-form-item>
       </a-form>
     </a-modal>
     <a-modal
-      :visible="openDelete"
-      :title="`${$t('modal.title.tips')}`"
       :closable="false"
+      :title="`${$t('modal.title.tips')}`"
+      :visible="openDelete"
       :width="360"
-      @ok="submitDelete"
       @cancel="cancelReq"
+      @ok="submitDelete"
     >
       <a-space>
         <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
@@ -579,9 +584,9 @@
       const res = await querySysMenuDetail(pk);
       resetForm(res);
       menuType.value = res.menu_type;
-      switchStatus.value = Boolean(form.status);
-      switchShow.value = Boolean(form.show);
-      switchCache.value = Boolean(form.cache);
+      switchStatus.value = Boolean(res.status);
+      switchShow.value = Boolean(res.show);
+      switchCache.value = Boolean(res.cache);
     } catch (error) {
       // console.log(error);
     } finally {

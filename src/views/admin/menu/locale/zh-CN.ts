@@ -9,6 +9,7 @@ export default {
   'admin.menu.form.selectDefault': '全部',
   'admin.menu.form.search': '搜索',
   'admin.menu.form.reset': '重置',
+  'admin.menu.form.title': '菜单标题',
   'admin.menu.form.title.placeholder': '请输入标题',
   'admin.menu.form.title.help': '菜单标题是必填项',
   'admin.menu.form.path.name': '请输入路由名称',

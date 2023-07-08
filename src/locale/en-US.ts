@@ -1,10 +1,11 @@
 import localeMessageBox from '@/components/message-box/locale/en-US';
 import localeLogin from '@/views/login/locale/en-US';
-import localeMenu from '@/views/admin/menu/locale/en-US';
+import localeSysMenu from '@/views/admin/menu/locale/en-US';
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
 import localeLogLogin from '@/views/log/login/locale/en-US';
 import localeIconPicker from '@/components/icon-picker/locale/en-US';
 import localeLogOpera from '@/views/log/opera/locale/en-US';
+import localeSysDept from '@/views/admin/dept/locale/en-US';
 import localeSettings from './en-US/settings';
 
 export default {
@@ -37,7 +38,8 @@ export default {
   ...localeLogin,
   ...localeWorkplace,
   ...localeLogLogin,
-  ...localeMenu,
+  ...localeSysMenu,
   ...localeIconPicker,
   ...localeLogOpera,
+  ...localeSysDept,
 };
