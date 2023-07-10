@@ -431,6 +431,8 @@
     try {
       const res = await querySysApiList(params);
       renderData.value = res.items;
+      pagination.total = res.total;
+      pagination.current = params.page;
     } catch (error) {
       // console.log(error);
     } finally {
