@@ -95,6 +95,9 @@
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
           >
+            <template #index="{ rowIndex }">
+              {{ rowIndex + 1 }}
+            </template>
             <template #method="{ record }">
               <a-tag
                 v-if="record.method === 'GET'"
@@ -310,6 +313,14 @@
     openDelete.value = true;
   };
   const columns = computed<TableColumnData[]>(() => [
+    {
+      title: 'ID',
+      dataIndex: 'index',
+      slotName: 'index',
+      ellipsis: true,
+      tooltip: true,
+      width: 100,
+    },
     {
       title: t('admin.api.columns.name'),
       dataIndex: 'name',
