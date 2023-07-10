@@ -1,0 +1,18 @@
+export default {
+  'menu.monitor.server': '服务器监控',
+  'menu.monitor.server.memory': '内存',
+  'menu.monitor.server.system': '系统',
+  'menu.monitor.server.disk': '磁盘',
+  'menu.monitor.server.service': '服务',
+  'menu.monitor.server.placeholder': '未知',
+  'menu.monitor.server.cpu.usage': '使用率',
+  'menu.monitor.server.cpu.max-frequency': '最大频率',
+  'menu.monitor.server.cpu.min-frequency': '最小频率',
+  'menu.monitor.server.cpu.current-frequency': '当前频率',
+  'menu.monitor.server.cpu.logical-cores': '逻辑核心数',
+  'menu.monitor.server.cpu.physical-cores': '物理核心数',
+  'menu.monitor.server.memory.total': '总量',
+  'menu.monitor.server.memory.used': '已使用',
+  'menu.monitor.server.memory.free': '剩余',
+  'menu.monitor.server.memory.usage': '使用率',
+};

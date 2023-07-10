@@ -1,0 +1,18 @@
+export default {
+  'menu.monitor.server': 'Server monitor',
+  'menu.monitor.server.memory': 'Memory',
+  'menu.monitor.server.system': 'System',
+  'menu.monitor.server.disk': 'Disk',
+  'menu.monitor.server.service': 'Service',
+  'menu.monitor.server.placeholder': 'Unknown',
+  'menu.monitor.server.cpu.usage': 'Usage',
+  'menu.monitor.server.cpu.max-frequency': 'Max-fre',
+  'menu.monitor.server.cpu.min-frequency': 'Min-fre',
+  'menu.monitor.server.cpu.current-frequency': 'Current-fre',
+  'menu.monitor.server.cpu.logical-cores': 'L-cores',
+  'menu.monitor.server.cpu.physical-cores': 'P-cores',
+  'menu.monitor.server.memory.total': 'Total',
+  'menu.monitor.server.memory.used': 'Used',
+  'menu.monitor.server.memory.free': 'Free',
+  'menu.monitor.server.memory.usage': 'Usage',
+};

@@ -6,6 +6,8 @@ import localeLogLogin from '@/views/log/login/locale/zh-CN';
 import localeIconPicker from '@/components/icon-picker/locale/zh-CN';
 import localeLogOpera from '@/views/log/opera/locale/zh-CN';
 import localeSysDept from '@/views/admin/dept/locale/zh-CN';
+import localeServerMonitor from '@/views/monitor/server/locale/zh-CN';
+import localeRedisMonitor from '@/views/monitor/redis/locale/zh-CN';
 import localeSettings from './zh-CN/settings';
 
 export default {
@@ -14,7 +16,7 @@ export default {
   'menu.server.workplace': '工作台-服务端',
   'menu.system': '系统管理',
   'menu.log': '日志',
-  'menu.server.monitor': '实时监控-服务端',
+  'menu.monitor': '监控',
   'menu.list': '列表页',
   'menu.result': '结果页',
   'menu.exception': '异常页',
@@ -42,4 +44,6 @@ export default {
   ...localeIconPicker,
   ...localeLogOpera,
   ...localeSysDept,
+  ...localeServerMonitor,
+  ...localeRedisMonitor,
 };
