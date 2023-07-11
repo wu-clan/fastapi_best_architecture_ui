@@ -23,6 +23,16 @@ const SYSTEM: AppRouteRecordRaw = {
       },
     },
     {
+      path: 'sys-api',
+      name: 'SysApi',
+      component: () => import('@/views/admin/api/index.vue'),
+      meta: {
+        locale: 'menu.system.sysApi',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
       path: 'sys-menu',
       name: 'SysMenu',
       component: () => import('@/views/admin/menu/index.vue'),

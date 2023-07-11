@@ -4,9 +4,13 @@
       <Breadcrumb :items="[$t('menu.system'), $t('menu.system.sysDept')]" />
       <a-card :title="$t('menu.system.sysDept')" class="general-card">
         <a-row>
-          <a-col :span="30">
-            <a-form :model="formModel" label-align="right" layout="inline">
-              <a-row>
+          <a-col :flex="62">
+            <a-form
+              :auto-label-width="true"
+              :model="formModel"
+              label-align="right"
+            >
+              <a-row :gutter="16">
                 <a-col :span="6">
                   <a-form-item :label="$t('admin.dept.form.name')" field="name">
                     <a-input
@@ -525,6 +529,12 @@
     },
     { deep: true, immediate: true }
   );
+</script>
+
+<script lang="ts">
+  export default {
+    name: 'SysDept',
+  };
 </script>
 
 <style lang="less" scoped>
