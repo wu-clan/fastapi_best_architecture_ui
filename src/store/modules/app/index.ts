@@ -15,9 +15,9 @@ export function generateMenu(data: MenuItem[], parentName?: string) {
     const menuItem: MenuState = {
       title: menu.title,
       name: menu.name,
-      path: !menu.path ? `/${menu.name}` : menu.path,
+      path: !menu.path ? `/${localeName}` : menu.path,
       component: !menu.component
-        ? () => import('@/layout/default-layout.vue')
+        ? () => import('@/views/not-found/index.vue')
         : views[`/src/views${menu.component}`],
       children: [],
       meta: {
