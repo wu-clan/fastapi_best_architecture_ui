@@ -17,6 +17,7 @@ export default {
   'menu.server.workplace': '工作台-服务端',
   'menu.system': '系统管理',
   'menu.log': '日志',
+  'menu.monitor': '系统监控',
   'menu.server.monitor': '实时监控-服务端',
   'menu.list': '列表页',
   'menu.result': '结果页',

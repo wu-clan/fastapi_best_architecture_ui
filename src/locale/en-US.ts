@@ -18,6 +18,7 @@ export default {
   'menu.server.monitor': 'Monitor-Server',
   'menu.system': 'System Manage',
   'menu.log': 'Log',
+  'menu.monitor': 'System Monitor',
   'menu.list': 'List',
   'menu.result': 'Result',
   'menu.exception': 'Exception',
