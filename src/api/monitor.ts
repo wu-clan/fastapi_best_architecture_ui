@@ -11,7 +11,6 @@ export interface ServerMonitorRes {
 export interface RedisMonitorRes {
   info: Record<string, any>;
   stats: Record<string, any>[];
-  size: number;
 }
 
 export function queryServerMonitor(): Promise<ServerMonitorRes> {
