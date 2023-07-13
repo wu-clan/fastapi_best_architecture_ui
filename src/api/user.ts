@@ -41,6 +41,18 @@ export interface SysUserRoleReq {
   roles: number[];
 }
 
+export interface SysUserAvatarReq {
+  url: string;
+}
+
+export interface SysUserInfoReq {
+  dept_id?: number;
+  username: string;
+  nickname: string;
+  email: string;
+  phone?: string;
+}
+
 export function getUserInfo(): Promise<UserState> {
   return axios.get('/api/v1/users/me');
 }
@@ -76,4 +88,16 @@ export function changeUserSuper(pk: number) {
 
 export function changeUserMulti(pk: number) {
   return axios.put(`/api/v1/users/${pk}/multi`);
+}
+
+export function updateUserAvatar(username: string, data: SysUserAvatarReq) {
+  return axios.put(`/api/v1/users/${username}/avatar`, data);
+}
+
+export function updateUser(username: string, data: SysUserInfoReq) {
+  return axios.put(`/api/v1/users/${username}`, data);
+}
+
+export function deleteUser(username: string) {
+  return axios.delete(`/api/v1/users/${username}`);
 }

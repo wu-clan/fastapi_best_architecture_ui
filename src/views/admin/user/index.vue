@@ -84,8 +84,8 @@
             :data="renderData"
             :loading="loading"
             :pagination="pagination"
-            :size="size"
             :scroll="{ x: 2000 }"
+            :size="size"
             row-key="id"
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
@@ -109,7 +109,11 @@
                 :image-url="record.avatar"
                 @click="updateAvatar(record.username)"
               />
-              <a-avatar v-else @click="updateAvatar(record.username)">
+              <a-avatar
+                v-else
+                :style="{ backgroundColor: avatarColor }"
+                @click="updateAvatar(record.username)"
+              >
                 {{ record.username[0] }}
               </a-avatar>
             </template>
@@ -165,6 +169,119 @@
             </template>
           </a-table>
         </div>
+        <div class="content-modal">
+          <a-modal
+            :closable="false"
+            :on-before-ok="handleAvatarBeforeOk"
+            :title="drawerTitle"
+            :visible="openAvatar"
+            @cancel="closeAvatar"
+            @ok="submitUserAvatar"
+          >
+            <a-form ref="formAvatarRef" :model="formAvatar">
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.avatar')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.avatar.required'),
+                  },
+                ]"
+                :tooltip="$t('admin.user.form.avatar.help')"
+                field="url"
+              >
+                <a-input
+                  v-model="formAvatar.url"
+                  :placeholder="$t('admin.user.form.avatar.placeholder')"
+                />
+              </a-form-item>
+            </a-form>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :on-before-ok="handleUserInfoBeforeOk"
+            :title="drawerTitle"
+            :visible="openEdit"
+            @cancel="closeEdit"
+            @ok="submitUserInfo"
+          >
+            <a-form ref="formUserInfoRef" :model="formUserInfo">
+              <a-form-item :label="$t('admin.user.form.dept')" field="dept_id">
+                <a-tree-select
+                  v-model="formUserInfo.dept_id"
+                  :allow-clear="true"
+                  :allow-search="true"
+                  :data="deptTreeData"
+                  :field-names="selectDeptTreeFieldNames"
+                  :loading="loading"
+                  :placeholder="$t('admin.user.form.dept.placeholder')"
+                ></a-tree-select>
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.username')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.username.required'),
+                  },
+                ]"
+                field="username"
+              >
+                <a-input
+                  v-model="formUserInfo.username"
+                  :placeholder="$t('admin.user.form.username.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.nickname')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.nickname.required'),
+                  },
+                ]"
+                field="nickname"
+              >
+                <a-input
+                  v-model="formUserInfo.nickname"
+                  :placeholder="$t('admin.user.form.nickname.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.email')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.email.required'),
+                  },
+                ]"
+                field="email"
+              >
+                <a-input
+                  v-model="formUserInfo.email"
+                  :placeholder="$t('admin.user.form.email.placeholder')"
+                />
+              </a-form-item>
+            </a-form>
+          </a-modal>
+          <a-modal
+            :closable="false"
+            :title="`${$t('modal.title.tips')}`"
+            :visible="openDelete"
+            :width="360"
+            @cancel="closeDelete"
+            @ok="submitDeleteUser"
+          >
+            <a-space>
+              <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+              {{ $t('modal.title.tips.delete') }}
+            </a-space>
+          </a-modal>
+        </div>
       </a-card>
     </a-layout>
   </div>
@@ -181,21 +298,31 @@
     changeUserMulti,
     changeUserStatus,
     changeUserSuper,
+    deleteUser,
     getUser,
     getUserList,
+    SysUserAvatarReq,
+    SysUserInfoReq,
     SysUserParams,
     SysUserRes,
     SysUserRoleReq,
+    updateUser,
+    updateUserAvatar,
     updateUserRole,
   } from '@/api/user';
   import { computed, reactive, ref, watch } from 'vue';
-  import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
+  import {
+    SelectOptionData,
+    TableColumnData,
+    TreeFieldNames,
+  } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import { cloneDeep } from 'lodash';
   import { Pagination } from '@/types/global';
   import { useUserStore } from '@/store';
-  import string from '@/utils/string';
   import { SysRoleRes } from '@/api/role';
+  import getRandomColor from '@/utils/color';
+  import { querySysDeptTree, SysDeptTreeParams } from '@/api/dept';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -222,6 +349,22 @@
       value: 0,
     },
   ]);
+  const formAvatar = reactive<SysUserAvatarReq>({
+    url: '',
+  });
+  const formUserInfo = reactive<SysUserInfoReq>({
+    dept_id: 0,
+    username: '',
+    nickname: '',
+    email: '',
+    phone: undefined,
+  });
+  const deptTreeData = ref();
+  const selectDeptTreeFieldNames: TreeFieldNames = {
+    key: 'id',
+    title: 'name',
+    children: 'children',
+  };
 
   // 表格
   const userStore = useUserStore();
@@ -245,17 +388,16 @@
     operateUsername.value = username;
     drawerTitle.value = t('admin.api.columns.edit.drawer');
     await fetchUser(username);
+    await fetchDeptTree();
     openEdit.value = true;
   };
   const DeleteUser = async (username: string) => {
     operateUsername.value = username;
-    await fetchUser(username);
     openDelete.value = true;
   };
   const updateAvatar = async (username: string) => {
     operateUsername.value = username;
     drawerTitle.value = t('admin.api.columns.edit.avatar');
-    await fetchUser(username);
     openAvatar.value = true;
   };
   const switchStatus = ref<boolean>(!currentUser.is_superuser);
@@ -266,6 +408,7 @@
     });
     return nameList;
   };
+  const avatarColor = getRandomColor();
   const columns = computed<TableColumnData[]>(() => [
     {
       title: 'UUID',
@@ -376,6 +519,35 @@
   const openEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
   const openAvatar = ref<boolean>(false);
+  const formAvatarRef = ref();
+  const formUserInfoRef = ref();
+  const closeAvatar = () => {
+    openAvatar.value = false;
+    formAvatar.url = '';
+  };
+  const closeEdit = () => {
+    openEdit.value = false;
+    resetUserInfoForm(formUserInfo);
+  };
+  const closeDelete = () => {
+    openDelete.value = false;
+  };
+
+  // 表单校验
+  const handleAvatarBeforeOk = async (done: any) => {
+    const res = await formAvatarRef.value?.validate();
+    if (!res) {
+      done(true);
+    }
+    done(false);
+  };
+  const handleUserInfoBeforeOk = async (done: any) => {
+    const res = await formUserInfoRef.value?.validate();
+    if (!res) {
+      done(true);
+    }
+    done(false);
+  };
 
   // 请求用户列表
   const fetchUserList = async (params: SysUserParams = {}) => {
@@ -398,6 +570,36 @@
     setLoading(true);
     try {
       const res = await getUser(username);
+      resetUserInfoForm(res);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 请求部门树
+  const fetchDeptTree = async (params: SysDeptTreeParams = {}) => {
+    setLoading(true);
+    try {
+      deptTreeData.value = await querySysDeptTree(params);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 更新用户头像
+  const submitUserAvatar = async () => {
+    setLoading(true);
+    try {
+      await updateUserAvatar(operateUsername.value, formAvatar);
+      closeAvatar();
+      await fetchUserList({
+        page: pagination.current,
+        size: pagination.pageSize,
+      });
     } catch (error) {
       // console.log(error);
     } finally {
@@ -406,7 +608,7 @@
   };
 
   // 更新用户角色
-  const updateUserRoles = async (username: string, roles: SysUserRoleReq) => {
+  const submitUserRoles = async (username: string, roles: SysUserRoleReq) => {
     setLoading(true);
     try {
       await updateUserRole(username, roles);
@@ -469,6 +671,40 @@
     }
   };
 
+  // 更新用户信息
+  const submitUserInfo = async () => {
+    setLoading(true);
+    try {
+      await updateUser(operateUsername.value, formUserInfo);
+      closeEdit();
+      await fetchUserList({
+        page: pagination.current,
+        size: pagination.pageSize,
+      });
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除用户
+  const submitDeleteUser = async () => {
+    setLoading(true);
+    try {
+      await deleteUser(operateUsername.value);
+      closeDelete();
+      await fetchUserList({
+        page: pagination.current,
+        size: pagination.pageSize,
+      });
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 事件: 分页
   const onPageChange = async (current: number) => {
     await fetchUserList({ page: current, size: pagination.pageSize });
@@ -495,6 +731,14 @@
   // 重置状态
   const resetStatus = () => {
     formModel.value.status = undefined;
+  };
+
+  // 重置表单
+  const resetUserInfoForm = (data: Record<any, any>) => {
+    Object.keys(data).forEach((key) => {
+      // @ts-ignore
+      formUserInfo[key] = data[key];
+    });
   };
 
   // 监听columns变化
