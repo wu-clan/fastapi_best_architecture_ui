@@ -3,7 +3,7 @@ import { Notification } from '@arco-design/web-vue';
 import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
 import defaultSettings from '@/config/settings.json';
 import { getUserMenuList } from '@/api/user';
-import convertToCamelCase from '@/utils/string';
+import convertToCamelCase, { convertToKebabCase } from '@/utils/string';
 import { WHITE_LIST } from '@/router/constants';
 import { AppRouteRecordRaw } from '@/router/routes/types';
 import { RouteRecordNormalized } from 'vue-router';
@@ -19,7 +19,7 @@ function generateMenu(
   data.forEach((menu) => {
     const localeName = convertToCamelCase(menu.name);
     const menuItem: AppRouteRecordRaw = {
-      path: !menu.path ? `/${localeName}` : menu.path,
+      path: !menu.path ? `/${convertToKebabCase(menu.name)}` : menu.path,
       name: menu.name,
       component: !menu.component
         ? () => import('@/views/not-found/index.vue')
