@@ -6,7 +6,6 @@
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/utils/route-listener';
   import { openWindow, regexUrl } from '@/utils';
-  import { MenuState } from '@/store/modules/app/types';
   import useMenuTree from './use-menu-tree';
 
   export default defineComponent({
@@ -31,7 +30,7 @@
       const openKeys = ref<string[]>([]);
       const selectedKey = ref<string[]>([]);
 
-      const goto = (item: MenuState) => {
+      const goto = (item: RouteRecordRaw) => {
         // Open external link
         const path = item.path ? (item.path as string) : '';
         if (regexUrl.test(path)) {
@@ -95,7 +94,7 @@
       };
 
       const renderSubMenu = () => {
-        function travel(_route: MenuState[], nodes = []) {
+        function travel(_route: RouteRecordRaw[], nodes = []) {
           if (_route) {
             _route.forEach((element) => {
               const icon = element?.meta?.icon
@@ -110,7 +109,8 @@
                       title: () =>
                         h(
                           compile(
-                            element?.title || t(element?.meta?.locale || '')
+                            element?.meta?.title ||
+                              t(element?.meta?.locale || '')
                           )
                         ),
                     }}
@@ -123,7 +123,7 @@
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {element?.title || t(element?.meta?.locale || '')}
+                    {element?.meta?.title || t(element?.meta?.locale || '')}
                   </a-menu-item>
                 );
               nodes.push(node as never);
