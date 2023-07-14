@@ -6,7 +6,7 @@ export default function convertToCamelCase(input: string): string {
   return camelCase;
 }
 
-// 转换为小字母加下划线命名
+// 转换为小字母加中划线命名
 export function convertToKebabCase(input: string): string {
   let snakeCase = input.replace(/^[_-]+/, '');
   snakeCase = snakeCase.replace(/([A-Z])/g, '-$1').toLowerCase();
