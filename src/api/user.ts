@@ -75,7 +75,7 @@ export function getUser(username: string): Promise<SysUserRes> {
 }
 
 export function updateUserRole(username: string, data: SysUserRoleReq) {
-  return axios.put(`/api/v1/users/${username}/roles`, data);
+  return axios.put(`/api/v1/users/${username}/role`, data);
 }
 
 export function changeUserStatus(pk: number) {

@@ -96,6 +96,7 @@
             <template #roles="{ record }">
               <a-popconfirm
                 :content="$t('admin.user.columns.updateUserRoles.placeholder')"
+                @ok="updateRole(record.username, record.id)"
               >
                 <a-input-tag
                   :model-value="roleNameList(record.roles)"
@@ -107,14 +108,23 @@
               <a-avatar
                 v-if="record.avatar"
                 :image-url="record.avatar"
+                trigger-type="mask"
                 @click="updateAvatar(record.username)"
-              />
+              >
+                <template #trigger-icon>
+                  <IconEdit />
+                </template>
+              </a-avatar>
               <a-avatar
                 v-else
                 :style="{ backgroundColor: avatarColor }"
+                trigger-type="mask"
                 @click="updateAvatar(record.username)"
               >
                 {{ record.username[0] }}
+                <template #trigger-icon>
+                  <IconEdit />
+                </template>
               </a-avatar>
             </template>
             <template #status="{ record }">
@@ -281,6 +291,23 @@
               {{ $t('modal.title.tips.delete') }}
             </a-space>
           </a-modal>
+          <a-modal
+            :closable="false"
+            :title="drawerTitle"
+            :visible="openEditUserRole"
+            @cancel="closeEditUserRole"
+            @ok="submitUserRole"
+          >
+            <a-select
+              v-model="formUserRole.roles"
+              :allow-clear="true"
+              :loading="loading"
+              :multiple="true"
+              :options="roleOptions"
+              :placeholder="$t('admin.user.form.role.placeholder')"
+              :width="360"
+            ></a-select>
+          </a-modal>
         </div>
       </a-card>
     </a-layout>
@@ -320,7 +347,11 @@
   import { cloneDeep } from 'lodash';
   import { Pagination } from '@/types/global';
   import { useUserStore } from '@/store';
-  import { SysRoleRes } from '@/api/role';
+  import {
+    querySysRoleAll,
+    querySysRoleAllBySysUser,
+    SysRoleRes,
+  } from '@/api/role';
   import getRandomColor from '@/utils/color';
   import { querySysDeptTree, SysDeptTreeParams } from '@/api/dept';
 
@@ -359,6 +390,19 @@
     email: '',
     phone: undefined,
   });
+  const formUserRole = reactive<SysUserRoleReq>({
+    roles: [],
+  });
+  const userRoleData = ref<SysRoleRes[]>([]);
+  const roleOptions = computed<SelectOptionData[]>(() => {
+    return userRoleData.value.map((item) => {
+      return {
+        value: item.id,
+        label: item.name,
+        disabled: Boolean(!item.status),
+      };
+    });
+  });
   const deptTreeData = ref();
   const selectDeptTreeFieldNames: TreeFieldNames = {
     key: 'id',
@@ -386,7 +430,7 @@
   });
   const EditUser = async (username: string) => {
     operateUsername.value = username;
-    drawerTitle.value = t('admin.api.columns.edit.drawer');
+    drawerTitle.value = t('admin.user.columns.edit.userinfo');
     await fetchUser(username);
     await fetchDeptTree();
     openEdit.value = true;
@@ -397,8 +441,15 @@
   };
   const updateAvatar = async (username: string) => {
     operateUsername.value = username;
-    drawerTitle.value = t('admin.api.columns.edit.avatar');
+    drawerTitle.value = t('admin.user.columns.edit.avatar');
     openAvatar.value = true;
+  };
+  const updateRole = async (username: string, pk: number) => {
+    operateUsername.value = username;
+    drawerTitle.value = t('admin.user.columns.edit.role');
+    await fetchUserRole(pk);
+    await fetchAllRole();
+    openEditUserRole.value = true;
   };
   const switchStatus = ref<boolean>(!currentUser.is_superuser);
   const roleNameList = (roleList: SysRoleRes[]) => {
@@ -416,7 +467,7 @@
       slotName: 'uuid',
       ellipsis: true,
       tooltip: true,
-      width: 150,
+      width: 168,
     },
     {
       title: t('admin.user.columns.avatar'),
@@ -447,7 +498,7 @@
       slotName: 'dept',
       ellipsis: true,
       tooltip: true,
-      width: 120,
+      width: 150,
     },
     {
       title: t('admin.user.columns.roles'),
@@ -519,11 +570,12 @@
   const openEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
   const openAvatar = ref<boolean>(false);
+  const openEditUserRole = ref<boolean>(false);
   const formAvatarRef = ref();
   const formUserInfoRef = ref();
   const closeAvatar = () => {
-    openAvatar.value = false;
     formAvatar.url = '';
+    openAvatar.value = false;
   };
   const closeEdit = () => {
     openEdit.value = false;
@@ -531,6 +583,10 @@
   };
   const closeDelete = () => {
     openDelete.value = false;
+  };
+  const closeEditUserRole = () => {
+    formUserRole.roles = [];
+    openEditUserRole.value = false;
   };
 
   // 表单校验
@@ -590,6 +646,31 @@
     }
   };
 
+  // 请求所有角色
+  const fetchAllRole = async () => {
+    setLoading(true);
+    try {
+      userRoleData.value = await querySysRoleAll();
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 请求用户角色
+  const fetchUserRole = async (pk: number) => {
+    setLoading(true);
+    try {
+      const res = await querySysRoleAllBySysUser(pk);
+      formUserRole.roles = res.map((item) => item.id);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 更新用户头像
   const submitUserAvatar = async () => {
     setLoading(true);
@@ -608,10 +689,11 @@
   };
 
   // 更新用户角色
-  const submitUserRoles = async (username: string, roles: SysUserRoleReq) => {
+  const submitUserRole = async () => {
     setLoading(true);
     try {
-      await updateUserRole(username, roles);
+      await updateUserRole(operateUsername.value, formUserRole);
+      closeEditUserRole();
       await fetchUserList({
         page: pagination.current,
         size: pagination.pageSize,

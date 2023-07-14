@@ -1,4 +1,5 @@
 import { SysMenuRes } from '@/api/menu';
+import axios from 'axios';
 
 export interface SysRoleRes {
   id: number;
@@ -7,5 +8,13 @@ export interface SysRoleRes {
   status: number;
   remark?: string;
   created_time: string;
-  menus: SysMenuRes[];
+  menus?: SysMenuRes[];
+}
+
+export function querySysRoleAll(): Promise<SysRoleRes[]> {
+  return axios.get('/api/v1/roles/all');
+}
+
+export function querySysRoleAllBySysUser(pk: number): Promise<SysRoleRes[]> {
+  return axios.get(`/api/v1/roles/${pk}/all`);
 }
