@@ -6,7 +6,7 @@ export default function usePermission() {
   return {
     accessRouter(route: RouteLocationNormalized | RouteRecordRaw) {
       return (
-        // !route.meta?.requiresAuth ||
+        !route.meta?.requiresAuth ||
         !route.meta?.roles ||
         route.meta?.roles?.includes('*') ||
         route.meta?.roles?.includes(userStore.roles)
