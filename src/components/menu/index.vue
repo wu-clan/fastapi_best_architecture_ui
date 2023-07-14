@@ -1,7 +1,7 @@
 <script lang="tsx">
   import { compile, computed, defineComponent, h, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
-  import type { RouteMeta } from 'vue-router';
+  import type { RouteMeta, RouteRecordRaw } from 'vue-router';
   import { useRoute, useRouter } from 'vue-router';
   import { useAppStore } from '@/store';
   import { listenerRouteChange } from '@/utils/route-listener';
@@ -54,7 +54,7 @@
       const findMenuOpenKeys = (target: string) => {
         const result: string[] = [];
         let isFind = false;
-        const backtrack = (item: MenuState, keys: string[]) => {
+        const backtrack = (item: RouteRecordRaw, keys: string[]) => {
           if (item.name === target) {
             isFind = true;
             result.push(...keys);
@@ -66,7 +66,7 @@
             });
           }
         };
-        menuTree.value.forEach((el: MenuState) => {
+        menuTree.value.forEach((el: RouteRecordRaw) => {
           if (isFind) return; // Performance optimization
           backtrack(el, [el.name as string]);
         });

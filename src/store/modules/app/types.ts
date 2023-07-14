@@ -13,9 +13,7 @@ export interface AppState {
   device: string;
   tabBar: boolean;
   menuFromServer: boolean;
-  // eslint-disable-next-line no-use-before-define
   serverMenu: MenuState[];
-
   [key: string]: unknown;
 }
 
@@ -45,11 +43,12 @@ export interface MenuState {
   component: any;
   children: MenuState[];
   meta: {
+    roles?: string[];
+    requiresAuth: boolean;
     icon?: string;
     hideInMenu: boolean;
     ignoreCache: boolean;
     order: number;
-    roles?: string[];
     locale: string;
   };
 }

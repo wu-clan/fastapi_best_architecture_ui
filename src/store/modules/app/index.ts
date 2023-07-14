@@ -4,6 +4,7 @@ import type { NotificationReturn } from '@arco-design/web-vue/es/notification/in
 import defaultSettings from '@/config/settings.json';
 import { getUserMenuList } from '@/api/user';
 import convertToCamelCase from '@/utils/string';
+import { WHITE_LIST } from '@/router/constants';
 import { AppState, MenuItem, MenuState } from './types';
 
 export function generateMenu(data: MenuItem[], parentName?: string) {
@@ -21,12 +22,13 @@ export function generateMenu(data: MenuItem[], parentName?: string) {
         : views[`/src/views${menu.component}`],
       children: [],
       meta: {
+        // roles: menu.perms ? menu.perms.split(',') : [],
+        roles: ['*'],
+        requiresAuth: WHITE_LIST.some((item) => item.name === menu.name),
         icon: menu.icon,
         hideInMenu: menu.show === 0,
         ignoreCache: menu.cache === 0,
         order: menu.sort,
-        // roles: menu.perms ? menu.perms.split(',') : [],
-        roles: ['*'],
         locale: parentName
           ? `menu.${parentName}.${localeName}`
           : `menu.${localeName}`,
