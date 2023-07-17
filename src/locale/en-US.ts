@@ -10,6 +10,7 @@ import localeServerMonitor from '@/views/monitor/server/locale/en-US';
 import localeRedisMonitor from '@/views/monitor/redis/locale/en-US';
 import localeSysApi from '@/views/admin/api/locale/en-US';
 import localeSysUser from '@/views/admin/user/locale/en-US';
+import localeSysRole from '@/views/admin/role/locale/en-US';
 import localeSettings from './en-US/settings';
 
 export default {
@@ -51,4 +52,5 @@ export default {
   ...localeRedisMonitor,
   ...localeSysApi,
   ...localeSysUser,
+  ...localeSysRole,
 };
