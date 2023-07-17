@@ -25,7 +25,6 @@ function generateMenu(
         ? () => import('@/views/not-found/index.vue')
         : views[`/src/views${menu.component}`],
       children: [],
-      fullPath: menu.path,
       meta: {
         title: menu.title,
         // roles: menu.perms ? menu.perms.split(',') : [],
