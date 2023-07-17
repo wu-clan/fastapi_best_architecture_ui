@@ -32,7 +32,10 @@ export default function useMenuTree() {
         // leaf node
         if (element.meta?.hideInMenu || !element.children) {
           element.children = [];
-          return null;
+          if (appStore.menuFromServer) {
+            return null;
+          }
+          return element;
         }
 
         // route filter hideInMenu true
