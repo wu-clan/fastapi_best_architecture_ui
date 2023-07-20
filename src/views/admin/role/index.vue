@@ -120,6 +120,7 @@
             :on-before-ok="beforeSubmit"
             :title="drawerTitle"
             :visible="openNewOrEdit"
+            :width="550"
             @cancel="cancelReq"
             @ok="submitNewOrEdit"
           >
@@ -170,6 +171,18 @@
               </a-form-item>
             </a-form>
           </a-modal>
+          <a-modal
+            :closable="false"
+            :title="`${$t('modal.title.tips')}`"
+            :visible="openDelete"
+            @cancel="cancelReq"
+            @ok="submitDelete"
+          >
+            <a-space>
+              <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+              {{ $t('admin.role.modal.delete') }}
+            </a-space>
+          </a-modal>
         </div>
       </a-card>
     </a-layout>
@@ -193,6 +206,7 @@
   import useLoading from '@/hooks/loading';
   import {
     createSysRole,
+    deleteSysRole,
     querySysRoleDetail,
     querySysRoleList,
     SysRoleParams,
@@ -367,6 +381,24 @@
     } catch (error) {
       // console.log(error);
     } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除角色
+  const submitDelete = async () => {
+    setLoading(true);
+    try {
+      await deleteSysRole({ pk: rowSelectKeys.value });
+      cancelReq();
+      Message.success(t('submit.delete.success'));
+      await fetchRoleList();
+      rowSelectKeys.value = [];
+    } catch (error) {
+      openDelete.value = false;
+      // console.log(error);
+    } finally {
+      openDelete.value = false;
       setLoading(false);
     }
   };

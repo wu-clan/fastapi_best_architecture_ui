@@ -35,6 +35,10 @@ export interface SysRoleListRes {
   total: number;
 }
 
+export interface SysRoleDeleteParams {
+  pk: number[];
+}
+
 export function querySysRoleAll(): Promise<SysRoleRes[]> {
   return axios.get('/api/v1/roles/all');
 }
@@ -64,4 +68,13 @@ export function createSysRole(data: SysRoleReq) {
 
 export function updateSysRole(pk: number, data: SysRoleReq) {
   return axios.put(`/api/v1/roles/${pk}`, data);
+}
+
+export function deleteSysRole(params: SysRoleDeleteParams) {
+  return axios.delete(`/api/v1/roles`, {
+    params,
+    paramsSerializer: (obj) => {
+      return qs.stringify(obj);
+    },
+  });
 }
