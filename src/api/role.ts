@@ -2,6 +2,17 @@ import { SysMenuRes } from '@/api/menu';
 import axios from 'axios';
 import qs from 'query-string';
 
+export interface SysRoleReq {
+  name: string;
+  data_scope: number;
+  status: number;
+  remark?: string;
+}
+
+export interface SysRoleMenuReq {
+  menus: number[];
+}
+
 export interface SysRoleRes {
   id: number;
   name: string;
@@ -41,4 +52,16 @@ export function querySysRoleList(
       return qs.stringify(obj);
     },
   });
+}
+
+export function querySysRoleDetail(pk: number): Promise<SysRoleRes> {
+  return axios.get(`/api/v1/roles/${pk}`);
+}
+
+export function createSysRole(data: SysRoleReq) {
+  return axios.post('/api/v1/roles', data);
+}
+
+export function updateSysRole(pk: number, data: SysRoleReq) {
+  return axios.put(`/api/v1/roles/${pk}`, data);
 }

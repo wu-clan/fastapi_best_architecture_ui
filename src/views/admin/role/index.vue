@@ -13,10 +13,7 @@
             >
               <a-row>
                 <a-col :span="12">
-                  <a-form-item
-                    :label="$t('admin.role.form.title')"
-                    field="name"
-                  >
+                  <a-form-item :label="$t('admin.role.form.name')" field="name">
                     <a-input
                       v-model="formModel.name"
                       :placeholder="$t('admin.role.form.name.placeholder')"
@@ -94,7 +91,77 @@
             <template #index="{ rowIndex }">
               {{ rowIndex + 1 }}
             </template>
+            <template #status="{ record }">
+              <a-tag v-if="record.status === 1" :color="`green`" bordered>
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
+              </a-tag>
+              <a-tag v-else :color="`red`" bordered>
+                {{ $t(`admin.menu.form.status.${record.status}`) }}
+              </a-tag>
+            </template>
+            <template #data_scope="{ record }">
+              {{ dataScopeText(record.data_scope) }}
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-link @click="EditPerm(record.id)">
+                  {{ $t(`admin.role.columns.perms`) }}
+                </a-link>
+                <a-link @click="EditRole(record.id)">
+                  {{ $t(`admin.role.columns.edit`) }}
+                </a-link>
+              </a-space>
+            </template>
           </a-table>
+        </div>
+        <div class="content-modal">
+          <a-modal
+            :visible="openNewOrEdit"
+            :title="drawerTitle"
+            :closable="false"
+            :on-before-ok="beforeSubmit"
+            @cancel="cancelReq"
+            @ok="submitNewOrEdit"
+          >
+            <a-form ref="formRef" :model="form">
+              <a-form-item
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.role.form.name.help'),
+                  },
+                ]"
+                :label="$t('admin.role.columns.name')"
+                field="name"
+              >
+                <a-input v-model="form.name"></a-input>
+              </a-form-item>
+              <a-form-item
+                :label="$t('admin.role.columns.data_scope')"
+                field="data_scope"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.role.form.data_scope.help'),
+                  },
+                ]"
+              >
+                <a-select v-model="form.data_scope"></a-select>
+              </a-form-item>
+              <a-form-item
+                :label="$t('admin.role.columns.status')"
+                field="status"
+              >
+                <a-switch v-model="form.status"></a-switch>
+              </a-form-item>
+              <a-form-item
+                :label="$t('admin.role.columns.remark')"
+                field="remark"
+              >
+                <a-textarea v-model="form.remark"></a-textarea>
+              </a-form-item>
+            </a-form>
+          </a-modal>
         </div>
       </a-card>
     </a-layout>
@@ -107,14 +174,27 @@
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
   import Breadcrumb from '@/components/breadcrumb/index.vue';
-  import { computed, reactive, watch } from 'vue/dist/vue';
+  import { computed, reactive, ref, watch } from 'vue';
   import { cloneDeep } from 'lodash';
-  import { ref } from 'vue';
-  import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
+  import {
+    Message,
+    SelectOptionData,
+    TableColumnData,
+    TreeFieldNames,
+  } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
-  import { querySysRoleList, SysRoleParams, SysRoleRes } from '@/api/role';
+  import {
+    createSysRole,
+    querySysRoleDetail,
+    querySysRoleList,
+    SysRoleParams,
+    SysRoleReq,
+    SysRoleRes,
+    updateSysRole,
+  } from '@/api/role';
   import { Pagination } from '@/types/global';
+  import { querySysMenuTree, SysMenuTreeParams } from '@/api/menu';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -131,11 +211,11 @@
   const formModel = ref(generateFormModel());
   const statusOptions = computed<SelectOptionData[]>(() => [
     {
-      label: t('admin.menu.form.status.1'),
+      label: t('admin.role.form.status.1'),
       value: 1,
     },
     {
-      label: t('admin.menu.form.status.0'),
+      label: t('admin.role.form.status.0'),
       value: 0,
     },
   ]);
@@ -160,12 +240,28 @@
   const pagination: Pagination = reactive({
     ...basePagination,
   });
+  const operateRow = ref<number>(0);
   const NewRole = () => {
+    buttonStatus.value = 'new';
     drawerTitle.value = t('admin.role.columns.new.drawer');
+    resetForm(formDefaultValues);
+    openNewOrEdit.value = true;
   };
   const DeleteRole = () => {
     drawerTitle.value = t('admin.role.columns.delete.drawer');
     openDelete.value = true;
+  };
+  const EditPerm = (pk: number) => {
+    drawerTitle.value = t('admin.role.columns.perms.drawer');
+    operateRow.value = pk;
+    openDelete.value = true;
+  };
+  const EditRole = async (pk: number) => {
+    buttonStatus.value = 'edit';
+    operateRow.value = pk;
+    drawerTitle.value = t('admin.role.columns.edit.drawer');
+    await fetchRoleDetail(pk);
+    openNewOrEdit.value = true;
   };
   const columns = computed<TableColumnData[]>(() => [
     {
@@ -190,17 +286,70 @@
       title: t('admin.role.columns.status'),
       dataIndex: 'status',
       slotName: 'status',
+      align: 'center',
     },
     {
       title: t('admin.role.columns.remark'),
       dataIndex: 'remark',
       slotName: 'remark',
     },
+    {
+      title: t('admin.role.columns.operate'),
+      dataIndex: 'operate',
+      slotName: 'operate',
+      align: 'center',
+    },
   ]);
 
   // 对话框
+  const openNewOrEdit = ref<boolean>(false);
   const drawerTitle = ref<string>('');
   const openDelete = ref<boolean>(false);
+  const formRef = ref();
+  const cancelReq = () => {
+    openNewOrEdit.value = false;
+    openDelete.value = false;
+  };
+  const formDefaultValues: SysRoleReq = {
+    name: '',
+    data_scope: 1,
+    status: 1,
+    remark: undefined,
+  };
+  const form = reactive<SysRoleReq>({ ...formDefaultValues });
+  const buttonStatus = ref<string>();
+  const menuTreeSelectData = ref();
+
+  // 表单校验
+  const beforeSubmit = async (done: any) => {
+    const res = await formRef.value?.validate();
+    if (!res) {
+      done(true);
+    }
+    done(false);
+  };
+
+  // 提交按钮
+  const submitNewOrEdit = async () => {
+    setLoading(true);
+    try {
+      if (buttonStatus.value === 'new') {
+        await createSysRole(form);
+        cancelReq();
+        Message.success(t('submit.create.success'));
+        await fetchRoleList();
+      } else {
+        await updateSysRole(operateRow.value, form);
+        cancelReq();
+        Message.success(t('submit.update.success'));
+        await fetchRoleList();
+      }
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 删除按钮状态
   const deleteButtonStatus = () => {
@@ -215,6 +364,32 @@
       renderData.value = res.items;
       pagination.total = res.total;
       pagination.current = params.page;
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchRoleList();
+
+  // 请求菜单树
+  const fetchMenuTree = async (params: SysMenuTreeParams = {}) => {
+    setLoading(true);
+    try {
+      menuTreeSelectData.value = await querySysMenuTree(params);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 请求角色详情
+  const fetchRoleDetail = async (pk: number) => {
+    setLoading(true);
+    try {
+      const res = await querySysRoleDetail(pk);
+      resetForm(res);
     } catch (error) {
       // console.log(error);
     } finally {
@@ -250,6 +425,21 @@
     formModel.value.status = undefined;
   };
 
+  const dataScopeText = (ds: number) => {
+    if (ds === 1) {
+      return t('admin.role.columns.data_scope.1');
+    }
+    return t('admin.role.columns.data_scope.2');
+  };
+
+  // 重置表单
+  const resetForm = (data: Record<any, any>) => {
+    Object.keys(data).forEach((key) => {
+      // @ts-ignore
+      form[key] = data[key];
+    });
+  };
+
   // 监听columns变化
   watch(
     () => columns.value,
@@ -270,4 +460,8 @@
   };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+  .content {
+    padding-top: 20px;
+  }
+</style>

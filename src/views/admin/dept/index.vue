@@ -396,7 +396,6 @@
   const beforeSubmit = async (done: any) => {
     const res = await formRef.value?.validate();
     if (!res) {
-      // 关闭对话框
       done(true);
     }
     done(false);
