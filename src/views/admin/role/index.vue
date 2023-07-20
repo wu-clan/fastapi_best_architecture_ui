@@ -116,43 +116,51 @@
         </div>
         <div class="content-modal">
           <a-modal
-            :visible="openNewOrEdit"
-            :title="drawerTitle"
             :closable="false"
             :on-before-ok="beforeSubmit"
+            :title="drawerTitle"
+            :visible="openNewOrEdit"
             @cancel="cancelReq"
             @ok="submitNewOrEdit"
           >
             <a-form ref="formRef" :model="form">
               <a-form-item
+                :label="$t('admin.role.columns.name')"
                 :rules="[
                   {
                     required: true,
                     message: $t('admin.role.form.name.help'),
                   },
                 ]"
-                :label="$t('admin.role.columns.name')"
                 field="name"
               >
                 <a-input v-model="form.name"></a-input>
               </a-form-item>
               <a-form-item
                 :label="$t('admin.role.columns.data_scope')"
-                field="data_scope"
                 :rules="[
                   {
                     required: true,
                     message: $t('admin.role.form.data_scope.help'),
                   },
                 ]"
+                field="data_scope"
               >
-                <a-select v-model="form.data_scope"></a-select>
+                <a-select
+                  v-model="form.data_scope"
+                  :options="dataScopeOptions"
+                ></a-select>
               </a-form-item>
               <a-form-item
                 :label="$t('admin.role.columns.status')"
                 field="status"
               >
-                <a-switch v-model="form.status"></a-switch>
+                <a-switch
+                  v-model="form.status"
+                  v-model:model-value="switchStatus"
+                  :checked-text="$t('switch.open')"
+                  :unchecked-text="$t('switch.close')"
+                ></a-switch>
               </a-form-item>
               <a-form-item
                 :label="$t('admin.role.columns.remark')"
@@ -180,7 +188,6 @@
     Message,
     SelectOptionData,
     TableColumnData,
-    TreeFieldNames,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
@@ -292,6 +299,8 @@
       title: t('admin.role.columns.remark'),
       dataIndex: 'remark',
       slotName: 'remark',
+      ellipsis: true,
+      tooltip: true,
     },
     {
       title: t('admin.role.columns.operate'),
@@ -319,6 +328,17 @@
   const form = reactive<SysRoleReq>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
   const menuTreeSelectData = ref();
+  const dataScopeOptions = computed<SelectOptionData[]>(() => [
+    {
+      label: t('admin.role.form.data_scope.1'),
+      value: 1,
+    },
+    {
+      label: t('admin.role.form.data_scope.2'),
+      value: 2,
+    },
+  ]);
+  const switchStatus = ref<boolean>(Boolean(form.status));
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -390,6 +410,7 @@
     try {
       const res = await querySysRoleDetail(pk);
       resetForm(res);
+      switchStatus.value = Boolean(res.status);
     } catch (error) {
       // console.log(error);
     } finally {
