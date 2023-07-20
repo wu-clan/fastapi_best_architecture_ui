@@ -561,7 +561,7 @@
       slotName: 'operate',
       align: 'center',
       fixed: 'right',
-      width: 120,
+      width: 130,
     },
   ]);
 

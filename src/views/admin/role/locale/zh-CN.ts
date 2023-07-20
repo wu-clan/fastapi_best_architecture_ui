@@ -34,4 +34,7 @@ export default {
   // modal
   'admin.role.modal.delete':
     '确定要删除吗？角色删除没有设置强制检测，删除角色后，用户对应的角色权限将会被清空，可能造成无法挽回的后果，请慎重操作！',
+  // drawer
+  'admin.role.drawer.menu': '角色菜单',
+  'admin.role.drawer.api': '角色API',
 };

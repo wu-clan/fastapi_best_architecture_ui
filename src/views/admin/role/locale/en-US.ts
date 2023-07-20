@@ -34,4 +34,7 @@ export default {
   // modal
   'admin.role.modal.delete':
     'Are you sure you want to delete it? Role deletion does not set forced detection. After the role is deleted, the user’s corresponding role permissions will be cleared, which may cause irreparable consequences. Please operate with caution!',
+  // drawer
+  'admin.role.drawer.menu': 'Role menu',
+  'admin.role.drawer.api': 'Role api',
 };

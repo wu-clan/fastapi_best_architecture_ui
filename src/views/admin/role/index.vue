@@ -183,6 +183,32 @@
               {{ $t('admin.role.modal.delete') }}
             </a-space>
           </a-modal>
+          <a-drawer
+            :closable="false"
+            :title="drawerTitle"
+            :visible="openEditPerm"
+            :width="666"
+            :header="false"
+            @cancel="cancelReq"
+          >
+            <a-tabs
+              :animation="true"
+              default-active-key="1"
+              :type="'card-gutter'"
+              :justify="true"
+            >
+              <a-tab-pane
+                key="1"
+                :closable="false"
+                :title="$t('admin.role.drawer.menu')"
+              ></a-tab-pane>
+              <a-tab-pane
+                key="2"
+                :closable="false"
+                :title="$t('admin.role.drawer.api')"
+              ></a-tab-pane>
+            </a-tabs>
+          </a-drawer>
         </div>
       </a-card>
     </a-layout>
@@ -273,9 +299,8 @@
     openDelete.value = true;
   };
   const EditPerm = (pk: number) => {
-    drawerTitle.value = t('admin.role.columns.perms.drawer');
     operateRow.value = pk;
-    openDelete.value = true;
+    openEditPerm.value = true;
   };
   const EditRole = async (pk: number) => {
     buttonStatus.value = 'edit';
@@ -328,10 +353,12 @@
   const openNewOrEdit = ref<boolean>(false);
   const drawerTitle = ref<string>('');
   const openDelete = ref<boolean>(false);
+  const openEditPerm = ref<boolean>(false);
   const formRef = ref();
   const cancelReq = () => {
     openNewOrEdit.value = false;
     openDelete.value = false;
+    openEditPerm.value = false;
   };
   const formDefaultValues: SysRoleReq = {
     name: '',

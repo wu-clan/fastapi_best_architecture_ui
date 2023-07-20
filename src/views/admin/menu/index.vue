@@ -472,7 +472,7 @@
       title: t('admin.menu.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
-      width: 160,
+      width: 166,
     },
   ]);
 
