@@ -55,6 +55,12 @@ export function querySysMenuTree(
   });
 }
 
+export function querySysMenuTreeBySysRole(
+  pk: number
+): Promise<SysMenuTreeRes[]> {
+  return axios.get(`/api/v1/menus/${pk}/all`);
+}
+
 export function querySysMenuDetail(pk: number): Promise<SysMenuTreeRes> {
   return axios.get(`/api/v1/menus/${pk}`);
 }

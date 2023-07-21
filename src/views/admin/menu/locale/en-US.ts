@@ -24,7 +24,7 @@ export default {
   'admin.menu.form.component.help':
     'The access route address, the access component path, such as: `/log/login/index.vue`, defaults to the `views` directory',
   'admin.menu.form.perms.help':
-    'At present, the role menu authentication is being used, which will be used as a server-side API authentication, such as `admin:list`, and the `,` (comma) interval is used when multiple permissions, please modify it carefully',
+    'Used as a server-side API authentication, such as `admin:list`, and the `,` (comma) interval is used when multiple permissions, please modify it carefully',
   // button
   'admin.menu.button.create': 'New',
   'admin.menu.button.collapse': 'Expand/collapse',

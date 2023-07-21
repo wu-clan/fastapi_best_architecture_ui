@@ -24,7 +24,7 @@ export default {
   'admin.menu.form.component.help':
     '访问的路由地址，访问的组件路径，如：`/log/login/index.vue`，默认在`views`目录下',
   'admin.menu.form.perms.help':
-    '当前正在使用角色菜单验权，将作为 server 端 API 验权使用，如 `admin:list`，多个权限时使用 `,`(英文逗号) 间隔，请谨慎修改',
+    '作为 server 端 API 验权使用，如 `admin:list`，多个权限时使用 `,`(英文逗号) 间隔，请谨慎修改',
   // button
   'admin.menu.button.create': '新增',
   'admin.menu.button.collapse': '展开/收起',

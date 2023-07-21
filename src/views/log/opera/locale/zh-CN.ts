@@ -25,6 +25,6 @@ export default {
   'log.opera.columns.status': '状态',
   'log.opera.columns.msg': '消息',
   'log.opera.columns.args': '参数',
-  'log.opera.columns.cost_time': '耗时',
+  'log.opera.columns.cost_time': '耗时(ms)',
   'log.opera.columns.opera_time': '操作时间',
 };

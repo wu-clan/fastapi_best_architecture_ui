@@ -74,6 +74,9 @@
             {{ $t('admin.role.button.delete') }}
           </a-button>
         </a-space>
+        <a-alert :type="'warning'" style="margin-top: 20px">
+          {{ $t('admin.role.alert.data_scope') }}
+        </a-alert>
         <div class="content">
           <a-table
             v-model:selected-keys="rowSelectKeys"
@@ -187,26 +190,61 @@
             :closable="false"
             :title="drawerTitle"
             :visible="openEditPerm"
-            :width="666"
+            :width="688"
             :header="false"
+            @ok="submitPerms"
             @cancel="cancelReq"
           >
             <a-tabs
+              v-model:active-key="activePerm"
               :animation="true"
-              default-active-key="1"
               :type="'card-gutter'"
               :justify="true"
             >
               <a-tab-pane
-                key="1"
+                key="menu"
                 :closable="false"
                 :title="$t('admin.role.drawer.menu')"
-              ></a-tab-pane>
+              >
+                <a-space style="margin: 0 0 20px 20px" :size="'medium'">
+                  <a-button
+                    :type="'outline'"
+                    :shape="'round'"
+                    @click="checkMenu"
+                  >
+                    {{ $t('admin.role.drawer.menu.button.select') }}
+                  </a-button>
+                  <a-button :type="'outline'" :shape="'round'" @click="expand">
+                    {{ $t('admin.role.drawer.menu.button.collapse') }}
+                  </a-button>
+                  <a-input-search
+                    :style="{ width: '360px' }"
+                    :placeholder="
+                      $t('admin.role.drawer.menu.input.placeholder')
+                    "
+                  />
+                </a-space>
+                <a-tree
+                  ref="menuTreeDataRef"
+                  v-model:checked-keys="checkedKeys"
+                  :checkable="true"
+                  :data="menuTreeData"
+                  :field-names="selectMenuTreeFieldNames"
+                  style="margin-left: 20px"
+                  :check-strictly="true"
+                  :default-expand-all="true"
+                ></a-tree>
+              </a-tab-pane>
               <a-tab-pane
-                key="2"
+                key="api"
                 :closable="false"
                 :title="$t('admin.role.drawer.api')"
-              ></a-tab-pane>
+              >
+                <a-input-search
+                  :style="{ width: '360px', margin: '0 0 20px 20px' }"
+                  :placeholder="$t('admin.role.drawer.api.input.placeholder')"
+                />
+              </a-tab-pane>
             </a-tabs>
           </a-drawer>
         </div>
@@ -227,6 +265,7 @@
     Message,
     SelectOptionData,
     TableColumnData,
+    TreeFieldNames,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
@@ -239,9 +278,15 @@
     SysRoleReq,
     SysRoleRes,
     updateSysRole,
+    updateSysRoleMenu,
   } from '@/api/role';
   import { Pagination } from '@/types/global';
-  import { querySysMenuTree, SysMenuTreeParams } from '@/api/menu';
+  import {
+    querySysMenuTree,
+    querySysMenuTreeBySysRole,
+    SysMenuTreeParams,
+    SysMenuTreeRes,
+  } from '@/api/menu';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -298,8 +343,12 @@
     drawerTitle.value = t('admin.role.columns.delete.drawer');
     openDelete.value = true;
   };
-  const EditPerm = (pk: number) => {
+  const EditPerm = async (pk: number) => {
     operateRow.value = pk;
+    await fetchMenuTree();
+    await fetchRoleMenuTree();
+    checkedKeys.value = [];
+    fetchCheckedKeys(menuTreeDataByRole.value);
     openEditPerm.value = true;
   };
   const EditRole = async (pk: number) => {
@@ -368,7 +417,6 @@
   };
   const form = reactive<SysRoleReq>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
-  const menuTreeSelectData = ref();
   const dataScopeOptions = computed<SelectOptionData[]>(() => [
     {
       label: t('admin.role.form.data_scope.1'),
@@ -380,6 +428,29 @@
     },
   ]);
   const switchStatus = ref<boolean>(Boolean(form.status));
+
+  // 抽屉
+  const checkedKeys = ref<number[]>([]);
+  const menuTreeData = ref();
+  const menuTreeDataByRole = ref();
+  const selectMenuTreeFieldNames: TreeFieldNames = {
+    key: 'id',
+    title: 'title',
+    children: 'children',
+    icon: 'iconRender',
+  };
+  const expandAll = ref<boolean>(false);
+  const checkAll = ref<boolean>(false);
+  const menuTreeDataRef = ref();
+  const activePerm = ref<string>('menu');
+  const submitPerms = async () => {
+    if (activePerm.value === 'menu') {
+      await submitRoleMenu();
+    }
+  };
+  const roleMenuKeys = computed(() => {
+    return { menus: checkedKeys.value };
+  });
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -455,7 +526,21 @@
   const fetchMenuTree = async (params: SysMenuTreeParams = {}) => {
     setLoading(true);
     try {
-      menuTreeSelectData.value = await querySysMenuTree(params);
+      menuTreeData.value = await querySysMenuTree(params);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 请求角色菜单树
+  const fetchRoleMenuTree = async () => {
+    setLoading(true);
+    try {
+      menuTreeDataByRole.value = await querySysMenuTreeBySysRole(
+        operateRow.value
+      );
     } catch (error) {
       // console.log(error);
     } finally {
@@ -475,6 +560,30 @@
     } finally {
       setLoading(false);
     }
+  };
+
+  // 更新角色菜单
+  const submitRoleMenu = async () => {
+    setLoading(true);
+    try {
+      await updateSysRoleMenu(operateRow.value, roleMenuKeys.value);
+      cancelReq();
+      Message.success(t('submit.update.success'));
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  // 获取菜单选中节点
+  const fetchCheckedKeys = (data: SysMenuTreeRes[]) => {
+    data.forEach((item: SysMenuTreeRes) => {
+      const checkedKey = item.id;
+      if (item.children && item.children.length > 0) {
+        fetchCheckedKeys(item.children);
+      }
+      checkedKeys.value.push(checkedKey);
+    });
   };
 
   // 事件: 分页
@@ -505,6 +614,7 @@
     formModel.value.status = undefined;
   };
 
+  // 数据权限说明
   const dataScopeText = (ds: number) => {
     if (ds === 1) {
       return t('admin.role.columns.data_scope.1');
@@ -518,6 +628,18 @@
       // @ts-ignore
       form[key] = data[key];
     });
+  };
+
+  // 全选/取消全选
+  const checkMenu = () => {
+    checkAll.value = !checkAll.value;
+    menuTreeDataRef.value.checkAll(checkAll.value);
+  };
+
+  // 展开/收起
+  const expand = () => {
+    expandAll.value = !expandAll.value;
+    menuTreeDataRef.value.expandAll(expandAll.value);
   };
 
   // 监听columns变化

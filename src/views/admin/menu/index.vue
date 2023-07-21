@@ -406,9 +406,11 @@
       width: 150,
     },
     {
-      title: t('admin.menu.columns.name'),
-      dataIndex: 'name',
-      slotName: 'name',
+      title: t('admin.menu.columns.path'),
+      dataIndex: 'path',
+      slotName: 'path',
+      ellipsis: true,
+      tooltip: true,
       width: 150,
     },
     {

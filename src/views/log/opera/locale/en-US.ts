@@ -25,6 +25,6 @@ export default {
   'log.opera.columns.status': 'Status',
   'log.opera.columns.msg': 'Message',
   'log.opera.columns.args': 'Args',
-  'log.opera.columns.cost_time': 'CostTime',
+  'log.opera.columns.cost_time': 'Cost time',
   'log.opera.columns.opera_time': 'Opera time',
 };

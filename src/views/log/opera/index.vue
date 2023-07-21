@@ -256,7 +256,7 @@
       slotName: 'msg',
       ellipsis: true,
       tooltip: true,
-      width: 180,
+      width: 160,
     },
     {
       title: t('log.opera.columns.args'),
