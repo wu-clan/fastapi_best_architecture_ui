@@ -78,3 +78,7 @@ export function deleteSysRole(params: SysRoleDeleteParams) {
     },
   });
 }
+
+export function updateSysRoleMenu(pk: number, data: SysRoleMenuReq) {
+  return axios.put(`/api/v1/roles/${pk}/menu`, data);
+}
