@@ -20,9 +20,9 @@ export default {
   'admin.menu.form.remark.placeholder': 'Please enter a comment',
   'admin.menu.form.parent_id.placeholder': 'Top',
   'admin.menu.form.path.help':
-    'The access route address, such as: `admin`, if the external network address requires internal link access, it starts with `http(s)://`',
+    'The route address to access, such as: `admin`, if it is empty, the route address is converted to lowercase letters plus hyphens by default, such as `SysMenu` -> `sys-menu`, if it is an external network address that needs to be accessed internally, then `http(s)://` is used at the beginning',
   'admin.menu.form.component.help':
-    'The access route address, the access component path, such as: `/log/login/index.vue`, defaults to the `views` directory',
+    'The access component path, such as: `/log/login/index.vue`, defaults to the `views` directory',
   'admin.menu.form.perms.help':
     'Used as a server-side API authentication, such as `admin:list`, and the `,` (comma) interval is used when multiple permissions, please modify it carefully',
   // button

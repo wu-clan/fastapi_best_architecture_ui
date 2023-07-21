@@ -135,7 +135,7 @@
       :on-before-ok="beforeSubmit"
       :title="drawerTitle"
       :visible="openNewOrEdit"
-      :width="550"
+      :width="580"
       @cancel="cancelReq"
       @ok="submitNewOrEdit"
     >
@@ -195,7 +195,7 @@
         >
           <a-input
             v-model="form.name"
-            :placeholder="$t('admin.menu.form.name.placeholder')"
+            :placeholder="$t('admin.menu.form.path.name')"
           ></a-input>
         </a-form-item>
         <a-form-item

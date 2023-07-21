@@ -20,9 +20,9 @@ export default {
   'admin.menu.form.remark.placeholder': '请输入备注',
   'admin.menu.form.parent_id.placeholder': '顶级',
   'admin.menu.form.path.help':
-    '访问的路由地址，如：`admin`，如外网地址需内链访问则以`http(s)://`开头',
+    '访问的路由地址，如：`admin`，如果为空，则默认使用路由名称转化的小写字母加中划线为路由地址，如 `SysMenu` -> `sys-menu`，如果是外网地址需内链访问，则以`http(s)://`开头',
   'admin.menu.form.component.help':
-    '访问的路由地址，访问的组件路径，如：`/log/login/index.vue`，默认在`views`目录下',
+    '访问的组件路径，如：`/log/login/index.vue`，默认在`views`目录下',
   'admin.menu.form.perms.help':
     '作为 server 端 API 验权使用，如 `admin:list`，多个权限时使用 `,`(英文逗号) 间隔，请谨慎修改',
   // button
