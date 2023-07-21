@@ -266,14 +266,17 @@
     SelectOptionData,
     TableColumnData,
     TreeFieldNames,
+    TreeNodeData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
   import {
     createSysRole,
     deleteSysRole,
+    querySysMenuTreeBySysRole,
     querySysRoleDetail,
     querySysRoleList,
+    SysRoleMenuReq,
     SysRoleParams,
     SysRoleReq,
     SysRoleRes,
@@ -283,7 +286,6 @@
   import { Pagination } from '@/types/global';
   import {
     querySysMenuTree,
-    querySysMenuTreeBySysRole,
     SysMenuTreeParams,
     SysMenuTreeRes,
   } from '@/api/menu';
@@ -434,7 +436,7 @@
   const checkedKeys = ref<number[]>([]);
   const menuTreeData = ref();
   const searchKey = ref<string>('');
-  const filterMenuTreeData = computed(() => {
+  const filterMenuTreeData = computed<any>(() => {
     if (!searchKey.value) return menuTreeData;
     return searchMenuTreeData();
   });
@@ -454,8 +456,8 @@
       await submitRoleMenu();
     }
   };
-  const roleMenuKeys = computed(() => {
-    return { menus: checkedKeys.value };
+  const roleMenuKeys = reactive<SysRoleMenuReq>({
+    menus: checkedKeys.value,
   });
 
   // 表单校验
@@ -572,7 +574,7 @@
   const submitRoleMenu = async () => {
     setLoading(true);
     try {
-      await updateSysRoleMenu(operateRow.value, roleMenuKeys.value);
+      await updateSysRoleMenu(operateRow.value, roleMenuKeys);
       cancelReq();
       Message.success(t('submit.update.success'));
     } catch (error) {
@@ -584,8 +586,8 @@
 
   // 筛选菜单树
   const searchMenuTreeData = () => {
-    const loop = (data: any) => {
-      const result: any = [];
+    const loop = (data: SysMenuTreeRes[]) => {
+      const result: SysMenuTreeRes[] = [];
       data.forEach((item: SysMenuTreeRes) => {
         if (
           item.title.toLowerCase().indexOf(searchKey.value.toLowerCase()) > -1

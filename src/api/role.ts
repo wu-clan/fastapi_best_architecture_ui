@@ -1,4 +1,4 @@
-import { SysMenuRes } from '@/api/menu';
+import { SysMenuRes, SysMenuTreeRes } from '@/api/menu';
 import axios from 'axios';
 import qs from 'query-string';
 
@@ -45,6 +45,12 @@ export function querySysRoleAll(): Promise<SysRoleRes[]> {
 
 export function querySysRoleAllBySysUser(pk: number): Promise<SysRoleRes[]> {
   return axios.get(`/api/v1/roles/${pk}/all`);
+}
+
+export function querySysMenuTreeBySysRole(
+  pk: number
+): Promise<SysMenuTreeRes[]> {
+  return axios.get(`/api/v1/roles/${pk}/menus`);
 }
 
 export function querySysRoleList(
