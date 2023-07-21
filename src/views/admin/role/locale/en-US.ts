@@ -37,4 +37,11 @@ export default {
   // drawer
   'admin.role.drawer.menu': 'Role menu',
   'admin.role.drawer.api': 'Role api',
+  'admin.role.drawer.menu.button.select': 'Select all/Cancel all',
+  'admin.role.drawer.menu.button.collapse': 'Expand/Collapse',
+  'admin.role.drawer.menu.input.placeholder': 'Menu Filter',
+  'admin.role.drawer.api.input.placeholder': 'API Filter',
+  // alert
+  'admin.role.alert.data_scope':
+    'When you set the data permissions to all, you will ignore the menu authorization or API authorization and directly have all the permissions, so please be careful!',
 };

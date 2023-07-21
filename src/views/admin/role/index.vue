@@ -188,51 +188,51 @@
           </a-modal>
           <a-drawer
             :closable="false"
+            :header="false"
             :title="drawerTitle"
             :visible="openEditPerm"
             :width="688"
-            :header="false"
-            @ok="submitPerms"
             @cancel="cancelReq"
+            @ok="submitPerms"
           >
             <a-tabs
               v-model:active-key="activePerm"
               :animation="true"
-              :type="'card-gutter'"
               :justify="true"
+              :type="'card-gutter'"
             >
               <a-tab-pane
                 key="menu"
                 :closable="false"
                 :title="$t('admin.role.drawer.menu')"
               >
-                <a-space style="margin: 0 0 20px 20px" :size="'medium'">
+                <a-space :size="'medium'" style="margin: 0 0 20px 20px">
                   <a-button
-                    :type="'outline'"
                     :shape="'round'"
+                    :type="'outline'"
                     @click="checkMenu"
                   >
                     {{ $t('admin.role.drawer.menu.button.select') }}
                   </a-button>
-                  <a-button :type="'outline'" :shape="'round'" @click="expand">
+                  <a-button :shape="'round'" :type="'outline'" @click="expand">
                     {{ $t('admin.role.drawer.menu.button.collapse') }}
                   </a-button>
                   <a-input-search
-                    :style="{ width: '360px' }"
+                    v-model="searchKey"
                     :placeholder="
                       $t('admin.role.drawer.menu.input.placeholder')
                     "
+                    :style="{ width: '360px' }"
                   />
                 </a-space>
                 <a-tree
                   ref="menuTreeDataRef"
                   v-model:checked-keys="checkedKeys"
+                  :check-strictly="true"
                   :checkable="true"
-                  :data="menuTreeData"
+                  :data="filterMenuTreeData"
                   :field-names="selectMenuTreeFieldNames"
                   style="margin-left: 20px"
-                  :check-strictly="true"
-                  :default-expand-all="true"
                 ></a-tree>
               </a-tab-pane>
               <a-tab-pane
@@ -241,8 +241,8 @@
                 :title="$t('admin.role.drawer.api')"
               >
                 <a-input-search
-                  :style="{ width: '360px', margin: '0 0 20px 20px' }"
                   :placeholder="$t('admin.role.drawer.api.input.placeholder')"
+                  :style="{ width: '360px', margin: '0 0 20px 20px' }"
                 />
               </a-tab-pane>
             </a-tabs>
@@ -349,6 +349,7 @@
     await fetchRoleMenuTree();
     checkedKeys.value = [];
     fetchCheckedKeys(menuTreeDataByRole.value);
+    searchKey.value = '';
     openEditPerm.value = true;
   };
   const EditRole = async (pk: number) => {
@@ -432,6 +433,11 @@
   // 抽屉
   const checkedKeys = ref<number[]>([]);
   const menuTreeData = ref();
+  const searchKey = ref<string>('');
+  const filterMenuTreeData = computed(() => {
+    if (!searchKey.value) return menuTreeData;
+    return searchMenuTreeData();
+  });
   const menuTreeDataByRole = ref();
   const selectMenuTreeFieldNames: TreeFieldNames = {
     key: 'id',
@@ -575,6 +581,31 @@
       setLoading(false);
     }
   };
+
+  // 筛选菜单树
+  const searchMenuTreeData = () => {
+    const loop = (data: any) => {
+      const result: any = [];
+      data.forEach((item: SysMenuTreeRes) => {
+        if (
+          item.title.toLowerCase().indexOf(searchKey.value.toLowerCase()) > -1
+        ) {
+          result.push({ ...item });
+        } else if (item.children) {
+          const filterData = loop(item.children);
+          if (filterData.length) {
+            result.push({
+              ...item,
+              children: filterData,
+            });
+          }
+        }
+      });
+      return result;
+    };
+    return loop(menuTreeData.value);
+  };
+
   // 获取菜单选中节点
   const fetchCheckedKeys = (data: SysMenuTreeRes[]) => {
     data.forEach((item: SysMenuTreeRes) => {
