@@ -27,7 +27,7 @@ export default {
   'admin.user.form.email.placeholder': '请输入邮箱',
   'admin.user.form.role.placeholder': '请选择角色',
   // columns
-  'admin.user.columns.updateUserRoles.placeholder': '你要修改用户的角色吗？',
+  'admin.user.columns.updateUserRoles.placeholder': '确定要修改用户角色吗？',
   'admin.user.columns.switch.true': '开启',
   'admin.user.columns.switch.false': '关闭',
   'admin.user,columns.edit': '编辑',
@@ -49,4 +49,6 @@ export default {
   'admin.user.columns.operate': '操作',
   'admin.user.columns.edit': '编辑',
   'admin.user.columns.delete': '删除',
+  // alert
+  'admin.user.alert.superuser': '管理员不受角色权限限制，默认拥有所有权限',
 };

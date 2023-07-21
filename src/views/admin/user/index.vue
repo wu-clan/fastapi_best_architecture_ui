@@ -43,13 +43,13 @@
                 </a-col>
                 <a-col :span="6">
                   <a-form-item
-                    :label="$t('admin.dept.form.status')"
+                    :label="$t('admin.user.form.status')"
                     field="status"
                   >
                     <a-select
                       v-model="formModel.status"
                       :options="statusOptions"
-                      :placeholder="$t('admin.dept.form.selectDefault')"
+                      :placeholder="$t('admin.user.form.selectDefault')"
                       allow-clear
                       @clear="resetStatus"
                     />
@@ -65,18 +65,21 @@
                 <template #icon>
                   <icon-search />
                 </template>
-                {{ $t('admin.dept.form.search') }}
+                {{ $t('admin.user.form.search') }}
               </a-button>
               <a-button @click="resetSelect">
                 <template #icon>
                   <icon-refresh />
                 </template>
-                {{ $t('admin.dept.form.reset') }}
+                {{ $t('admin.user.form.reset') }}
               </a-button>
             </a-space>
           </a-col>
         </a-row>
         <a-divider />
+        <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
+          {{ $t('admin.user.alert.superuser') }}
+        </a-alert>
         <div class="content">
           <a-table
             :bordered="false"

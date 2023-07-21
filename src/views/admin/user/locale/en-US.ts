@@ -29,7 +29,7 @@ export default {
   'admin.user.form.role.placeholder': 'Please select role',
   // columns
   'admin.user.columns.updateUserRoles.placeholder':
-    'Do you want to modify the user s role?',
+    'Sure you want to change the user role?',
   'admin.user.columns.switch.true': 'Enable',
   'admin.user.columns.switch.false': 'Disable',
   'admin.user,columns.edit': 'Edit',
@@ -51,4 +51,7 @@ export default {
   'admin.user.columns.operate': 'Operate',
   'admin.user.columns.edit': 'Edit',
   'admin.user.columns.delete': 'Delete',
+  // alert
+  'admin.user.alert.superuser':
+    'Superuser are not limited by role permissions and have all permissions by default',
 };
