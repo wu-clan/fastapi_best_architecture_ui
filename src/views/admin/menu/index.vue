@@ -380,6 +380,9 @@
     buttonStatus.value = 'new';
     drawerTitle.value = t('admin.menu.columns.new.drawer');
     resetForm(formDefaultValues);
+    switchCache.value = Boolean(form.cache);
+    switchShow.value = Boolean(form.show);
+    switchStatus.value = Boolean(form.status);
     menuType.value = 1;
     form.parent_id = pk;
     openNewOrEdit.value = true;
