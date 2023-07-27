@@ -96,7 +96,11 @@
             :title="$t('menu.monitor.server.service')"
             class="info-card"
           >
-            <a-descriptions :data="serviceData"></a-descriptions>
+            <a-descriptions
+              :bordered="true"
+              :data="serviceData"
+              :layout="'inline-vertical'"
+            ></a-descriptions>
           </a-card>
           <a-space style="padding-top: 22px" />
           <a-card
@@ -108,7 +112,6 @@
               :bordered="true"
               :column="4"
               :data="osData"
-              :layout="'vertical'"
             ></a-descriptions>
           </a-card>
           <a-space style="padding-top: 22px" />
@@ -117,7 +120,12 @@
             :title="$t('menu.monitor.server.disk')"
             class="info-card"
           >
-            <a-descriptions :bordered="true" :data="diskData"></a-descriptions>
+            <a-table
+              :columns="columns"
+              :data="diskData"
+              :hoverable="false"
+              :pagination="false"
+            ></a-table>
           </a-card>
         </div>
       </a-card>
@@ -134,11 +142,45 @@
   import useLoading from '@/hooks/loading';
   import { queryServerMonitor } from '@/api/monitor';
   import { computed, ref } from 'vue';
-  import { DescData } from '@arco-design/web-vue';
+  import { DescData, TableColumnData } from '@arco-design/web-vue';
+  import { useI18n } from 'vue-i18n';
 
+  const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
 
   const setServerData = ref<Record<string, any>>({});
+  const diskData = ref();
+  const columns = computed<TableColumnData[]>(() => [
+    {
+      title: t('monitor.server.columns.dir'),
+      dataIndex: 'dir',
+    },
+    {
+      title: t('monitor.server.columns.type'),
+      dataIndex: 'type',
+    },
+    {
+      title: t('monitor.server.columns.device'),
+      dataIndex: 'device',
+    },
+    {
+      title: t('monitor.server.columns.total'),
+      dataIndex: 'total',
+    },
+    {
+      title: t('monitor.server.columns.free'),
+      dataIndex: 'free',
+    },
+    {
+      title: t('monitor.server.columns.used'),
+      dataIndex: 'used',
+    },
+    {
+      title: t('monitor.server.columns.usage'),
+      dataIndex: 'usage',
+    },
+  ]);
+
   const cpuData = computed(() => {
     return {
       usage: setServerData.value.cpu?.usage,
@@ -149,6 +191,7 @@
       physical_num: setServerData.value.cpu?.physical_num,
     };
   });
+
   const memData = computed(() => {
     return {
       total: setServerData.value.memory?.total,
@@ -157,20 +200,7 @@
       usage: setServerData.value.memory?.usage,
     };
   });
-  const diskData = computed<DescData[]>(() => {
-    const data: DescData[] = [];
-    if (setServerData.value.disk) {
-      setServerData.value.disk.forEach((item: Record<string, any>) => {
-        Object.keys(item).forEach((key) => {
-          data.push({
-            label: key,
-            value: item[key],
-          });
-        });
-      });
-    }
-    return data;
-  });
+
   const serviceData = computed<DescData[]>(() => {
     const data: DescData[] = [];
     if (setServerData.value.service) {
@@ -183,6 +213,7 @@
     }
     return data;
   });
+
   const osData = computed<DescData[]>(() => {
     const data: DescData[] = [];
     if (setServerData.value.system) {
@@ -214,8 +245,8 @@
       setServerData.value.cpu = res.cpu;
       setServerData.value.memory = res.mem;
       setServerData.value.system = res.sys;
-      setServerData.value.disk = res.disk;
       setServerData.value.service = res.service;
+      diskData.value = res.disk;
     } catch (err) {
       // console.error(err);
     } finally {

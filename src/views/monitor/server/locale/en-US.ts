@@ -15,4 +15,12 @@ export default {
   'menu.monitor.server.memory.used': 'Used',
   'menu.monitor.server.memory.free': 'Free',
   'menu.monitor.server.memory.usage': 'Usage',
+  // columns
+  'monitor.server.columns.dir': 'dir',
+  'monitor.server.columns.type': 'type',
+  'monitor.server.columns.device': 'device',
+  'monitor.server.columns.total': 'total',
+  'monitor.server.columns.free': 'free',
+  'monitor.server.columns.used': 'used',
+  'monitor.server.columns.usage': 'usage',
 };

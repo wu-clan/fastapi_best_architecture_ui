@@ -15,4 +15,12 @@ export default {
   'menu.monitor.server.memory.used': '已使用',
   'menu.monitor.server.memory.free': '剩余',
   'menu.monitor.server.memory.usage': '使用率',
+  // columns
+  'monitor.server.columns.dir': '路径',
+  'monitor.server.columns.type': '类型',
+  'monitor.server.columns.device': '设备',
+  'monitor.server.columns.total': '总计',
+  'monitor.server.columns.free': '空闲',
+  'monitor.server.columns.used': '已使用',
+  'monitor.server.columns.usage': '使用率',
 };
