@@ -4,6 +4,7 @@ export default {
   'login.form.password.errMsg': '密码不能为空',
   'login.form.captcha.errMsg': '验证码不能为空',
   'login.form.login.errMsg': '登录出错，轻刷新重试',
+  'login.form.login.staff.errMsg': '此用户禁止后台管理登录',
   'login.form.login.success': '欢迎使用',
   'login.form.userName.placeholder': '用户名：admin',
   'login.form.password.placeholder': '密码：admin',

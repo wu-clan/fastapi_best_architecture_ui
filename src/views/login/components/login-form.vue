@@ -131,6 +131,12 @@
   }) => {
     if (loading.value) return;
     if (!errors) {
+      // 设置禁止后台登录
+      // if (router.currentRoute.value.path === '') {
+      //   if (!userStore.is_staff) {
+      //     throw new Error('login.form.login.staff.errMsg');
+      //   }
+      // }
       setLoading(true);
       try {
         await userStore.login(values as LoginData);

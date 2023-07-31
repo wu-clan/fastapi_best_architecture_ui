@@ -3,5 +3,6 @@ export interface UserState {
   nickname?: string;
   avatar?: string;
   is_superuser: boolean;
+  is_staff: boolean;
   roles: string;
 }

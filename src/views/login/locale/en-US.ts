@@ -4,6 +4,8 @@ export default {
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.captcha.errMsg': 'Captcha cannot be empty',
   'login.form.login.errMsg': 'Login error, refresh and try again',
+  'login.form.login.staff.errMsg':
+    'This user forbids background management to log in',
   'login.form.login.success': 'welcome to use',
   'login.form.userName.placeholder': 'Username: admin',
   'login.form.password.placeholder': 'Password: admin',
