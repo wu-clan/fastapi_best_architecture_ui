@@ -35,7 +35,7 @@ export default {
   'admin.user.form.role.placeholder': 'Please select role',
   // columns
   'admin.user.columns.updateUserRoles.placeholder':
-    'Sure you want to change the user role?',
+    "Sure you want to modify the user's role?",
   'admin.user.columns.switch.true': 'Enable',
   'admin.user.columns.switch.false': 'Disable',
   'admin.user,columns.edit': 'Edit',

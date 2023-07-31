@@ -55,7 +55,7 @@ export interface SysUserInfoReq {
 }
 
 export interface SysUserAddReq {
-  dept_id: number;
+  dept_id?: number;
   username: string;
   nickname: string;
   password: string;

@@ -33,7 +33,7 @@ export default {
   'admin.user.form.role.required': '角色是必选项',
   'admin.user.form.role.placeholder': '请选择角色',
   // columns
-  'admin.user.columns.updateUserRoles.placeholder': '确定要修改用户角色吗？',
+  'admin.user.columns.updateUserRoles.placeholder': '确定要修改用户的角色吗？',
   'admin.user.columns.switch.true': '开启',
   'admin.user.columns.switch.false': '关闭',
   'admin.user,columns.edit': '编辑',

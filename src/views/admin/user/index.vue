@@ -77,15 +77,15 @@
           </a-col>
         </a-row>
         <a-divider />
-        <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
-          {{ $t('admin.user.alert.superuser') }}
-        </a-alert>
         <a-button type="primary" @click="AddUser()">
           <template #icon>
             <icon-plus />
           </template>
           {{ $t('admin.user.button.add') }}
         </a-button>
+        <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
+          {{ $t('admin.user.alert.superuser') }}
+        </a-alert>
         <div class="content">
           <a-table
             :bordered="false"
@@ -333,22 +333,23 @@
           </a-modal>
           <a-modal
             :closable="false"
+            :on-before-ok="handlerAddUserBeforOk"
             :title="drawerTitle"
             :visible="openAdd"
-            :on-before-ok="handlerAddUserBeforOk"
+            :width="580"
             @cancel="closeAdd"
             @ok="submitAddUser"
           >
             <a-form ref="formAddUserRef" :model="formAddUser">
               <a-form-item
                 :label="$t('admin.user.form.dept')"
-                field="dept_id"
                 :rules="[
                   {
                     required: true,
                     message: $t('admin.user.form.dept.required'),
                   },
                 ]"
+                field="dept_id"
               >
                 <a-tree-select
                   v-model="formAddUser.dept_id"
@@ -553,7 +554,7 @@
     children: 'children',
   };
   const formDefaultValues: SysUserAddReq = {
-    dept_id: 0,
+    dept_id: undefined,
     username: '',
     nickname: '',
     password: '',
@@ -583,6 +584,8 @@
   const AddUser = async () => {
     drawerTitle.value = t('admin.user.columns.add');
     resetForm(formDefaultValues);
+    await fetchDeptTree();
+    await fetchAllRole();
     openAdd.value = true;
   };
   const EditUser = async (username: string) => {
