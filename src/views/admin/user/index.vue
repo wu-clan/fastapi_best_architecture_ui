@@ -80,6 +80,12 @@
         <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
           {{ $t('admin.user.alert.superuser') }}
         </a-alert>
+        <a-button type="primary" @click="AddUser()">
+          <template #icon>
+            <icon-plus />
+          </template>
+          {{ $t('admin.user.button.add') }}
+        </a-button>
         <div class="content">
           <a-table
             :bordered="false"
@@ -87,7 +93,7 @@
             :data="renderData"
             :loading="loading"
             :pagination="pagination"
-            :scroll="{ x: 2000 }"
+            :scroll="{ x: 2100 }"
             :size="size"
             row-key="id"
             @page-change="onPageChange"
@@ -154,6 +160,20 @@
                   $t(`admin.user.columns.switch.${record.is_superuser}`)
                 "
                 @change="changeSuper(record.id)"
+              />
+            </template>
+            <template #is_staff="{ record }">
+              <a-switch
+                v-model:model-value="record.is_staff"
+                :checked-text="
+                  $t(`admin.user.columns.switch.${record.is_staff}`)
+                "
+                :disabled="switchStatus"
+                :loading="loading"
+                :unchecked-text="
+                  $t(`admin.user.columns.switch.${record.is_staff}`)
+                "
+                @change="changeStaff(record.id)"
               />
             </template>
             <template #is_multi_login="{ record }">
@@ -311,6 +331,123 @@
               :width="360"
             ></a-select>
           </a-modal>
+          <a-modal
+            :closable="false"
+            :title="drawerTitle"
+            :visible="openAdd"
+            :on-before-ok="handlerAddUserBeforOk"
+            @cancel="closeAdd"
+            @ok="submitAddUser"
+          >
+            <a-form ref="formAddUserRef" :model="formAddUser">
+              <a-form-item
+                :label="$t('admin.user.form.dept')"
+                field="dept_id"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.dept.required'),
+                  },
+                ]"
+              >
+                <a-tree-select
+                  v-model="formAddUser.dept_id"
+                  :allow-clear="true"
+                  :allow-search="true"
+                  :data="deptTreeData"
+                  :field-names="selectDeptTreeFieldNames"
+                  :loading="loading"
+                  :placeholder="$t('admin.user.form.dept.placeholder')"
+                ></a-tree-select>
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.username')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.username.required'),
+                  },
+                ]"
+                field="username"
+              >
+                <a-input
+                  v-model="formAddUser.username"
+                  :placeholder="$t('admin.user.form.username.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.nickname')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.nickname.required'),
+                  },
+                ]"
+                field="nickname"
+              >
+                <a-input
+                  v-model="formAddUser.nickname"
+                  :placeholder="$t('admin.user.form.nickname.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.password')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.password.required'),
+                  },
+                ]"
+                field="password"
+              >
+                <a-input-password
+                  v-model="formAddUser.password"
+                  :placeholder="$t('admin.user.form.password.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.email')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.email.required'),
+                  },
+                ]"
+                field="email"
+              >
+                <a-input
+                  v-model="formAddUser.email"
+                  :placeholder="$t('admin.user.form.email.placeholder')"
+                />
+              </a-form-item>
+
+              <a-form-item
+                :feedback="true"
+                :label="$t('admin.user.form.role')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('admin.user.form.role.required'),
+                  },
+                ]"
+                field="roles"
+              >
+                <a-select
+                  v-model="formAddUser.roles"
+                  :allow-clear="true"
+                  :loading="loading"
+                  :multiple="true"
+                  :options="roleOptions"
+                  :placeholder="$t('admin.user.form.role.placeholder')"
+                  :width="360"
+                ></a-select>
+              </a-form-item>
+            </a-form>
+          </a-modal>
         </div>
       </a-card>
     </a-layout>
@@ -325,12 +462,15 @@
   import Breadcrumb from '@/components/breadcrumb/index.vue';
   import useLoading from '@/hooks/loading';
   import {
+    addUser,
     changeUserMulti,
+    changeUserStaff,
     changeUserStatus,
     changeUserSuper,
     deleteUser,
     getUser,
     getUserList,
+    SysUserAddReq,
     SysUserAvatarReq,
     SysUserInfoReq,
     SysUserParams,
@@ -412,6 +552,15 @@
     title: 'name',
     children: 'children',
   };
+  const formDefaultValues: SysUserAddReq = {
+    dept_id: 0,
+    username: '',
+    nickname: '',
+    password: '',
+    email: '',
+    roles: [],
+  };
+  const formAddUser = reactive<SysUserAddReq>({ ...formDefaultValues });
 
   // 表格
   const userStore = useUserStore();
@@ -431,6 +580,11 @@
   const pagination: Pagination = reactive({
     ...basePagination,
   });
+  const AddUser = async () => {
+    drawerTitle.value = t('admin.user.columns.add');
+    resetForm(formDefaultValues);
+    openAdd.value = true;
+  };
   const EditUser = async (username: string) => {
     operateUsername.value = username;
     drawerTitle.value = t('admin.user.columns.edit.userinfo');
@@ -552,6 +706,14 @@
       width: 120,
     },
     {
+      title: t('admin.user.columns.is_staff'),
+      dataIndex: 'is_staff',
+      slotName: 'is_staff',
+      align: 'center',
+      fixed: 'right',
+      width: 120,
+    },
+    {
       title: t('admin.user.columns.is_multi_login'),
       dataIndex: 'is_multi_login',
       slotName: 'is_multi_login',
@@ -570,15 +732,21 @@
 
   // 对话框
   const drawerTitle = ref<string>('');
+  const openAdd = ref<boolean>(false);
   const openEdit = ref<boolean>(false);
   const openDelete = ref<boolean>(false);
   const openAvatar = ref<boolean>(false);
   const openEditUserRole = ref<boolean>(false);
   const formAvatarRef = ref();
   const formUserInfoRef = ref();
+  const formAddUserRef = ref();
   const closeAvatar = () => {
     formAvatar.url = '';
     openAvatar.value = false;
+  };
+  const closeAdd = () => {
+    openAdd.value = false;
+    resetForm(formDefaultValues);
   };
   const closeEdit = () => {
     openEdit.value = false;
@@ -602,6 +770,13 @@
   };
   const handleUserInfoBeforeOk = async (done: any) => {
     const res = await formUserInfoRef.value?.validate();
+    if (!res) {
+      done(true);
+    }
+    done(false);
+  };
+  const handlerAddUserBeforOk = async (done: any) => {
+    const res = await formAddUserRef.value?.validate();
     if (!res) {
       done(true);
     }
@@ -740,6 +915,21 @@
     }
   };
 
+  // 修改用户后台登录权限
+  const changeStaff = async (pk: number) => {
+    setLoading(true);
+    try {
+      await changeUserStaff(pk);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      await fetchUserList({
+        page: pagination.current,
+        size: pagination.pageSize,
+      });
+    }
+  };
+
   // 修改用户多点登录
   const changeMultiLogin = async (pk: number) => {
     setLoading(true);
@@ -762,6 +952,23 @@
     try {
       await updateUser(operateUsername.value, formUserInfo);
       closeEdit();
+      await fetchUserList({
+        page: pagination.current,
+        size: pagination.pageSize,
+      });
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 添加用户
+  const submitAddUser = async () => {
+    setLoading(true);
+    try {
+      await addUser(formAddUser);
+      closeAdd();
       await fetchUserList({
         page: pagination.current,
         size: pagination.pageSize,
@@ -818,11 +1025,19 @@
     formModel.value.status = undefined;
   };
 
-  // 重置表单
+  // 重置用户信息表单
   const resetUserInfoForm = (data: Record<any, any>) => {
     Object.keys(data).forEach((key) => {
       // @ts-ignore
       formUserInfo[key] = data[key];
+    });
+  };
+
+  // 重置新增用户表单
+  const resetForm = (data: Record<any, any>) => {
+    Object.keys(data).forEach((key) => {
+      // @ts-ignore
+      formAddUser[key] = data[key];
     });
   };
 

@@ -15,6 +15,7 @@ export interface SysUserRes {
   phone?: string;
   status: number;
   is_superuser: boolean;
+  is_staff: boolean;
   is_multi_login: boolean;
   join_time: string;
   last_login_time: string;
@@ -53,6 +54,15 @@ export interface SysUserInfoReq {
   phone?: string;
 }
 
+export interface SysUserAddReq {
+  dept_id: number;
+  username: string;
+  nickname: string;
+  password: string;
+  email: string;
+  roles: number[];
+}
+
 export function getUserInfo(): Promise<UserState> {
   return axios.get('/api/v1/users/me');
 }
@@ -86,6 +96,10 @@ export function changeUserSuper(pk: number) {
   return axios.put(`/api/v1/users/${pk}/super`);
 }
 
+export function changeUserStaff(pk: number) {
+  return axios.put(`/api/v1/users/${pk}/staff`);
+}
+
 export function changeUserMulti(pk: number) {
   return axios.put(`/api/v1/users/${pk}/multi`);
 }
@@ -98,6 +112,9 @@ export function updateUser(username: string, data: SysUserInfoReq) {
   return axios.put(`/api/v1/users/${username}`, data);
 }
 
+export function addUser(data: SysUserAddReq) {
+  return axios.post('/api/v1/users/add', data);
+}
 export function deleteUser(username: string) {
   return axios.delete(`/api/v1/users/${username}`);
 }
