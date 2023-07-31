@@ -126,7 +126,7 @@
               </a-avatar>
               <a-avatar
                 v-else
-                :style="{ backgroundColor: avatarColor }"
+                :style="{ backgroundColor: getRandomColor() }"
                 trigger-type="mask"
                 @click="updateAvatar(record.username)"
               >
@@ -619,7 +619,6 @@
     });
     return nameList;
   };
-  const avatarColor = getRandomColor();
   const columns = computed<TableColumnData[]>(() => [
     {
       title: 'UUID',
