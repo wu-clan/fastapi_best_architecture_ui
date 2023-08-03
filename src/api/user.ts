@@ -5,7 +5,7 @@ import { SysDeptRes } from '@/api/dept';
 import { SysRoleRes } from '@/api/role';
 import qs from 'query-string';
 
-export interface SysUserRes {
+export interface SysUserNoRelationRes {
   id: number;
   uuid: string;
   avatar?: string;
@@ -21,6 +21,9 @@ export interface SysUserRes {
   last_login_time: string;
   dept_id?: number;
   dept?: SysDeptRes;
+}
+
+export interface SysUserRes extends SysUserNoRelationRes {
   roles: SysRoleRes[];
 }
 
@@ -112,7 +115,7 @@ export function updateUser(username: string, data: SysUserInfoReq) {
   return axios.put(`/api/v1/users/${username}`, data);
 }
 
-export function addUser(data: SysUserAddReq) {
+export function addUser(data: SysUserAddReq): Promise<SysUserNoRelationRes> {
   return axios.post('/api/v1/users/add', data);
 }
 export function deleteUser(username: string) {

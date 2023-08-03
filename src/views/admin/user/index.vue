@@ -14,9 +14,14 @@
                 <a-col :span="6">
                   <a-form-item :label="$t('admin.user.form.dept')" field="name">
                     <a-tree-select
-                      v-model="formModel.dept"
+                      v-model="formAddUser.dept_id"
+                      :allow-clear="true"
+                      :allow-search="true"
+                      :data="deptTreeData"
+                      :field-names="selectDeptTreeFieldNames"
+                      :loading="loading"
                       :placeholder="$t('admin.user.form.dept.placeholder')"
-                    />
+                    ></a-tree-select>
                   </a-form-item>
                 </a-col>
                 <a-col :span="6">
@@ -333,7 +338,7 @@
           </a-modal>
           <a-modal
             :closable="false"
-            :on-before-ok="handlerAddUserBeforOk"
+            :on-before-ok="handlerAddUserBeforeOk"
             :title="drawerTitle"
             :visible="openAdd"
             :width="580"
@@ -498,6 +503,15 @@
   } from '@/api/role';
   import getRandomColor from '@/utils/color';
   import { querySysDeptTree, SysDeptTreeParams } from '@/api/dept';
+  import {
+    CasbinGroupDel,
+    CasbinGroupReq,
+    CasbinGroupsReq,
+    createCasbinGroup,
+    createCasbinGroups,
+    deleteCasbinAllGroups,
+  } from '@/api/casbin';
+  import { listEqual } from '@/utils/list';
 
   type Column = TableColumnData & { checked?: true };
   type SizeProps = 'mini' | 'small' | 'medium' | 'large';
@@ -535,6 +549,9 @@
     phone: undefined,
   });
   const formUserRole = reactive<SysUserRoleReq>({
+    roles: [],
+  });
+  const oldUserRole = reactive<SysUserRoleReq>({
     roles: [],
   });
   const userRoleData = ref<SysRoleRes[]>([]);
@@ -597,6 +614,7 @@
   };
   const DeleteUser = async (username: string) => {
     operateUsername.value = username;
+    await fetchUser(username);
     openDelete.value = true;
   };
   const updateAvatar = async (username: string) => {
@@ -607,6 +625,7 @@
   const updateRole = async (username: string, pk: number) => {
     operateUsername.value = username;
     drawerTitle.value = t('admin.user.columns.edit.role');
+    await fetchUser(username);
     await fetchUserRole(pk);
     await fetchAllRole();
     openEditUserRole.value = true;
@@ -762,6 +781,9 @@
     openEditUserRole.value = false;
   };
 
+  // 用户标识
+  const userUUID = ref<string>('');
+
   // 表单校验
   const handleAvatarBeforeOk = async (done: any) => {
     const res = await formAvatarRef.value?.validate();
@@ -777,7 +799,7 @@
     }
     done(false);
   };
-  const handlerAddUserBeforOk = async (done: any) => {
+  const handlerAddUserBeforeOk = async (done: any) => {
     const res = await formAddUserRef.value?.validate();
     if (!res) {
       done(true);
@@ -807,6 +829,7 @@
     try {
       const res = await getUser(username);
       resetUserInfoForm(res);
+      userUUID.value = res.uuid;
     } catch (error) {
       // console.log(error);
     } finally {
@@ -844,6 +867,7 @@
     try {
       const res = await querySysRoleAllBySysUser(pk);
       formUserRole.roles = res.map((item) => item.id);
+      oldUserRole.roles = formUserRole.roles;
     } catch (error) {
       // console.log(error);
     } finally {
@@ -872,6 +896,22 @@
   const submitUserRole = async () => {
     setLoading(true);
     try {
+      if (!listEqual(oldUserRole.roles, formUserRole.roles)) {
+        await submitDeleteCasbinGroups({ uuid: userUUID.value });
+        if (formUserRole.roles.length === 1) {
+          await submitCreateCasbinGroup({
+            uuid: userUUID.value,
+            role: String(formUserRole.roles[0]),
+          });
+        } else if (formUserRole.roles.length > 1) {
+          await submitCreateCasbinGroups({
+            gs: formUserRole.roles.map((item) => ({
+              uuid: userUUID.value,
+              role: String(item),
+            })),
+          });
+        }
+      }
       await updateUserRole(operateUsername.value, formUserRole);
       closeEditUserRole();
       await fetchUserList({
@@ -969,7 +1009,20 @@
   const submitAddUser = async () => {
     setLoading(true);
     try {
-      await addUser(formAddUser);
+      const res = await addUser(formAddUser);
+      if (formAddUser.roles.length === 1) {
+        await submitCreateCasbinGroup({
+          uuid: res.uuid,
+          role: String(formAddUser.roles[0]),
+        });
+      } else if (formAddUser.roles.length > 1) {
+        await submitCreateCasbinGroups({
+          gs: formAddUser.roles.map((item) => ({
+            uuid: res.uuid,
+            role: String(item),
+          })),
+        });
+      }
       closeAdd();
       await fetchUserList({
         page: pagination.current,
@@ -986,12 +1039,49 @@
   const submitDeleteUser = async () => {
     setLoading(true);
     try {
+      await submitDeleteCasbinGroups({ uuid: userUUID.value });
       await deleteUser(operateUsername.value);
       closeDelete();
       await fetchUserList({
         page: pagination.current,
         size: pagination.pageSize,
       });
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 创建 casbin group
+  const submitCreateCasbinGroup = async (data: CasbinGroupReq) => {
+    setLoading(true);
+    try {
+      await createCasbinGroup(data);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 创建 casbin groups
+  const submitCreateCasbinGroups = async (data: CasbinGroupsReq) => {
+    setLoading(true);
+    try {
+      await createCasbinGroups(data);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 删除所有 casbin groups
+  const submitDeleteCasbinGroups = async (data: CasbinGroupDel) => {
+    setLoading(true);
+    try {
+      await deleteCasbinAllGroups(data);
     } catch (error) {
       // console.log(error);
     } finally {
