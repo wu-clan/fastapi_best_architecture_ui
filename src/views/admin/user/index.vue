@@ -897,7 +897,9 @@
     setLoading(true);
     try {
       if (!listEqual(oldUserRole.roles, formUserRole.roles)) {
-        await submitDeleteCasbinGroups({ uuid: userUUID.value });
+        if (oldUserRole.roles.length > 0) {
+          await submitDeleteCasbinGroups({ uuid: userUUID.value });
+        }
         if (formUserRole.roles.length === 1) {
           await submitCreateCasbinGroup({
             uuid: userUUID.value,
