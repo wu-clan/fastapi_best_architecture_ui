@@ -37,7 +37,7 @@ export function createCasbinPolicies(data: CasbinPoliciesReq) {
 }
 
 export function deleteCasbinPolicies(data: CasbinPoliciesDel) {
-  return axios.delete('/api/v1/casbin/all', { data });
+  return axios.delete('/api/v1/casbin/policies/all', { data });
 }
 
 export function createCasbinGroup(data: CasbinGroupReq) {
@@ -49,5 +49,5 @@ export function createCasbinGroups(data: CasbinGroupsReq) {
 }
 
 export function deleteCasbinAllGroups(data: CasbinGroupDel) {
-  return axios.delete('/api/v1/casbin/all', { data });
+  return axios.delete('/api/v1/casbin/groups/all', { data });
 }
