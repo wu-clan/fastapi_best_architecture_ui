@@ -379,22 +379,6 @@
               </a-form-item>
               <a-form-item
                 :feedback="true"
-                :label="$t('admin.user.form.nickname')"
-                :rules="[
-                  {
-                    required: true,
-                    message: $t('admin.user.form.nickname.required'),
-                  },
-                ]"
-                field="nickname"
-              >
-                <a-input
-                  v-model="formAddUser.nickname"
-                  :placeholder="$t('admin.user.form.nickname.placeholder')"
-                />
-              </a-form-item>
-              <a-form-item
-                :feedback="true"
                 :label="$t('admin.user.form.password')"
                 :rules="[
                   {
@@ -556,7 +540,6 @@
   const formDefaultValues: SysUserAddReq = {
     dept_id: undefined,
     username: '',
-    nickname: '',
     password: '',
     email: '',
     roles: [],
