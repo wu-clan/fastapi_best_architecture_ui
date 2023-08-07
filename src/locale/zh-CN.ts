@@ -1,4 +1,3 @@
-import localeMessageBox from '@/components/message-box/locale/zh-CN';
 import localeLogin from '@/views/login/locale/zh-CN';
 import localeSysMenu from '@/views/admin/menu/locale/zh-CN';
 import localeWorkplace from '@/views/dashboard/workplace/locale/zh-CN';
@@ -40,7 +39,6 @@ export default {
   'submit.update.success': '更新成功',
   'submit.delete.success': '删除成功',
   ...localeSettings,
-  ...localeMessageBox,
   ...localeLogin,
   ...localeWorkplace,
   ...localeLogLogin,

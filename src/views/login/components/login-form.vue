@@ -101,7 +101,7 @@
   const loginConfig = useStorage('login-config', {
     rememberPassword: true,
     username: 'admin', // 演示默认值
-    password: 'admin', // demo default value
+    password: '123456', // demo default value
     captcha: '',
   });
 

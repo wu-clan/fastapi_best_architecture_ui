@@ -1,10 +1,6 @@
 <template>
   <div class="content">
-    <a-result
-      :subtitle="'Not found, Please check the menu component configuration'"
-      class="result"
-      status="404"
-    ></a-result>
+    <a-result :subtitle="'Not Found'" class="result" status="404"></a-result>
     <div class="operation-row">
       <a-button key="back" type="primary" @click="back">Back</a-button>
     </div>

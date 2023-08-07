@@ -1,5 +1,5 @@
 export default {
-  'login.form.title': 'Login to Arco Design Pro',
+  'login.form.title': 'Login FBA',
   'login.form.userName.errMsg': 'Username cannot be empty',
   'login.form.password.errMsg': 'Password cannot be empty',
   'login.form.captcha.errMsg': 'Captcha cannot be empty',
@@ -8,7 +8,7 @@ export default {
     'This user forbids background management to log in',
   'login.form.login.success': 'welcome to use',
   'login.form.userName.placeholder': 'Username: admin',
-  'login.form.password.placeholder': 'Password: admin',
+  'login.form.password.placeholder': 'Password: 123456',
   'login.form.captcha.placeholder': 'Captcha',
   'login.form.rememberPassword': 'Remember password',
   'login.form.forgetPassword': 'Forgot password',

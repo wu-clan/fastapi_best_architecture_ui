@@ -1,4 +1,3 @@
-import localeMessageBox from '@/components/message-box/locale/en-US';
 import localeLogin from '@/views/login/locale/en-US';
 import localeSysMenu from '@/views/admin/menu/locale/en-US';
 import localeWorkplace from '@/views/dashboard/workplace/locale/en-US';
@@ -40,7 +39,6 @@ export default {
   'submit.update.success': 'Updated success',
   'submit.delete.success': 'Deleted success',
   ...localeSettings,
-  ...localeMessageBox,
   ...localeLogin,
   ...localeWorkplace,
   ...localeLogLogin,

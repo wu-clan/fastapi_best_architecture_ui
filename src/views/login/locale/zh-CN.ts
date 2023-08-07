@@ -1,5 +1,5 @@
 export default {
-  'login.form.title': '登录 Arco Design Pro',
+  'login.form.title': '登录 FBA',
   'login.form.userName.errMsg': '用户名不能为空',
   'login.form.password.errMsg': '密码不能为空',
   'login.form.captcha.errMsg': '验证码不能为空',
@@ -7,7 +7,7 @@ export default {
   'login.form.login.staff.errMsg': '此用户禁止后台管理登录',
   'login.form.login.success': '欢迎使用',
   'login.form.userName.placeholder': '用户名：admin',
-  'login.form.password.placeholder': '密码：admin',
+  'login.form.password.placeholder': '密码：123456',
   'login.form.captcha.placeholder': '验证码',
   'login.form.rememberPassword': '记住密码',
   'login.form.forgetPassword': '忘记密码',
