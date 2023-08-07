@@ -94,12 +94,12 @@
         <div class="content">
           <a-table
             :bordered="false"
-            :columns="(showColumns as TableColumnData[])"
+            :columns="columns"
             :data="renderData"
             :loading="loading"
             :pagination="pagination"
             :scroll="{ x: 2100 }"
-            :size="size"
+            :size="'medium'"
             row-key="id"
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
@@ -470,14 +470,13 @@
     updateUserAvatar,
     updateUserRole,
   } from '@/api/user';
-  import { computed, reactive, ref, watch } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import {
     SelectOptionData,
     TableColumnData,
     TreeFieldNames,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import { cloneDeep } from 'lodash';
   import { Pagination } from '@/types/global';
   import { useUserStore } from '@/store';
   import {
@@ -497,8 +496,6 @@
   } from '@/api/casbin';
   import { listEqual } from '@/utils/list';
 
-  type Column = TableColumnData & { checked?: true };
-  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const { loading, setLoading } = useLoading(true);
   const { t } = useI18n();
 
@@ -566,10 +563,7 @@
   // 表格
   const userStore = useUserStore();
   const currentUser = userStore.userInfo;
-  const cloneColumns = ref<Column[]>([]);
-  const showColumns = ref<Column[]>([]);
   const renderData = ref<SysUserRes[]>([]);
-  const size = ref<SizeProps>('medium');
   const operateUsername = ref<string>('');
   const basePagination: Pagination = {
     current: 1,
@@ -1117,19 +1111,6 @@
       formAddUser[key] = data[key];
     });
   };
-
-  // 监听columns变化
-  watch(
-    () => columns.value,
-    (val) => {
-      cloneColumns.value = cloneDeep(val);
-      cloneColumns.value.forEach((item, index) => {
-        item.checked = true;
-      });
-      showColumns.value = cloneDeep(cloneColumns.value);
-    },
-    { deep: true, immediate: true }
-  );
 </script>
 
 <script lang="ts">

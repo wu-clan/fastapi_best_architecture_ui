@@ -70,11 +70,11 @@
         <div class="content">
           <a-table
             :bordered="false"
-            :columns="(cloneColumns as TableColumnData[])"
+            :columns="columns"
             :data="renderData"
             :loading="loading"
             :pagination="pagination"
-            :size="size"
+            :size="'medium'"
             row-key="id"
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
@@ -102,16 +102,13 @@
 
 <script lang="ts" setup>
   import useLoading from '@/hooks/loading';
-  import { computed, reactive, ref, watch } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { LoginLogParams, LoginLogRes, queryLoginLogList } from '@/api/log';
   import { useI18n } from 'vue-i18n';
-  import { cloneDeep } from 'lodash';
   import { Pagination } from '@/types/global';
   import Footer from '@/components/footer/index.vue';
 
-  type Column = TableColumnData & { checked?: true };
-  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const generateFormModel = () => {
     return {
       username: undefined,
@@ -122,11 +119,8 @@
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
-  const cloneColumns = ref<Column[]>([]);
-  const showColumns = ref<Column[]>([]);
   const renderData = ref<LoginLogRes[]>([]);
   const formModel = ref(generateFormModel());
-  const size = ref<SizeProps>('medium');
   const basePagination: Pagination = {
     current: 1,
     defaultPageSize: 20,
@@ -238,19 +232,6 @@
   const resetStatus = () => {
     formModel.value.status = undefined;
   };
-
-  // 监听columns变化
-  watch(
-    () => columns.value,
-    (val) => {
-      cloneColumns.value = cloneDeep(val);
-      cloneColumns.value.forEach((item, index) => {
-        item.checked = true;
-      });
-      showColumns.value = cloneDeep(cloneColumns.value);
-    },
-    { deep: true, immediate: true }
-  );
 </script>
 
 <script lang="ts">

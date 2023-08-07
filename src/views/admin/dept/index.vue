@@ -92,11 +92,11 @@
           <a-table
             ref="tableRef"
             :bordered="false"
-            :columns="(cloneColumns as TableColumnData[])"
+            :columns="columns"
             :data="renderData"
             :loading="loading"
             :pagination="false"
-            :size="size"
+            :size="'medium'"
             row-key="id"
           >
             <template #status="{ record }">
@@ -241,10 +241,9 @@
     TableColumnData,
     TreeFieldNames,
   } from '@arco-design/web-vue';
-  import { computed, reactive, ref, watch } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
-  import { cloneDeep } from 'lodash';
   import {
     createSysDept,
     deleteSysDept,
@@ -257,8 +256,6 @@
   } from '@/api/dept';
   import { treeSelectDataType } from '@/types/global';
 
-  type Column = TableColumnData & { checked?: true };
-  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
 
@@ -284,10 +281,7 @@
   ]);
 
   // 表格
-  const cloneColumns = ref<Column[]>([]);
-  const showColumns = ref<Column[]>([]);
   const renderData = ref<SysDeptTreeRes[]>([]);
-  const size = ref<SizeProps>('medium');
   const tableRef = ref();
   const expandAll = ref<boolean>(false);
   const operateRow = ref<number>(0);
@@ -515,19 +509,6 @@
     });
     return result;
   };
-
-  // 监听columns变化
-  watch(
-    () => columns.value,
-    (val) => {
-      cloneColumns.value = cloneDeep(val);
-      cloneColumns.value.forEach((item, index) => {
-        item.checked = true;
-      });
-      showColumns.value = cloneDeep(cloneColumns.value);
-    },
-    { deep: true, immediate: true }
-  );
 </script>
 
 <script lang="ts">

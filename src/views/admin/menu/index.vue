@@ -74,11 +74,11 @@
           <a-table
             ref="tableRef"
             :bordered="false"
-            :columns="(cloneColumns as TableColumnData[])"
+            :columns="columns"
             :data="renderData"
             :loading="loading"
             :pagination="false"
-            :size="size"
+            :size="'medium'"
             row-key="id"
           >
             <template #menu_type="{ record }">
@@ -322,7 +322,7 @@
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
   import IconPicker from '@/components/icon-picker/index.vue';
-  import { computed, reactive, ref, watch } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import {
     Message,
     SelectOptionData,
@@ -341,11 +341,8 @@
     SysMenuTreeRes,
     updateSysMenu,
   } from '@/api/menu';
-  import { cloneDeep } from 'lodash';
   import { treeSelectDataType } from '@/types/global';
 
-  type Column = TableColumnData & { checked?: true };
-  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
 
@@ -369,10 +366,7 @@
   ]);
 
   // 表格
-  const cloneColumns = ref<Column[]>([]);
-  const showColumns = ref<Column[]>([]);
   const renderData = ref<SysMenuTreeRes[]>([]);
-  const size = ref<SizeProps>('medium');
   const tableRef = ref();
   const expandAll = ref<boolean>(false);
   const operateRow = ref<number>(0);
@@ -645,19 +639,6 @@
     });
     return result;
   };
-
-  // 监听columns变化
-  watch(
-    () => columns.value,
-    (val) => {
-      cloneColumns.value = cloneDeep(val);
-      cloneColumns.value.forEach((item, index) => {
-        item.checked = true;
-      });
-      showColumns.value = cloneDeep(cloneColumns.value);
-    },
-    { deep: true, immediate: true }
-  );
 </script>
 
 <script lang="ts">
