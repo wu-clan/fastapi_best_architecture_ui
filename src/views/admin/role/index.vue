@@ -626,7 +626,9 @@
   const submitRoleMenu = async () => {
     setLoading(true);
     try {
-      await updateSysRoleMenu(operateRow.value, roleMenuKeys);
+      if (roleMenuKeys.menus.length > 0) {
+        await updateSysRoleMenu(operateRow.value, roleMenuKeys);
+      }
       cancelReq();
       Message.success(t('submit.update.success'));
     } catch (error) {

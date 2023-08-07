@@ -45,11 +45,11 @@ export default function useMenuTree() {
 
         // Associated child node
         const subItem = travel(element.children, layer + 1);
-
         if (subItem.length) {
           element.children = subItem;
           return element;
         }
+
         // the else logic
         if (layer > 1) {
           element.children = subItem;
@@ -62,11 +62,13 @@ export default function useMenuTree() {
 
         return null;
       });
+
       return collector.filter(Boolean);
     }
 
     return travel(copyRouter, 0);
   });
+  console.log('menuTree', menuTree.value);
 
   return {
     menuTree,

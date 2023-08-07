@@ -7,6 +7,7 @@ import convertToCamelCase, { convertToKebabCase } from '@/utils/string';
 import { WHITE_LIST } from '@/router/constants';
 import { AppRouteRecordRaw } from '@/router/routes/types';
 import { RouteRecordNormalized } from 'vue-router';
+import DASHBOARD from '@/router/routes/modules/dashboard';
 import { AppState, MenuItem } from './types';
 
 function generateMenu(
@@ -22,14 +23,14 @@ function generateMenu(
       path: !menu.path ? `/${convertToKebabCase(menu.name)}` : menu.path,
       name: menu.name,
       component: !menu.component
-        ? () => import('@/views/not-found/index.vue')
+        ? () => import('@/layout/default-layout.vue')
         : views[`/src/views${menu.component}`],
       children: [],
       meta: {
         title: menu.title,
         // roles: menu.perms ? menu.perms.split(',') : [],
         roles: ['*'],
-        requiresAuth: WHITE_LIST.some((item) => item.name === menu.name),
+        requiresAuth: !WHITE_LIST.some((item) => item.name === menu.name),
         icon: menu.icon,
         hideInMenu: menu.show === 0,
         ignoreCache: menu.cache === 0,
@@ -97,9 +98,13 @@ const useAppStore = defineStore('app', {
           closable: true,
         });
         const data = await getUserMenuList();
-        this.serverMenu = generateMenu(
-          data
-        ) as unknown as RouteRecordNormalized[];
+        if (data.length === 0) {
+          this.serverMenu = [DASHBOARD] as unknown as RouteRecordNormalized[];
+        } else {
+          this.serverMenu = generateMenu(
+            data
+          ) as unknown as RouteRecordNormalized[];
+        }
         notifyInstance = Notification.success({
           id: 'menuNotice',
           content: 'success',
