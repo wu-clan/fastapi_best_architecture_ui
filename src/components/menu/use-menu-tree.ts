@@ -68,7 +68,6 @@ export default function useMenuTree() {
 
     return travel(copyRouter, 0);
   });
-  console.log('menuTree', menuTree.value);
 
   return {
     menuTree,
