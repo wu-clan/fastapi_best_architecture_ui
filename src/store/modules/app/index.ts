@@ -100,6 +100,10 @@ const useAppStore = defineStore('app', {
         const data = await getUserMenuList();
         if (data.length === 0) {
           this.serverMenu = [DASHBOARD] as unknown as RouteRecordNormalized[];
+        } else if (!data.some((item) => item.name === 'dashboard')) {
+          this.serverMenu = [DASHBOARD].concat(
+            generateMenu(data)
+          ) as unknown as RouteRecordNormalized[];
         } else {
           this.serverMenu = generateMenu(
             data
