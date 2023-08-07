@@ -38,6 +38,10 @@ export function querySysApiList(params: SysApiParams): Promise<SysApiListRes> {
   });
 }
 
+export function querySysApiAll(): Promise<SysApiRes[]> {
+  return axios.get('/api/v1/apis/all');
+}
+
 export function querySysApiDetail(pk: number): Promise<SysApiRes> {
   return axios.get(`/api/v1/apis/${pk}`);
 }

@@ -81,12 +81,12 @@
           <a-table
             v-model:selected-keys="rowSelectKeys"
             :bordered="false"
-            :columns="(cloneColumns as TableColumnData[])"
+            :columns="columns"
             :data="renderData"
             :loading="loading"
             :pagination="pagination"
             :row-selection="rowSelection"
-            :size="size"
+            :size="'medium'"
             row-key="id"
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
@@ -179,7 +179,7 @@
             :title="`${$t('modal.title.tips')}`"
             :visible="openDelete"
             @cancel="cancelReq"
-            @ok="submitDelete"
+            @ok="submitDeleteRole"
           >
             <a-space>
               <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
@@ -206,7 +206,7 @@
                 :closable="false"
                 :title="$t('admin.role.drawer.menu')"
               >
-                <a-space :size="'medium'" style="margin: 0 0 20px 20px">
+                <a-space :size="'medium'" style="margin: 10px 0 20px 20px">
                   <a-button
                     :shape="'round'"
                     :type="'outline'"
@@ -227,8 +227,7 @@
                 </a-space>
                 <a-tree
                   ref="menuTreeDataRef"
-                  v-model:checked-keys="checkedKeys"
-                  :check-strictly="true"
+                  v-model:checked-keys="menuCheckedKeys"
                   :checkable="true"
                   :data="filterMenuTreeData"
                   :field-names="selectMenuTreeFieldNames"
@@ -240,10 +239,28 @@
                 :closable="false"
                 :title="$t('admin.role.drawer.api')"
               >
-                <a-input-search
-                  :placeholder="$t('admin.role.drawer.api.input.placeholder')"
-                  :style="{ width: '360px', margin: '0 0 20px 20px' }"
-                />
+                <a-space :size="'medium'" style="margin: 10px 0 20px 20px">
+                  <a-button
+                    :shape="'round'"
+                    :type="'outline'"
+                    @click="checkApi"
+                  >
+                    {{ $t('admin.role.drawer.menu.button.select') }}
+                  </a-button>
+                  <a-input-search
+                    v-model="searchKey"
+                    :placeholder="$t('admin.role.drawer.api.input.placeholder')"
+                    :style="{ width: '360px' }"
+                  />
+                </a-space>
+                <a-tree
+                  ref="apiDataRef"
+                  v-model:checked-keys="apiCheckedKeys"
+                  :checkable="true"
+                  :data="filterApiData"
+                  :field-names="selectApiFieldNames"
+                  style="margin-left: 10px"
+                ></a-tree>
               </a-tab-pane>
             </a-tabs>
           </a-drawer>
@@ -260,13 +277,11 @@
   import Footer from '@/components/footer/index.vue';
   import Breadcrumb from '@/components/breadcrumb/index.vue';
   import { computed, reactive, ref, watch } from 'vue';
-  import { cloneDeep } from 'lodash';
   import {
     Message,
     SelectOptionData,
     TableColumnData,
     TreeFieldNames,
-    TreeNodeData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
   import useLoading from '@/hooks/loading';
@@ -289,9 +304,17 @@
     SysMenuTreeParams,
     SysMenuTreeRes,
   } from '@/api/menu';
+  import { querySysApiAll, SysApiRes } from '@/api/api';
+  import {
+    CasbinPoliciesDel,
+    CasbinPoliciesReq,
+    CasbinPolicyReq,
+    createCasbinPolicies,
+    createCasbinPolicy,
+    deleteCasbinPolicies,
+    queryCasbinPoliciesByRole,
+  } from '@/api/casbin';
 
-  type Column = TableColumnData & { checked?: true };
-  type SizeProps = 'mini' | 'small' | 'medium' | 'large';
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
 
@@ -315,10 +338,7 @@
   ]);
 
   // 表格
-  const cloneColumns = ref<Column[]>([]);
-  const showColumns = ref<Column[]>([]);
   const renderData = ref<SysRoleRes[]>([]);
-  const size = ref<SizeProps>('medium');
   const rowSelectKeys = ref<number[]>([]);
   const rowSelection = reactive({
     showCheckedAll: true,
@@ -347,10 +367,11 @@
   };
   const EditPerm = async (pk: number) => {
     operateRow.value = pk;
+    activePerm.value = 'menu';
     await fetchMenuTree();
     await fetchRoleMenuTree();
-    checkedKeys.value = [];
-    fetchCheckedKeys(menuTreeDataByRole.value);
+    menuCheckedKeys.value = [];
+    fetchMenuCheckedKeys(menuTreeDataByRole.value);
     searchKey.value = '';
     openEditPerm.value = true;
   };
@@ -433,31 +454,47 @@
   const switchStatus = ref<boolean>(Boolean(form.status));
 
   // 抽屉
-  const checkedKeys = ref<number[]>([]);
+  const menuCheckedKeys = ref<number[]>([]);
+  const apiCheckedKeys = ref<number[]>([]);
   const menuTreeData = ref();
+  const apiData = ref();
+  const casbinPolicies = ref();
   const searchKey = ref<string>('');
   const filterMenuTreeData = computed<any>(() => {
     if (!searchKey.value) return menuTreeData;
-    return searchMenuTreeData();
+    return searchMenuTreeData(searchKey.value);
   });
   const menuTreeDataByRole = ref();
+  const filterApiData = computed<any>(() => {
+    if (!searchKey.value) return apiData;
+    return searchApiData(searchKey.value);
+  });
+
   const selectMenuTreeFieldNames: TreeFieldNames = {
     key: 'id',
     title: 'title',
     children: 'children',
     icon: 'iconRender',
   };
+  const selectApiFieldNames: TreeFieldNames = {
+    key: 'id',
+    title: 'name',
+    children: 'children',
+  };
   const expandAll = ref<boolean>(false);
   const checkAll = ref<boolean>(false);
   const menuTreeDataRef = ref();
+  const apiDataRef = ref();
   const activePerm = ref<string>('menu');
   const submitPerms = async () => {
     if (activePerm.value === 'menu') {
       await submitRoleMenu();
+    } else if (activePerm.value === 'api') {
+      await submitRoleApi();
     }
   };
   const roleMenuKeys = reactive<SysRoleMenuReq>({
-    menus: checkedKeys.value,
+    menus: menuCheckedKeys.value,
   });
 
   // 表单校验
@@ -492,7 +529,7 @@
   };
 
   // 删除角色
-  const submitDelete = async () => {
+  const submitDeleteRole = async () => {
     setLoading(true);
     try {
       await deleteSysRole({ pk: rowSelectKeys.value });
@@ -507,11 +544,6 @@
       openDelete.value = false;
       setLoading(false);
     }
-  };
-
-  // 删除按钮状态
-  const deleteButtonStatus = () => {
-    return rowSelectKeys.value?.length === 0;
   };
 
   // 请求角色列表
@@ -570,6 +602,26 @@
     }
   };
 
+  // 请求API数据
+  const fetchApiData = async () => {
+    try {
+      apiData.value = await querySysApiAll();
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  // 请求Casbin所有P规则
+  const fetchCasbinPolicies = async () => {
+    try {
+      casbinPolicies.value = await queryCasbinPoliciesByRole(
+        String(operateRow.value)
+      );
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
   // 更新角色菜单
   const submitRoleMenu = async () => {
     setLoading(true);
@@ -584,14 +636,73 @@
     }
   };
 
+  // 更新角色API
+  const submitRoleApi = async () => {
+    try {
+      if (casbinPolicies.value.length > 0) {
+        await submitDeleteCasbinPolicies({ role: String(operateRow.value) });
+      }
+      // eslint-disable-next-line array-callback-return,consistent-return
+      const policies: CasbinPolicyReq[] = [];
+      apiData.value.forEach((item: SysApiRes) => {
+        if (apiCheckedKeys.value.includes(item.id)) {
+          policies.push({
+            sub: String(operateRow.value),
+            path: item.path,
+            method: item.method,
+          });
+        }
+      });
+      if (policies.length === 1) {
+        await submitCasbinPolicy({
+          sub: policies[0].sub,
+          path: policies[0].path,
+          method: policies[0].method,
+        });
+      } else if (policies.length > 1) {
+        await submitCasbinPolicies({ ps: policies });
+      }
+
+      cancelReq();
+      Message.success(t('submit.update.success'));
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  // 添加角色Casbin的P规则
+  const submitCasbinPolicy = async (data: CasbinPolicyReq) => {
+    try {
+      await createCasbinPolicy(data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  // 添加多组角色Casbin的P规则
+  const submitCasbinPolicies = async (data: CasbinPoliciesReq) => {
+    try {
+      await createCasbinPolicies(data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  // 删除角色Casbin所有P规则
+  const submitDeleteCasbinPolicies = async (data: CasbinPoliciesDel) => {
+    try {
+      await deleteCasbinPolicies(data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
   // 筛选菜单树
-  const searchMenuTreeData = () => {
+  const searchMenuTreeData = (keyword: string) => {
     const loop = (data: SysMenuTreeRes[]) => {
       const result: SysMenuTreeRes[] = [];
       data.forEach((item: SysMenuTreeRes) => {
-        if (
-          item.title.toLowerCase().indexOf(searchKey.value.toLowerCase()) > -1
-        ) {
+        if (item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
           result.push({ ...item });
         } else if (item.children) {
           const filterData = loop(item.children);
@@ -608,14 +719,44 @@
     return loop(menuTreeData.value);
   };
 
+  // 筛选API数据
+  const searchApiData = (keyword: string) => {
+    const loop = (data: SysApiRes[]) => {
+      const result: SysApiRes[] = [];
+      data.forEach((item: SysApiRes) => {
+        if (item.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
+          result.push({ ...item });
+        }
+      });
+      return result;
+    };
+    return loop(apiData.value);
+  };
+
   // 获取菜单选中节点
-  const fetchCheckedKeys = (data: SysMenuTreeRes[]) => {
+  const fetchMenuCheckedKeys = (data: SysMenuTreeRes[]) => {
     data.forEach((item: SysMenuTreeRes) => {
-      const checkedKey = item.id;
+      const menuCheckedKey = item.id;
       if (item.children && item.children.length > 0) {
-        fetchCheckedKeys(item.children);
+        fetchMenuCheckedKeys(item.children);
       }
-      checkedKeys.value.push(checkedKey);
+      menuCheckedKeys.value.push(menuCheckedKey);
+    });
+  };
+
+  // 获取API选中节点
+  const fetchApiCheckedKeys = (policies: any[]) => {
+    const apiDataFormat: string[] = apiData.value.map((item: SysApiRes) => {
+      return `${item.id}:${item.path}:${item.method}`;
+    });
+    // eslint-disable-next-line array-callback-return
+    apiDataFormat.findIndex((item: string) => {
+      policies.forEach((policy: string[]) => {
+        const ruleFormat = `${policy[1]}:${policy[2]}`;
+        if (item.includes(ruleFormat)) {
+          apiCheckedKeys.value.push(Number(item.split(':')[0]));
+        }
+      });
     });
   };
 
@@ -647,6 +788,11 @@
     formModel.value.status = undefined;
   };
 
+  // 删除按钮状态
+  const deleteButtonStatus = () => {
+    return rowSelectKeys.value?.length === 0;
+  };
+
   // 数据权限说明
   const dataScopeText = (ds: number) => {
     if (ds === 1) {
@@ -668,6 +814,10 @@
     checkAll.value = !checkAll.value;
     menuTreeDataRef.value.checkAll(checkAll.value);
   };
+  const checkApi = () => {
+    checkAll.value = !checkAll.value;
+    apiDataRef.value.checkAll(checkAll.value);
+  };
 
   // 展开/收起
   const expand = () => {
@@ -675,17 +825,20 @@
     menuTreeDataRef.value.expandAll(expandAll.value);
   };
 
-  // 监听columns变化
+  // 监听角色API标签选择
   watch(
-    () => columns.value,
-    (val) => {
-      cloneColumns.value = cloneDeep(val);
-      cloneColumns.value.forEach((item, index) => {
-        item.checked = true;
-      });
-      showColumns.value = cloneDeep(cloneColumns.value);
+    () => activePerm,
+    async (val) => {
+      if (val.value === 'api') {
+        apiCheckedKeys.value = [];
+        await fetchApiData();
+        await fetchCasbinPolicies();
+        fetchApiCheckedKeys(casbinPolicies.value);
+      }
     },
-    { deep: true, immediate: true }
+    {
+      deep: true,
+    }
   );
 </script>
 
