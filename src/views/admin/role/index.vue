@@ -228,6 +228,7 @@
                 <a-tree
                   ref="menuTreeDataRef"
                   v-model:checked-keys="menuCheckedKeys"
+                  :check-strictly="true"
                   :checkable="true"
                   :data="filterMenuTreeData"
                   :field-names="selectMenuTreeFieldNames"
@@ -256,6 +257,7 @@
                 <a-tree
                   ref="apiDataRef"
                   v-model:checked-keys="apiCheckedKeys"
+                  :check-strictly="true"
                   :checkable="true"
                   :data="filterApiData"
                   :field-names="selectApiFieldNames"
@@ -291,7 +293,6 @@
     querySysMenuTreeBySysRole,
     querySysRoleDetail,
     querySysRoleList,
-    SysRoleMenuReq,
     SysRoleParams,
     SysRoleReq,
     SysRoleRes,
@@ -493,9 +494,6 @@
       await submitRoleApi();
     }
   };
-  const roleMenuKeys = reactive<SysRoleMenuReq>({
-    menus: menuCheckedKeys.value,
-  });
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
@@ -624,17 +622,17 @@
 
   // 更新角色菜单
   const submitRoleMenu = async () => {
-    setLoading(true);
     try {
-      if (roleMenuKeys.menus.length > 0) {
-        await updateSysRoleMenu(operateRow.value, roleMenuKeys);
+      if (menuCheckedKeys.value.length > 0) {
+        checkedParentNode(menuTreeDataRef.value.getCheckedNodes('all'));
+        await updateSysRoleMenu(operateRow.value, {
+          menus: menuCheckedKeys.value,
+        });
       }
       cancelReq();
       Message.success(t('submit.update.success'));
     } catch (error) {
       // console.log(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -733,6 +731,20 @@
       return result;
     };
     return loop(apiData.value);
+  };
+
+  // 遍历选中角色菜单父节点
+  const checkedParentNode = (data: SysMenuTreeRes[]) => {
+    data.forEach((item: SysMenuTreeRes) => {
+      if (item.parent_id) {
+        if (!menuCheckedKeys.value.includes(item.parent_id)) {
+          menuCheckedKeys.value.push(item.parent_id);
+        }
+      }
+      if (item.children && item.children.length > 0) {
+        checkedParentNode(item.children);
+      }
+    });
   };
 
   // 获取菜单选中节点
