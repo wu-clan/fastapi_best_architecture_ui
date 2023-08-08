@@ -1,9 +1,9 @@
 {
-  "name": "arco-design-pro-vue",
-  "description": "Arco Design Pro for Vue",
-  "version": "1.0.0",
-  "private": true,
-  "author": "ArcoDesign Team",
+  "name": "fba-ui",
+  "description": "FastAPI Best Architecture UI",
+  "version": "0.0.1",
+  "private": false,
+  "author": "FastAPI Practices",
   "license": "MIT",
   "scripts": {
     "dev": "vite --config ./config/vite.config.dev.ts",
@@ -12,7 +12,6 @@
     "preview": "npm run build && vite preview --host",
     "type:check": "vue-tsc --noEmit --skipLibCheck",
     "lint-staged": "npx lint-staged",
-    "prepare": "husky install"
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx}": [
@@ -67,7 +66,6 @@
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.6.0",
-    "husky": "^8.0.1",
     "less": "^4.1.3",
     "lint-staged": "^13.0.3",
     "mockjs": "^1.1.0",
