@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
 import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
+import { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
 import { getUserMenuList } from '@/api/user';
 import convertToCamelCase, { convertToKebabCase } from '@/utils/string';
 import { WHITE_LIST } from '@/router/constants';
 import { AppRouteRecordRaw } from '@/router/routes/types';
-import { RouteRecordNormalized } from 'vue-router';
 import DASHBOARD from '@/router/routes/modules/dashboard';
 import { AppState, MenuItem } from './types';
 

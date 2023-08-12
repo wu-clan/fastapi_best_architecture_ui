@@ -448,6 +448,13 @@
 </template>
 
 <script lang="ts" setup>
+  import { computed, reactive, ref } from 'vue';
+  import {
+    SelectOptionData,
+    TableColumnData,
+    TreeFieldNames,
+  } from '@arco-design/web-vue';
+  import { useI18n } from 'vue-i18n';
   import Footer from '@/components/footer/index.vue';
   import Breadcrumb from '@/components/breadcrumb/index.vue';
   import useLoading from '@/hooks/loading';
@@ -470,13 +477,6 @@
     updateUserAvatar,
     updateUserRole,
   } from '@/api/user';
-  import { computed, reactive, ref } from 'vue';
-  import {
-    SelectOptionData,
-    TableColumnData,
-    TreeFieldNames,
-  } from '@arco-design/web-vue';
-  import { useI18n } from 'vue-i18n';
   import { Pagination } from '@/types/global';
   import { useUserStore } from '@/store';
   import {

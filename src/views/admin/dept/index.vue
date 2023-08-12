@@ -139,7 +139,6 @@
               >
                 <a-tree-select
                   v-model="form.parent_id"
-                  v-model:model-value="form.parent_id"
                   :allow-clear="true"
                   :allow-search="true"
                   :data="treeSelectData"
@@ -194,15 +193,14 @@
                 field="status"
               >
                 <a-switch
-                  v-model="form.status"
-                  v-model:model-value="switchStatus"
+                  v-model="switchStatus"
                   :checked-text="$t('switch.open')"
                   :unchecked-text="$t('switch.close')"
                 />
               </a-form-item>
               <a-form-item :label="$t('admin.dept.columns.sort')" field="sort">
                 <a-input-number
-                  v-model:model-value="form.sort"
+                  v-model="form.sort"
                   :default-value="0"
                   :mode="'button'"
                   :placeholder="$t('admin.dept.form.sort.placeholder')"
@@ -234,15 +232,15 @@
 </template>
 
 <script lang="ts" setup>
-  import Footer from '@/components/footer/index.vue';
   import {
     Message,
     SelectOptionData,
     TableColumnData,
     TreeFieldNames,
   } from '@arco-design/web-vue';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, watch } from 'vue';
   import { useI18n } from 'vue-i18n';
+  import Footer from '@/components/footer/index.vue';
   import useLoading from '@/hooks/loading';
   import {
     createSysDept,
@@ -289,6 +287,7 @@
     buttonStatus.value = 'new';
     drawerTitle.value = t('admin.dept.columns.new.drawer');
     resetForm(formDefaultValues);
+    switchStatus.value = true;
     form.parent_id = pk;
     openNewOrEdit.value = true;
   };
@@ -370,7 +369,7 @@
     sort: undefined,
   };
   const form = reactive<SysDeptReq>({ ...formDefaultValues });
-  const switchStatus = ref<boolean>(Boolean(form.status));
+  const switchStatus = ref<boolean>(true);
   const treeSelectData = ref();
   const selectTreeFieldNames: TreeFieldNames = {
     key: 'id',
@@ -509,6 +508,13 @@
     });
     return result;
   };
+
+  watch(
+    () => switchStatus.value,
+    (val) => {
+      form.status = val ? 1 : 0;
+    }
+  );
 </script>
 
 <script lang="ts">

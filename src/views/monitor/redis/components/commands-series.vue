@@ -3,8 +3,8 @@
 </template>
 
 <script lang="ts" setup>
-  import useChartOption from '@/hooks/chart-option';
   import { PropType } from 'vue';
+  import useChartOption from '@/hooks/chart-option';
 
   const props = defineProps({
     stats: {

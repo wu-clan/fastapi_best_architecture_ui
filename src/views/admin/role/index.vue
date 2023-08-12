@@ -160,8 +160,7 @@
                 field="status"
               >
                 <a-switch
-                  v-model="form.status"
-                  v-model:model-value="switchStatus"
+                  v-model="switchStatus"
                   :checked-text="$t('switch.open')"
                   :unchecked-text="$t('switch.close')"
                 ></a-switch>
@@ -276,8 +275,6 @@
 </template>
 
 <script lang="ts" setup>
-  import Footer from '@/components/footer/index.vue';
-  import Breadcrumb from '@/components/breadcrumb/index.vue';
   import { computed, reactive, ref, watch } from 'vue';
   import {
     Message,
@@ -286,6 +283,8 @@
     TreeFieldNames,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
+  import Breadcrumb from '@/components/breadcrumb/index.vue';
+  import Footer from '@/components/footer/index.vue';
   import useLoading from '@/hooks/loading';
   import {
     createSysRole,
@@ -360,6 +359,7 @@
     buttonStatus.value = 'new';
     drawerTitle.value = t('admin.role.columns.new.drawer');
     resetForm(formDefaultValues);
+    switchStatus.value = true;
     openNewOrEdit.value = true;
   };
   const DeleteRole = () => {
@@ -452,7 +452,7 @@
       value: 2,
     },
   ]);
-  const switchStatus = ref<boolean>(Boolean(form.status));
+  const switchStatus = ref<boolean>(true);
 
   // 抽屉
   const menuCheckedKeys = ref<number[]>([]);
@@ -852,6 +852,13 @@
     },
     {
       deep: true,
+    }
+  );
+
+  watch(
+    () => switchStatus.value,
+    (val) => {
+      form.status = val ? 1 : 0;
     }
   );
 </script>

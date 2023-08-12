@@ -141,10 +141,7 @@
     >
       <a-form ref="formRef" :model="form">
         <a-form-item :label="$t('admin.menu.columns.type')" field="menu_type">
-          <a-radio-group
-            v-model="form.menu_type"
-            v-model:model-value="menuType"
-          >
+          <a-radio-group v-model="menuType">
             <a-radio :value="0">
               {{ $t('admin.menu.columns.type.0') }}
             </a-radio>
@@ -162,7 +159,6 @@
         >
           <a-tree-select
             v-model="form.parent_id"
-            v-model:model-value="form.parent_id"
             :allow-clear="true"
             :allow-search="true"
             :data="treeSelectData"
@@ -252,8 +248,7 @@
           field="cache"
         >
           <a-switch
-            v-model="form.cache"
-            v-model:model-value="switchCache"
+            v-model="switchCache"
             :checked-text="$t('switch.open')"
             :unchecked-text="$t('switch.close')"
           />
@@ -265,8 +260,7 @@
           field="show"
         >
           <a-switch
-            v-model="form.show"
-            v-model:model-value="switchShow"
+            v-model="switchShow"
             :checked-text="$t('switch.open')"
             :unchecked-text="$t('switch.close')"
           />
@@ -278,8 +272,7 @@
           field="status"
         >
           <a-switch
-            v-model="form.status"
-            v-model:model-value="switchStatus"
+            v-model="switchStatus"
             :checked-text="$t('switch.open')"
             :unchecked-text="$t('switch.close')"
           />
@@ -291,7 +284,6 @@
         >
           <a-input-number
             v-model="form.sort"
-            v-model:model-value="form.sort"
             :default-value="0"
             :mode="'button'"
             :placeholder="$t('admin.menu.columns.sort')"
@@ -320,9 +312,7 @@
 </template>
 
 <script lang="ts" setup>
-  import Footer from '@/components/footer/index.vue';
-  import IconPicker from '@/components/icon-picker/index.vue';
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, ref, watch } from 'vue';
   import {
     Message,
     SelectOptionData,
@@ -330,6 +320,8 @@
     TreeFieldNames,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
+  import IconPicker from '@/components/icon-picker/index.vue';
+  import Footer from '@/components/footer/index.vue';
   import useLoading from '@/hooks/loading';
   import {
     createSysMenu,
@@ -374,9 +366,9 @@
     buttonStatus.value = 'new';
     drawerTitle.value = t('admin.menu.columns.new.drawer');
     resetForm(formDefaultValues);
-    switchCache.value = Boolean(form.cache);
-    switchShow.value = Boolean(form.show);
-    switchStatus.value = Boolean(form.status);
+    switchCache.value = true;
+    switchShow.value = true;
+    switchStatus.value = true;
     menuType.value = 1;
     form.parent_id = pk;
     openNewOrEdit.value = true;
@@ -500,9 +492,9 @@
     remark: undefined,
   };
   const form = reactive<SysMenuReq>({ ...formDefaultValues });
-  const switchStatus = ref<boolean>(Boolean(form.status));
-  const switchShow = ref<boolean>(Boolean(form.show));
-  const switchCache = ref<boolean>(Boolean(form.cache));
+  const switchStatus = ref<boolean>(true);
+  const switchShow = ref<boolean>(true);
+  const switchCache = ref<boolean>(true);
   const treeSelectData = ref();
   const selectTreeFieldNames: TreeFieldNames = {
     key: 'id',
@@ -639,6 +631,34 @@
     });
     return result;
   };
+
+  watch(
+    () => menuType.value,
+    (val) => {
+      form.menu_type = val;
+    }
+  );
+
+  watch(
+    () => switchStatus.value,
+    (val) => {
+      form.status = val ? 1 : 0;
+    }
+  );
+
+  watch(
+    () => switchShow.value,
+    (val) => {
+      form.show = val ? 1 : 0;
+    }
+  );
+
+  watch(
+    () => switchCache.value,
+    (val) => {
+      form.cache = val ? 1 : 0;
+    }
+  );
 </script>
 
 <script lang="ts">

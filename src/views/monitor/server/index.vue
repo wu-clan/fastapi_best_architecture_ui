@@ -137,13 +137,13 @@
 </template>
 
 <script lang="ts" setup>
+  import { computed, ref } from 'vue';
+  import { DescData, TableColumnData } from '@arco-design/web-vue';
+  import { useI18n } from 'vue-i18n';
   import Footer from '@/components/footer/index.vue';
   import Breadcrumb from '@/components/breadcrumb/index.vue';
   import useLoading from '@/hooks/loading';
   import { queryServerMonitor } from '@/api/monitor';
-  import { computed, ref } from 'vue';
-  import { DescData, TableColumnData } from '@arco-design/web-vue';
-  import { useI18n } from 'vue-i18n';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);

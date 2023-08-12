@@ -42,13 +42,13 @@
 </template>
 
 <script lang="ts" setup>
+  import { computed, ref, watch } from 'vue';
+  import { DescData } from '@arco-design/web-vue';
+  import { useI18n } from 'vue-i18n';
   import Footer from '@/components/footer/index.vue';
   import Breadcrumb from '@/components/breadcrumb/index.vue';
   import useLoading from '@/hooks/loading';
   import { queryRedisMonitor } from '@/api/monitor';
-  import { computed, ref, watch } from 'vue';
-  import { DescData } from '@arco-design/web-vue';
-  import { useI18n } from 'vue-i18n';
   import CommandsSeries from '@/views/monitor/redis/components/commands-series.vue';
   import ActiveSeries from '@/views/monitor/redis/components/active-series.vue';
 

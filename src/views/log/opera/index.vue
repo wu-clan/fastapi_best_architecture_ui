@@ -135,10 +135,10 @@
 </template>
 
 <script lang="ts" setup>
-  import useLoading from '@/hooks/loading';
   import { computed, reactive, ref } from 'vue';
   import { SelectOptionData, TableColumnData } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
+  import useLoading from '@/hooks/loading';
   import { Pagination } from '@/types/global';
   import Footer from '@/components/footer/index.vue';
   import { OperaLogParams, OperaLogRes, queryOperaLogList } from '@/api/log';

@@ -220,15 +220,15 @@
 </template>
 
 <script lang="ts" setup>
-  import Footer from '@/components/footer/index.vue';
   import {
     Message,
     SelectOptionData,
     TableColumnData,
   } from '@arco-design/web-vue';
   import { useI18n } from 'vue-i18n';
-  import useLoading from '@/hooks/loading';
   import { computed, reactive, ref } from 'vue';
+  import useLoading from '@/hooks/loading';
+  import Footer from '@/components/footer/index.vue';
   import {
     createSysApi,
     deleteSysApi,

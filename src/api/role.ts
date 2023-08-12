@@ -1,6 +1,6 @@
-import { SysMenuRes, SysMenuTreeRes } from '@/api/menu';
 import axios from 'axios';
 import qs from 'query-string';
+import { SysMenuRes, SysMenuTreeRes } from '@/api/menu';
 
 export interface SysRoleReq {
   name: string;

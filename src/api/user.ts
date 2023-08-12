@@ -1,9 +1,9 @@
 import axios from 'axios';
+import qs from 'query-string';
 import { UserState } from '@/store/modules/user/types';
 import { MenuItem } from '@/store/modules/app/types';
 import { SysDeptRes } from '@/api/dept';
 import { SysRoleRes } from '@/api/role';
-import qs from 'query-string';
 
 export interface SysUserNoRelationRes {
   id: number;

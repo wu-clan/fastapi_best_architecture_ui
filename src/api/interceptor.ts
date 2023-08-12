@@ -1,7 +1,7 @@
 import type { AxiosRequestConfig, AxiosResponse } from 'axios';
 import axios from 'axios';
-import { getToken } from '@/utils/auth';
 import { Message } from '@arco-design/web-vue';
+import { getToken } from '@/utils/auth';
 
 export interface HttpResponse<T = any> {
   msg: string;
