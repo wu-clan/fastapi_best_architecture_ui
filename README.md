@@ -5,6 +5,9 @@ the [FastAPI Best Architecture](https://github.com/fastapi-practices/fastapi_bes
 
 Realization of some basic functions, slow development, not a standard implementation, only as a demonstration of effects
 
+Unfortunately, we don't have the funds to provide a demo site at the moment, so please see the screenshot section to
+make it happen
+
 ## Run
 
 ```shell
