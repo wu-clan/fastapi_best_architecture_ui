@@ -16,7 +16,7 @@
                     :extra="$t('menu.monitor.server.cpu.usage')"
                     :placeholder="$t('menu.monitor.server.placeholder')"
                     :value="cpuData.usage"
-                    :value-style="usageStyle()"
+                    :value-style="usageStyle('cpu')"
                   >
                     <template #suffix> %</template>
                   </a-statistic>
@@ -82,7 +82,7 @@
                     :extra="$t('menu.monitor.server.memory.usage')"
                     :placeholder="$t('menu.monitor.server.placeholder')"
                     :value="memData.usage"
-                    :value-style="usageStyle()"
+                    :value-style="usageStyle('memory')"
                   >
                     <template #suffix> %</template>
                   </a-statistic>
@@ -227,11 +227,17 @@
     return data;
   });
 
-  const usageStyle = () => {
-    if (setServerData.value.cpu?.usage < 50) {
+  const usageStyle = (type: string) => {
+    let num = 0;
+    if (type === 'cpu') {
+      num = setServerData.value.cpu?.usage;
+    } else if (type === 'memory') {
+      num = setServerData.value.memory?.usage;
+    }
+    if (num < 50) {
       return { color: 'rgb(var(--green-6))' };
     }
-    if (setServerData.value.cpu?.usage < 80) {
+    if (num < 80) {
       return { color: 'rgb(var(--yellow-6))' };
     }
     return { color: 'rgb(var(--red-6))' };
