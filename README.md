@@ -8,6 +8,9 @@ Realization of some basic functions, slow development, only as a demonstration o
 Unfortunately, we don't have the funds to provide a demo site at the moment, so please see
 the [screenshots](#screenshots)
 
+> [!NOTE]
+> Use casbin authorization internally instead of role menu authorization
+
 ## Run
 
 ```shell
