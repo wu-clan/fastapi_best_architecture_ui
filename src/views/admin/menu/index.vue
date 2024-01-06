@@ -266,7 +266,6 @@
           />
         </a-form-item>
         <a-form-item
-          v-if="menuType === 0 || menuType === 1"
           :label="$t('admin.menu.columns.status')"
           :required="true"
           field="status"
