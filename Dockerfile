@@ -12,7 +12,11 @@ RUN yarn install \
 FROM nginx
 
 COPY ./deploy/nginx.conf /etc/nginx/nginx.conf
+
 COPY --from=build /fba_ui/dist /www/fba_ui
+
+#COPY /xxx/ssl.pem /xxx
+#COPY /xxx/ssl.key /xxx
 
 EXPOSE 80
 
