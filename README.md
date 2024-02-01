@@ -3,10 +3,9 @@
 Front-end Implementation of
 the [FastAPI Best Architecture](https://github.com/fastapi-practices/fastapi_best_architecture)
 
-Realization of some basic functions, slow development, only as a demonstration of effects
+Some basic functionality has been implemented, development has been slow, please keep in mind that at the moment it is only intended as a demo of the effect and not for production!
 
-Unfortunately, we don't have the funds to provide a demo site at the moment, so please see
-the [screenshots](#screenshots)
+Fortunately, we now have a demo site -> [FBA UI](https://fba.xwboy.top/)
 
 > [!NOTE]
 > Use casbin authorization internally instead of role menu authorization
