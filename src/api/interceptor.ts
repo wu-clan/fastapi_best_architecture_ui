@@ -40,18 +40,38 @@ axios.interceptors.request.use(
 // add response interceptors
 axios.interceptors.response.use(
   (response: AxiosResponse<HttpResponse>) => {
+    const { code }: { code: number } = response.data;
     const { data }: { data: HttpResponse } = response.data;
+
+    if (code === 401) {
+      // TODO: token 监听，自动刷新，重新登录
+    }
+
     return data;
   },
   (error: any) => {
-    if (error.response.status === 401) {
-      // TODO: token 监听，自动刷新，重新登录
+    let res: HttpError = {
+      msg: '服务器响应异常，请稍后重试',
+      code: 500,
+    };
+
+    if (error.response) {
+      res = error.response.data;
     }
+
+    if (error.message === 'Network Error') {
+      res.msg = '服务器连接异常，请稍后重试';
+    }
+
+    if (error.code === 'ECONNABORTED') {
+      res.msg = '请求超时，请稍后重试';
+    }
+
     Message.error({
-      content: error.response.data.msg,
+      content: res.msg,
       duration: 5 * 1000,
     });
 
-    return Promise.reject(error);
+    return Promise.reject(res);
   }
 );
