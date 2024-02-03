@@ -664,6 +664,46 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@oxlint/darwin-arm64@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/darwin-arm64/-/darwin-arm64-0.2.7.tgz#74d243b797fa7e551b76ede37b6d6771c8a595b9"
+  integrity sha512-p3+5IlpapPiH5D7xEkndvgcbPWN3ylaP1qTv12YiX7uw5u9vR1dD64T2iNwdGPhySzJjohPXUWcfzsyJb7cJZA==
+
+"@oxlint/darwin-x64@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/darwin-x64/-/darwin-x64-0.2.7.tgz#b7aa239f393754c922bd2e6323ee44e7058d45f4"
+  integrity sha512-l/cO2+2A56Kr9UuVb5cm5vgOn6HLAb8ozmdlM5nsRVUAs+ghouKkDnkypfMUs0CKGeQGMGy0F/IadZcMUd9mTQ==
+
+"@oxlint/linux-arm64-gnu@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/linux-arm64-gnu/-/linux-arm64-gnu-0.2.7.tgz#92ba76c3f21586cbbf14e1a0448809d744322b00"
+  integrity sha512-5SQ3OKd+pAOVmOF0Sg8cC37k718YOSIbQK6cGadUOib/SzMjGwdcSKvcuxo90iie76VZSxK+XPI9eDXg4fTTOw==
+
+"@oxlint/linux-arm64-musl@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/linux-arm64-musl/-/linux-arm64-musl-0.2.7.tgz#5a2a3dbc6ebe68eabc1b8e1bf5be030a51f6c2dd"
+  integrity sha512-OobFOyl+g7tcs4y49VVKlXz5kzlmMJdH3c1gdRURA9ii067Hl0n5Kmji0TScPN9anp1/WbWa8tSMOTuuxGnI1g==
+
+"@oxlint/linux-x64-gnu@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/linux-x64-gnu/-/linux-x64-gnu-0.2.7.tgz#f169ab0602edced5a69904a5a9aef72479261bc4"
+  integrity sha512-UbVjnCs6cL6AxK9QWbKlfE6xRYWXrlLAvPUtzlBnKhkRV6umfeYYvLymoe2NqvKFfqpMdi0qivw/jvbmISTMbw==
+
+"@oxlint/linux-x64-musl@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/linux-x64-musl/-/linux-x64-musl-0.2.7.tgz#2e518b183ad912856dc6f01976fbfb4c97d35155"
+  integrity sha512-AMwIPWYVofqlRuzj4U0rzbGSFQONky2aZPDrKWN+hT78JHbpGvKCinc5JBgATQxVLL4fRKM6vIlaIwKUroUMWg==
+
+"@oxlint/win32-arm64@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/win32-arm64/-/win32-arm64-0.2.7.tgz#bd93a9c511f88b7a1aff016c528dcdc7177fa7fd"
+  integrity sha512-Vim/aDQCDqewxD/O/MqT994tPxgRBMuFdBarapjS3gfm5KUT7TU1BbURpRPy+9CcOl18w4oDKTuerWXCCAqpMQ==
+
+"@oxlint/win32-x64@0.2.7":
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/@oxlint/win32-x64/-/win32-x64-0.2.7.tgz#09b373a4432f2369a3436c7e91d63a4fb78f83f6"
+  integrity sha512-eVKvNodOIDtAy3Hv6SyBCZh4LcGtyLfucRQSqdlPYjKmiebsBa3G2Y28EzxeSH9PkT9zOXfZLo/vjycB3PfBqw==
+
 "@rollup/pluginutils@^4.2.1":
   version "4.2.1"
   resolved "https://registry.npmmirror.com/@rollup/pluginutils/-/pluginutils-4.2.1.tgz#e6c6c3aba0744edce3fb2074922d3776c0af2a6d"
@@ -3049,6 +3089,11 @@ eslint-plugin-import@^2.26.0:
     resolve "^1.22.3"
     semver "^6.3.1"
     tsconfig-paths "^3.14.2"
+
+eslint-plugin-oxlint@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.npmmirror.com/eslint-plugin-oxlint/-/eslint-plugin-oxlint-0.2.3.tgz#240e2008cadd1128b435955764e523ceac4e49b4"
+  integrity sha512-Grdd+CmeyDxJAar251bh4n9CYZh/3uc0wIc7rrtaRgq7wFibM2oikpzGvA5QDM7/Yvnw/brajWGbIJlLK7pBGA==
 
 eslint-plugin-prettier@^4.2.1:
   version "4.2.1"
@@ -5789,6 +5834,20 @@ ow@^0.17.0:
   integrity sha512-i3keDzDQP5lWIe4oODyDFey1qVrq2hXKTuTH2VpqwpYtzPiKZt2ziRI4NBQmgW40AnV5Euz17OyWweCb+bNEQA==
   dependencies:
     type-fest "^0.11.0"
+
+oxlint@^0.2.7:
+  version "0.2.7"
+  resolved "https://registry.npmmirror.com/oxlint/-/oxlint-0.2.7.tgz#198320eeb5a8e5f5935fca9d44498ea4935896ec"
+  integrity sha512-v68bBpXI8ogUkzLewLiQoG0fJwvpYq3IiJS6/XbzuUoV/+RVtqVm7SB27N8Ts4QrOu8HIRaGlWrscN4RzT2OCA==
+  optionalDependencies:
+    "@oxlint/darwin-arm64" "0.2.7"
+    "@oxlint/darwin-x64" "0.2.7"
+    "@oxlint/linux-arm64-gnu" "0.2.7"
+    "@oxlint/linux-arm64-musl" "0.2.7"
+    "@oxlint/linux-x64-gnu" "0.2.7"
+    "@oxlint/linux-x64-musl" "0.2.7"
+    "@oxlint/win32-arm64" "0.2.7"
+    "@oxlint/win32-x64" "0.2.7"
 
 p-cancelable@^0.3.0:
   version "0.3.0"
