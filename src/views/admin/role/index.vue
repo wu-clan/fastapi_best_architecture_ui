@@ -612,9 +612,7 @@
   // 请求Casbin所有P规则
   const fetchCasbinPolicies = async () => {
     try {
-      casbinPolicies.value = await queryCasbinPoliciesByRole(
-        String(operateRow.value)
-      );
+      casbinPolicies.value = await queryCasbinPoliciesByRole(operateRow.value);
     } catch (error) {
       // console.log(error);
     }

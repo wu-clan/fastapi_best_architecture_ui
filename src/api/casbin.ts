@@ -28,8 +28,10 @@ export interface CasbinGroupDel {
   uuid: string;
 }
 
-export function queryCasbinPoliciesByRole(role: string) {
-  return axios.get(`/api/v1/casbin/policy/${role}/all`);
+export function queryCasbinPoliciesByRole(role?: number) {
+  return axios.get(`/api/v1/casbin/policies`, {
+    params: { role },
+  });
 }
 
 export function createCasbinPolicy(data: CasbinPolicyReq) {
