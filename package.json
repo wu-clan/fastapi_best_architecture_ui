@@ -22,8 +22,8 @@
     "*.vue": [
       "stylelint --fix",
       "prettier --write",
-      "eslint --fix",
-      "oxlint --fix"
+      "oxlint --fix",
+      "eslint --fix"
     ],
     "*.{less,css}": [
       "stylelint --fix",
