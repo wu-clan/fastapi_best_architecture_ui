@@ -36,7 +36,7 @@ export interface SysDeptTreeParams {
 export function querySysDeptTree(
   params: SysDeptTreeParams
 ): Promise<SysDeptTreeRes[]> {
-  return axios.get('/api/v1/depts', {
+  return axios.get('/api/v1/sys/depts', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -45,17 +45,17 @@ export function querySysDeptTree(
 }
 
 export function querySysDeptDetail(pk: number): Promise<SysDeptTreeRes> {
-  return axios.get(`/api/v1/depts/${pk}`);
+  return axios.get(`/api/v1/sys/depts/${pk}`);
 }
 
 export function createSysDept(data: SysDeptReq) {
-  return axios.post('/api/v1/depts', data);
+  return axios.post('/api/v1/sys/depts', data);
 }
 
 export function updateSysDept(pk: number, data: SysDeptReq) {
-  return axios.put(`/api/v1/depts/${pk}`, data);
+  return axios.put(`/api/v1/sys/depts/${pk}`, data);
 }
 
 export function deleteSysDept(pk: number) {
-  return axios.delete(`/api/v1/depts/${pk}`);
+  return axios.delete(`/api/v1/sys/depts/${pk}`);
 }

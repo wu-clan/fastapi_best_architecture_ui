@@ -66,15 +66,15 @@ export interface SysUserAddReq {
 }
 
 export function getUserInfo(): Promise<UserState> {
-  return axios.get('/api/v1/users/me');
+  return axios.get('/api/v1/sys/users/me');
 }
 
 export function getUserMenuList(): Promise<MenuItem[]> {
-  return axios.get('/api/v1/menus/sidebar');
+  return axios.get('/api/v1/sys/menus/sidebar');
 }
 
 export function getUserList(params: SysUserParams): Promise<SysUserListRes> {
-  return axios.get('/api/v1/users', {
+  return axios.get('/api/v1/sys/users', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -83,40 +83,40 @@ export function getUserList(params: SysUserParams): Promise<SysUserListRes> {
 }
 
 export function getUser(username: string): Promise<SysUserRes> {
-  return axios.get(`/api/v1/users/${username}`);
+  return axios.get(`/api/v1/sys/users/${username}`);
 }
 
 export function updateUserRole(username: string, data: SysUserRoleReq) {
-  return axios.put(`/api/v1/users/${username}/role`, data);
+  return axios.put(`/api/v1/sys/users/${username}/role`, data);
 }
 
 export function changeUserStatus(pk: number) {
-  return axios.put(`/api/v1/users/${pk}/status`);
+  return axios.put(`/api/v1/sys/users/${pk}/status`);
 }
 
 export function changeUserSuper(pk: number) {
-  return axios.put(`/api/v1/users/${pk}/super`);
+  return axios.put(`/api/v1/sys/users/${pk}/super`);
 }
 
 export function changeUserStaff(pk: number) {
-  return axios.put(`/api/v1/users/${pk}/staff`);
+  return axios.put(`/api/v1/sys/users/${pk}/staff`);
 }
 
 export function changeUserMulti(pk: number) {
-  return axios.put(`/api/v1/users/${pk}/multi`);
+  return axios.put(`/api/v1/sys/users/${pk}/multi`);
 }
 
 export function updateUserAvatar(username: string, data: SysUserAvatarReq) {
-  return axios.put(`/api/v1/users/${username}/avatar`, data);
+  return axios.put(`/api/v1/sys/users/${username}/avatar`, data);
 }
 
 export function updateUser(username: string, data: SysUserInfoReq) {
-  return axios.put(`/api/v1/users/${username}`, data);
+  return axios.put(`/api/v1/sys/users/${username}`, data);
 }
 
 export function addUser(data: SysUserAddReq): Promise<SysUserNoRelationRes> {
-  return axios.post('/api/v1/users/add', data);
+  return axios.post('/api/v1/sys/users/add', data);
 }
 export function deleteUser(username: string) {
-  return axios.delete(`/api/v1/users/${username}`);
+  return axios.delete(`/api/v1/sys/users/${username}`);
 }

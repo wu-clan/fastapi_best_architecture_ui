@@ -47,7 +47,7 @@ export interface SysMenuTreeParams {
 export function querySysMenuTree(
   params: SysMenuTreeParams
 ): Promise<SysMenuTreeRes[]> {
-  return axios.get('/api/v1/menus', {
+  return axios.get('/api/v1/sys/menus', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -56,17 +56,17 @@ export function querySysMenuTree(
 }
 
 export function querySysMenuDetail(pk: number): Promise<SysMenuTreeRes> {
-  return axios.get(`/api/v1/menus/${pk}`);
+  return axios.get(`/api/v1/sys/menus/${pk}`);
 }
 
 export function createSysMenu(data: SysMenuReq) {
-  return axios.post('/api/v1/menus', data);
+  return axios.post('/api/v1/sys/menus', data);
 }
 
 export function updateSysMenu(pk: number, data: SysMenuReq) {
-  return axios.put(`/api/v1/menus/${pk}`, data);
+  return axios.put(`/api/v1/sys/menus/${pk}`, data);
 }
 
 export function deleteSysMenu(pk: number) {
-  return axios.delete(`/api/v1/menus/${pk}`);
+  return axios.delete(`/api/v1/sys/menus/${pk}`);
 }

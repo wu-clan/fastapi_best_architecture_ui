@@ -29,31 +29,31 @@ export interface CasbinGroupDel {
 }
 
 export function queryCasbinPoliciesByRole(role?: number) {
-  return axios.get(`/api/v1/casbin/policies`, {
+  return axios.get(`/api/v1/sys/casbin/policies`, {
     params: { role },
   });
 }
 
 export function createCasbinPolicy(data: CasbinPolicyReq) {
-  return axios.post('/api/v1/casbin/policy', data);
+  return axios.post('/api/v1/sys/casbin/policy', data);
 }
 
 export function createCasbinPolicies(data: CasbinPoliciesReq) {
-  return axios.post('/api/v1/casbin/policies', data.ps);
+  return axios.post('/api/v1/sys/casbin/policies', data.ps);
 }
 
 export function deleteCasbinPolicies(data: CasbinPoliciesDel) {
-  return axios.delete('/api/v1/casbin/policies/all', { data });
+  return axios.delete('/api/v1/sys/casbin/policies/all', { data });
 }
 
 export function createCasbinGroup(data: CasbinGroupReq) {
-  return axios.post('/api/v1/casbin/group', data);
+  return axios.post('/api/v1/sys/casbin/group', data);
 }
 
 export function createCasbinGroups(data: CasbinGroupsReq) {
-  return axios.post('/api/v1/casbin/groups', data.gs);
+  return axios.post('/api/v1/sys/casbin/groups', data.gs);
 }
 
 export function deleteCasbinAllGroups(data: CasbinGroupDel) {
-  return axios.delete('/api/v1/casbin/groups/all', { data });
+  return axios.delete('/api/v1/sys/casbin/groups/all', { data });
 }

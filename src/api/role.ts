@@ -40,23 +40,23 @@ export interface SysRoleDeleteParams {
 }
 
 export function querySysRoleAll(): Promise<SysRoleRes[]> {
-  return axios.get('/api/v1/roles/all');
+  return axios.get('/api/v1/sys/roles/all');
 }
 
 export function querySysRoleAllBySysUser(pk: number): Promise<SysRoleRes[]> {
-  return axios.get(`/api/v1/roles/${pk}/all`);
+  return axios.get(`/api/v1/sys/roles/${pk}/all`);
 }
 
 export function querySysMenuTreeBySysRole(
   pk: number
 ): Promise<SysMenuTreeRes[]> {
-  return axios.get(`/api/v1/roles/${pk}/menus`);
+  return axios.get(`/api/v1/sys/roles/${pk}/menus`);
 }
 
 export function querySysRoleList(
   params: SysRoleParams
 ): Promise<SysRoleListRes> {
-  return axios.get('/api/v1/roles', {
+  return axios.get('/api/v1/sys/roles', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -65,19 +65,19 @@ export function querySysRoleList(
 }
 
 export function querySysRoleDetail(pk: number): Promise<SysRoleRes> {
-  return axios.get(`/api/v1/roles/${pk}`);
+  return axios.get(`/api/v1/sys/roles/${pk}`);
 }
 
 export function createSysRole(data: SysRoleReq) {
-  return axios.post('/api/v1/roles', data);
+  return axios.post('/api/v1/sys/roles', data);
 }
 
 export function updateSysRole(pk: number, data: SysRoleReq) {
-  return axios.put(`/api/v1/roles/${pk}`, data);
+  return axios.put(`/api/v1/sys/roles/${pk}`, data);
 }
 
 export function deleteSysRole(params: SysRoleDeleteParams) {
-  return axios.delete(`/api/v1/roles`, {
+  return axios.delete(`/api/v1/sys/roles`, {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -86,5 +86,5 @@ export function deleteSysRole(params: SysRoleDeleteParams) {
 }
 
 export function updateSysRoleMenu(pk: number, data: SysRoleMenuReq) {
-  return axios.put(`/api/v1/roles/${pk}/menu`, data);
+  return axios.put(`/api/v1/sys/roles/${pk}/menu`, data);
 }

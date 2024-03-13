@@ -30,7 +30,7 @@ export interface SysApiDeleteParams {
 }
 
 export function querySysApiList(params: SysApiParams): Promise<SysApiListRes> {
-  return axios.get('/api/v1/apis', {
+  return axios.get('/api/v1/sys/apis', {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
@@ -39,23 +39,23 @@ export function querySysApiList(params: SysApiParams): Promise<SysApiListRes> {
 }
 
 export function querySysApiAll(): Promise<SysApiRes[]> {
-  return axios.get('/api/v1/apis/all');
+  return axios.get('/api/v1/sys/apis/all');
 }
 
 export function querySysApiDetail(pk: number): Promise<SysApiRes> {
-  return axios.get(`/api/v1/apis/${pk}`);
+  return axios.get(`/api/v1/sys/apis/${pk}`);
 }
 
 export function createSysApi(data: SysApiReq) {
-  return axios.post('/api/v1/apis', data);
+  return axios.post('/api/v1/sys/apis', data);
 }
 
 export function updateSysApi(pk: number, data: SysApiReq) {
-  return axios.put(`/api/v1/apis/${pk}`, data);
+  return axios.put(`/api/v1/sys/apis/${pk}`, data);
 }
 
 export function deleteSysApi(params: SysApiDeleteParams) {
-  return axios.delete(`/api/v1/apis`, {
+  return axios.delete(`/api/v1/sys/apis`, {
     params,
     paramsSerializer: (obj) => {
       return qs.stringify(obj);
