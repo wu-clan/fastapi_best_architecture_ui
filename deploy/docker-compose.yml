@@ -1,0 +1,25 @@
+networks:
+  fba_network:
+    external: true
+
+volumes:
+  fba_static:
+    external: true
+
+fba_ui:
+  build:
+    context: ../
+    dockerfile: Dockerfile
+  ports:
+    - "80:80"
+    - "443:443"
+  container_name: fba_ui
+  restart: always
+  command:
+    - nginx
+    - -g
+    - daemon off;
+  volumes:
+    - fba_static:/www/fba_server/backend/app/static
+  networks:
+    - fba_network
