@@ -13,7 +13,8 @@ export default {
   'admin.menu.form.title.placeholder': '请输入标题',
   'admin.menu.form.title.help': '菜单标题是必填项',
   'admin.menu.form.path.name': '请输入路由名称',
-  'admin.menu.form.name.help': '菜单名称是必填项',
+  'admin.menu.form.name.help':
+    '菜单名称要于路由配置里meta.locale后缀一致，如路由`menu.system`, 则这里应命名为system',
   'admin.menu.form.path.placeholder': '请输入路由路径',
   'admin.menu.form.component.placeholder': '请输入组件路径',
   'admin.menu.form.perms.placeholder': '请输入权限字符',

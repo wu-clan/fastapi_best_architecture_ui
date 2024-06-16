@@ -185,8 +185,9 @@
           :feedback="true"
           :label="$t('admin.menu.columns.name')"
           :rules="[
-            { required: true, message: $t('admin.menu.form.name.help') },
+            { required: true, message: $t('admin.menu.form.name.placeholder') },
           ]"
+          :tooltip="$t('admin.menu.form.name.help')"
           field="name"
         >
           <a-input

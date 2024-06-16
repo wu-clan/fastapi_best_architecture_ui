@@ -13,7 +13,8 @@ export default {
   'admin.menu.form.title.placeholder': 'Please enter a title',
   'admin.menu.form.title.help': 'The menu title is required',
   'admin.menu.form.path.name': 'Please enter a route name',
-  'admin.menu.form.name.help': 'The menu name is required',
+  'admin.menu.form.name.help':
+    'The menu name should match the suffix of the `meta.locale` in the route configuration. For example, if the route is `menu.system`, then the name here should be `system`.',
   'admin.menu.form.path.placeholder': 'Please enter the routing path',
   'admin.menu.form.component.placeholder': 'Please enter the component path',
   'admin.menu.form.perms.placeholder': 'Please enter permission characters',

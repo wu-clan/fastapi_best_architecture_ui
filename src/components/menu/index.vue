@@ -109,7 +109,6 @@
                       title: () =>
                         h(
                           compile(
-                            element?.meta?.title ||
                               t(element?.meta?.locale || '')
                           )
                         ),
@@ -123,7 +122,7 @@
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {element?.meta?.title || t(element?.meta?.locale || '')}
+                    {t(element?.meta?.locale || '')}
                   </a-menu-item>
                 );
               nodes.push(node as never);
