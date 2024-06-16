@@ -216,7 +216,7 @@
       title: t('log.opera.columns.ip'),
       dataIndex: 'ip',
       slotName: 'ip',
-      width: 120,
+      width: 150,
     },
     {
       title: t('log.opera.columns.city'),

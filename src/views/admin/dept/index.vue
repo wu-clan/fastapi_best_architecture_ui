@@ -310,7 +310,7 @@
       slotName: 'name',
       ellipsis: true,
       tooltip: true,
-      width: 150,
+      width: 100,
     },
     {
       title: t('admin.dept.columns.sort'),
@@ -343,11 +343,13 @@
       title: t('admin.menu.columns.created_time'),
       dataIndex: 'created_time',
       slotName: 'created_time',
+      width: 180,
     },
     {
       title: t('admin.menu.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
+      width: 180,
     },
   ]);
 
