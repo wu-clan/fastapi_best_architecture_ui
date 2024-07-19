@@ -11,6 +11,7 @@ services:
     build:
       context: ../
       dockerfile: Dockerfile
+    image: fba_ui:latest
     ports:
       - "80:80"
       - "443:443"
