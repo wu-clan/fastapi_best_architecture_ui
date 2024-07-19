@@ -17,6 +17,8 @@ services:
       - "443:443"
     container_name: fba_ui
     restart: always
+    depends_on:
+      - fba_server
     command:
       - nginx
       - -g
