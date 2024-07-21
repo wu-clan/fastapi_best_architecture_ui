@@ -1,7 +1,7 @@
 <template>
   <div class="login-form-wrapper">
     <div class="login-form-title">{{ $t('login.form.title') }}</div>
-    <div class="login-form-sub-title">{{ $t('login.form.title') }}</div>
+    <div class="login-form-sub-title">{{ $t('login.form.sub_title') }}</div>
     <div class="login-form-error-msg">{{ errorMessage }}</div>
     <a-form
       ref="loginForm"
@@ -11,13 +11,14 @@
       @submit="handleSubmit"
     >
       <a-form-item
-        :rules="[{ required: true, message: $t('login.form.userName.errMsg') }]"
+        :rules="[{ required: true, message: $t('login.form.username.errMsg') }]"
         :validate-trigger="['change', 'blur']"
         field="username"
         hide-label
       >
         <a-input
           v-model="userInfo.username"
+          class="login-input"
           :placeholder="$t('login.form.userName.placeholder')"
         >
           <template #prefix>
@@ -33,6 +34,7 @@
       >
         <a-input-password
           v-model="userInfo.password"
+          class="login-input"
           :placeholder="$t('login.form.password.placeholder')"
           allow-clear
         >
@@ -55,7 +57,7 @@
         >
         </a-input>
         <div class="captcha-wrapper" @click="refreshCaptcha">
-          <a-image width="125" height="30" :preview="false" :src="imageSrc" />
+          <a-image :preview="false" :src="imageSrc" />
         </div>
       </a-form-item>
       <a-space :size="16" direction="vertical">
@@ -76,6 +78,14 @@
           {{ $t('login.form.register') }}
         </a-button>
       </a-space>
+      <a-space direction="horizontal" style="margin-top: 15px">
+        <template #split>
+          <a-divider direction="vertical" />
+        </template>
+        <a-button type="text" shape="round" @click="linuxDoOAuth2">
+          <template #icon><icon-code-sandbox :size="30" /></template>
+        </a-button>
+      </a-space>
     </a-form>
   </div>
 </template>
@@ -91,6 +101,7 @@
   import useLoading from '@/hooks/loading';
   import type { LoginData } from '@/api/auth';
   import type { HttpError } from '@/api/interceptor';
+  import { getOAuth2LinuxDo } from '@/api/oauth';
 
   const router = useRouter();
   const { t } = useI18n();
@@ -102,13 +113,12 @@
     rememberPassword: true,
     username: 'admin', // 演示默认值
     password: '123456', // demo default value
-    captcha: '',
   });
 
   const userInfo = reactive({
     username: loginConfig.value.username,
     password: loginConfig.value.password,
-    captcha: loginConfig.value.captcha,
+    captcha: '',
   });
 
   const imageSrc = ref('');
@@ -149,12 +159,15 @@
         });
         Message.success(t('login.form.login.success'));
         const { rememberPassword } = loginConfig.value;
-        const { username, password, captcha } = values;
+        const { username, password } = values;
         // 实际生产环境需要进行加密存储。
         // The actual production environment requires encrypted storage.
-        loginConfig.value.username = rememberPassword ? username : '';
-        loginConfig.value.password = rememberPassword ? password : '';
-        loginConfig.value.captcha = rememberPassword ? captcha : '';
+        loginConfig.value.username = rememberPassword
+          ? username
+          : t('login.form.userName.placeholder');
+        loginConfig.value.password = rememberPassword
+          ? password
+          : t('login.form.userName.placeholder');
       } catch (err) {
         errorMessage.value = (err as HttpError).msg;
       } finally {
@@ -165,6 +178,15 @@
 
   const setRememberPassword = (value: boolean) => {
     loginConfig.value.rememberPassword = value;
+  };
+
+  const linuxDoOAuth2 = async () => {
+    try {
+      const redirectUrl = await getOAuth2LinuxDo();
+      window.location.href = redirectUrl;
+    } catch (error) {
+      // console.log(error);
+    }
   };
 </script>
 
@@ -202,14 +224,17 @@
       color: var(--color-text-3) !important;
     }
   }
+  .login-input {
+    height: 40px;
+    border-radius: 10px;
+  }
   .captcha-input {
-    width: 60%;
+    width: 62%;
+    height: 40px;
+    border-radius: 10px;
   }
   .captcha-wrapper {
-    width: 130px;
-    height: 30px;
-    border: 1px solid var(--color-border-1);
-    border-radius: 2px;
+    height: 40px;
     margin-left: auto;
   }
 </style>

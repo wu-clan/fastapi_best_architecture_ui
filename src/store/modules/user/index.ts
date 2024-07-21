@@ -10,6 +10,7 @@ import {
   LoginData,
   logout as userLogout,
 } from '@/api/auth';
+import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
@@ -68,6 +69,19 @@ const useUserStore = defineStore('user', {
         throw err;
       }
     },
+
+    // OAuth2 login
+    async oauth2Login() {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get('access_token');
+      if (token) {
+        setToken(token);
+        return true;
+      }
+      return false;
+    },
+
+    // Logout
     logoutCallBack() {
       const appStore = useAppStore();
       this.resetInfo();
@@ -76,7 +90,6 @@ const useUserStore = defineStore('user', {
       appStore.clearServerMenu();
     },
 
-    // Logout
     async logout() {
       try {
         await userLogout();

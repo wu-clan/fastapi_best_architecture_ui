@@ -29,3 +29,14 @@ export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   name: 'notFound',
   component: () => import('@/views/not-found/index.vue'),
 };
+
+export const OAUTH2_CALLBACK: RouteRecordRaw = {
+  path: '/oauth2/callback',
+  name: 'oauth2CallBack',
+  component: () => import('@/views/login/components/oauth_callback.vue'),
+  meta: {
+    requiresAuth: false,
+    hideInMenu: true,
+    roles: ['oauth2'],
+  },
+};

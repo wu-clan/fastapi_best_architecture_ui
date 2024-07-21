@@ -9,11 +9,12 @@
 
 <script lang="ts" setup>
   import { useRouter } from 'vue-router';
+  import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 
   const router = useRouter();
   const back = () => {
     // warning： Go to the node that has the permission
-    router.push({ name: 'Workplace' });
+    router.push({ name: DEFAULT_ROUTE_NAME });
   };
 </script>
 
