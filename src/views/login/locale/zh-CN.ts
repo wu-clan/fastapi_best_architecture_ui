@@ -13,6 +13,7 @@ export default {
   'login.form.rememberPassword': '记住密码',
   'login.form.forgetPassword': '忘记密码',
   'login.form.login': '登录',
+  'login.form.oauth_login': '其他登录方式',
   'login.form.register': '注册账号',
   'login.banner.slogan1': '开箱即用的高质量模板',
   'login.banner.subSlogan1': '丰富的的页面模板，覆盖大多数典型业务场景',

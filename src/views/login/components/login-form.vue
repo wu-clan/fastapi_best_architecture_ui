@@ -78,12 +78,16 @@
           {{ $t('login.form.register') }}
         </a-button>
       </a-space>
-      <a-space direction="horizontal" style="margin-top: 15px">
+      <a-divider orientation="center" margin="28px">
+        <p style="color: var(--color-text-3) !important">
+          {{ $t('login.form.oauth_login') }}
+        </p>
+      </a-divider>
+      <a-space direction="horizontal">
         <template #split>
           <a-divider direction="vertical" />
         </template>
         <a-button type="text" shape="round" @click="linuxDoOAuth2">
-          <!--<template #icon><icon-code-sandbox :size="30" /></template>-->
           <!--src="https://double.fkgpt.fun/?name=LDO&size=66"-->
           <template #icon>
             <img

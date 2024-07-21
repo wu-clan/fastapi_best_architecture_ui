@@ -10,7 +10,6 @@ import {
   LoginData,
   logout as userLogout,
 } from '@/api/auth';
-import { DEFAULT_ROUTE_NAME } from '@/router/constants';
 import useAppStore from '../app';
 
 const useUserStore = defineStore('user', {
