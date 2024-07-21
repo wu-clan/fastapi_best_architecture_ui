@@ -83,7 +83,18 @@
           <a-divider direction="vertical" />
         </template>
         <a-button type="text" shape="round" @click="linuxDoOAuth2">
-          <template #icon><icon-code-sandbox :size="30" /></template>
+          <!--<template #icon><icon-code-sandbox :size="30" /></template>-->
+          <!--src="https://double.fkgpt.fun/?name=LDO&size=66"-->
+          <template #icon>
+            <img
+              src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
+              width="36"
+              height="36"
+              alt="LinuxDo OAuth"
+              :preview="false"
+              :style="{ 'border-radius': '30px' }"
+            />
+          </template>
         </a-button>
       </a-space>
     </a-form>
