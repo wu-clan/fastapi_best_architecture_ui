@@ -6,7 +6,7 @@ const SYSTEM: AppRouteRecordRaw = {
   name: 'admin',
   component: DEFAULT_LAYOUT,
   meta: {
-    locale: 'menu.system',
+    locale: 'menu.admin',
     requiresAuth: true,
     icon: 'icon-settings',
     order: 1,
@@ -17,7 +17,7 @@ const SYSTEM: AppRouteRecordRaw = {
       name: 'SysDept',
       component: () => import('@/views/admin/dept/index.vue'),
       meta: {
-        locale: 'menu.system.sysDept',
+        locale: 'menu.admin.sysDept',
         requiresAuth: true,
         roles: ['*'],
       },
@@ -27,7 +27,7 @@ const SYSTEM: AppRouteRecordRaw = {
       name: 'SysUser',
       component: () => import('@/views/admin/user/index.vue'),
       meta: {
-        locale: 'menu.system.sysUser',
+        locale: 'menu.admin.sysUser',
         requiresAuth: true,
         roles: ['*'],
       },
@@ -37,7 +37,7 @@ const SYSTEM: AppRouteRecordRaw = {
       name: 'SysApi',
       component: () => import('@/views/admin/api/index.vue'),
       meta: {
-        locale: 'menu.system.sysApi',
+        locale: 'menu.admin.sysApi',
         requiresAuth: true,
         roles: ['*'],
       },
@@ -47,7 +47,7 @@ const SYSTEM: AppRouteRecordRaw = {
       name: 'SysRole',
       component: () => import('@/views/admin/role/index.vue'),
       meta: {
-        locale: 'menu.system.sysRole',
+        locale: 'menu.admin.sysRole',
         requiresAuth: true,
         roles: ['*'],
       },
@@ -57,7 +57,7 @@ const SYSTEM: AppRouteRecordRaw = {
       name: 'SysMenu',
       component: () => import('@/views/admin/menu/index.vue'),
       meta: {
-        locale: 'menu.system.sysMenu',
+        locale: 'menu.admin.sysMenu',
         requiresAuth: true,
         roles: ['*'],
       },

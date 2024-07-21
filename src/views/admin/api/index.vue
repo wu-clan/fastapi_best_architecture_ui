@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <a-layout style="padding: 0 18px">
-      <Breadcrumb :items="[$t('menu.system'), $t('menu.system.sysApi')]" />
-      <a-card :title="$t('menu.system.sysApi')" class="general-card">
+      <Breadcrumb :items="[$t('menu.admin'), $t('menu.admin.sysApi')]" />
+      <a-card :title="$t('menu.admin.sysApi')" class="general-card">
         <a-row>
           <a-col :flex="62">
             <a-form

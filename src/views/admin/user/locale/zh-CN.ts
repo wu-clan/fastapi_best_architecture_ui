@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysUser': '用户管理',
+  'menu.admin.sysUser': '用户管理',
   // form
   'admin.user.form.dept': '部门',
   'admin.user.form.dept.required': '部门是必选项',

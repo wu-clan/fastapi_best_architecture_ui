@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysRole': '角色管理',
+  'menu.admin.sysRole': '角色管理',
   // form
   'admin.role.form.name': '菜单名称',
   'admin.role.form.name.placeholder': '请输入菜单名称',

@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysDept': 'Dept manage',
+  'menu.admin.sysDept': 'Dept manage',
   // form
   'admin.dept.form.name': 'Dept name',
   'admin.dept.form.name.placeholder': 'Please enter the department name',

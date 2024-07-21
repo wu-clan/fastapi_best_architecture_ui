@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysDept': '部门管理',
+  'menu.admin.sysDept': '部门管理',
   // form
   'admin.dept.form.name': '部门名称',
   'admin.dept.form.name.placeholder': '请输入部门名称',

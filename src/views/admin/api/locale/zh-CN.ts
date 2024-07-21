@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysApi': 'API管理',
+  'menu.admin.sysApi': 'API管理',
   // form
   'admin.api.form.name': 'API名称',
   'admin.api.form.name.placeholder': '请输入API名称',

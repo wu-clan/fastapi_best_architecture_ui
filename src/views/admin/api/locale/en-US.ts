@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysApi': 'Api manage',
+  'menu.admin.sysApi': 'Api manage',
   // form
   'admin.api.form.name': 'API name',
   'admin.api.form.name.placeholder': 'Please enter API name',

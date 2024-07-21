@@ -1,5 +1,5 @@
 export default {
-  'menu.system.sysUser': 'User Manage',
+  'menu.admin.sysUser': 'User Manage',
   // form
   'admin.user.form.dept': 'Department',
   'admin.user.form.dept.required': 'Department is required',
