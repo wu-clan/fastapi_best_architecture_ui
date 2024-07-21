@@ -106,12 +106,7 @@
                     key={element?.name}
                     v-slots={{
                       icon,
-                      title: () =>
-                        h(
-                          compile(
-                              t(element?.meta?.locale || '')
-                          )
-                        ),
+                      title: () => h(compile(t(element?.meta?.title || ''))),
                     }}
                   >
                     {travel(element?.children)}
@@ -122,7 +117,7 @@
                     v-slots={{ icon }}
                     onClick={() => goto(element)}
                   >
-                    {t(element?.meta?.locale || '')}
+                    {t(element?.meta?.title || '')}
                   </a-menu-item>
                 );
               nodes.push(node as never);
