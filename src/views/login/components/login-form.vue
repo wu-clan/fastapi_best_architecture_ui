@@ -57,7 +57,7 @@
         >
         </a-input>
         <div class="captcha-wrapper" @click="refreshCaptcha">
-          <a-image :preview="false" :src="imageSrc" />
+          <a-image class="captcha-wrapper" :preview="false" :src="imageSrc" />
         </div>
       </a-form-item>
       <a-space :size="16" direction="vertical">
@@ -88,12 +88,60 @@
           <a-divider direction="vertical" />
         </template>
         <a-button type="text" shape="round" @click="linuxDoOAuth2">
-          <!--src="https://double.fkgpt.fun/?name=LDO&size=66"-->
           <template #icon>
             <img
               src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
-              width="36"
-              height="36"
+              width="32"
+              height="32"
+              title="LinuxDo OAuth"
+              alt="LinuxDo OAuth"
+              :preview="false"
+              :style="{ 'border-radius': '30px' }"
+            />
+          </template>
+        </a-button>
+        <a-button type="text" shape="round" @click="linuxDoOAuth2">
+          <template #icon>
+            <img
+              src="https://double.fkgpt.fun/?name=LDO&size=35"
+              title="LinuxDo OAuth"
+              alt="LinuxDo OAuth"
+              :preview="false"
+              :style="{ 'border-radius': '30px' }"
+            />
+          </template>
+        </a-button>
+        <a-button type="text" shape="round" @click="linuxDoOAuth2">
+          <template #icon>
+            <img
+              src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
+              width="32"
+              height="32"
+              title="LinuxDo OAuth"
+              alt="LinuxDo OAuth"
+              :preview="false"
+              :style="{ 'border-radius': '30px' }"
+            />
+          </template>
+        </a-button>
+        <a-button type="text" shape="round" @click="linuxDoOAuth2">
+          <template #icon>
+            <img
+              src="https://double.fkgpt.fun/?name=LDO&size=35"
+              title="LinuxDo OAuth"
+              alt="LinuxDo OAuth"
+              :preview="false"
+              :style="{ 'border-radius': '30px' }"
+            />
+          </template>
+        </a-button>
+        <a-button type="text" shape="round" @click="linuxDoOAuth2">
+          <template #icon>
+            <img
+              src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
+              width="32"
+              height="32"
+              title="LinuxDo OAuth"
               alt="LinuxDo OAuth"
               :preview="false"
               :style="{ 'border-radius': '30px' }"
@@ -197,8 +245,7 @@
 
   const linuxDoOAuth2 = async () => {
     try {
-      const redirectUrl = await getOAuth2LinuxDo();
-      window.location.href = redirectUrl;
+      window.location.href = await getOAuth2LinuxDo();
     } catch (error) {
       // console.log(error);
     }
@@ -243,13 +290,22 @@
     height: 40px;
     border-radius: 10px;
   }
+  ::v-deep(.arco-divider-text) {
+    line-height: 0;
+  }
+  ::v-deep(.arco-divider-vertical) {
+    margin: 11px;
+  }
   .captcha-input {
     width: 62%;
     height: 40px;
-    border-radius: 10px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
   }
   .captcha-wrapper {
     height: 40px;
     margin-left: auto;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
   }
 </style>

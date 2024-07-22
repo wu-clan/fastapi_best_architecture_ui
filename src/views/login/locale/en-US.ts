@@ -13,7 +13,7 @@ export default {
   'login.form.rememberPassword': 'remember password',
   'login.form.forgetPassword': 'forgot password',
   'login.form.login': 'login',
-  'login.form.oauth_login': 'Other login methods',
+  'login.form.oauth_login': 'Other logins',
   'login.form.register': 'Register an account',
   'login.banner.slogan1': 'high-quality template out of the box',
   'login.banner.subSlogan1':
