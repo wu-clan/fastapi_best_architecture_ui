@@ -7,7 +7,7 @@
           <a-row :gutter="20">
             <a-col :span="12">
               <a-card :loading="loading" class="info-card" title="CPU">
-                <a-space :size="60">
+                <a-space :size="20">
                   <template #split>
                     <a-divider direction="vertical" />
                   </template>
@@ -49,7 +49,7 @@
                 :title="$t('menu.monitor.server.memory')"
                 class="info-card"
               >
-                <a-space :size="60">
+                <a-space :size="40">
                   <template #split>
                     <a-divider direction="vertical" />
                   </template>
