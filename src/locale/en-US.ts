@@ -10,15 +10,19 @@ import localeRedisMonitor from '@/views/monitor/redis/locale/en-US';
 import localeSysApi from '@/views/admin/api/locale/en-US';
 import localeSysUser from '@/views/admin/user/locale/en-US';
 import localeSysRole from '@/views/admin/role/locale/en-US';
+import localeGenerator from '@/views/automation/code-generator/local/en-US';
 import localeSettings from './en-US/settings';
 
 export default {
   'menu.dashboard': 'Dashboard',
   'menu.admin': 'System Manage',
+  'menu.automation': 'System Automation',
   'menu.log': 'Log',
   'menu.monitor': 'System Monitor',
   'menu.arcoWebsite': 'Arco Design',
   'menu.faq': 'FAQ',
+  'menu.github': 'GitHub',
+  'menu.sponsor': 'Sponsor',
   'navbar.action.locale': 'Switch to English',
   'modal.title.tips': 'Warm Tips',
   'modal.title.tips.delete': 'Are you sure you want to delete it？',
@@ -40,4 +44,5 @@ export default {
   ...localeSysApi,
   ...localeSysUser,
   ...localeSysRole,
+  ...localeGenerator,
 };

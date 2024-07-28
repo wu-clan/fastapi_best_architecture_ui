@@ -1,0 +1,654 @@
+<template>
+  <div class="container">
+    <a-layout style="padding: 0 18px">
+      <Breadcrumb
+        :items="[$t('menu.automation'), $t('menu.automation.codeGenerator')]"
+      />
+      <a-card
+        :title="$t('menu.automation.card.dataImport')"
+        class="general-card"
+      >
+        <a-tooltip :content="$t('automation.code-gen.tooltip.import')">
+          <a-tag :size="'large'" style="background-color: transparent">
+            <template #icon>
+              <icon-question style="color: rgb(var(--warning-6))" />
+            </template>
+          </a-tag>
+        </a-tooltip>
+        <a-button type="primary" style="margin-right: 10px" @click="openGetDB">
+          <template #icon>
+            <icon-search />
+          </template>
+          {{ $t('automation.code-gen.button.getDB') }}
+        </a-button>
+        <a-drawer
+          v-model:visible="getDBDrawer"
+          :footer="false"
+          :width="550"
+          :header="false"
+          @ok="okGetDB"
+        >
+          <a-form style="margin-top: 10px">
+            <a-form-item
+              :label="$t('automation.code-gen.form.db_name')"
+              :tooltip="$t('automation.code-gen.form.db_name.tooltip')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.db_name.placeholder')
+                "
+              ></a-input>
+            </a-form-item>
+          </a-form>
+          <a-button
+            type="primary"
+            :disabled="true"
+            style="float: right; margin-bottom: 20px"
+          >
+            {{ $t('automation.code-gen.button.getDB.req') }}
+          </a-button>
+          <a-list style="margin-top: 53px">
+            <template #header>{{
+              $t('automation.code-gen.list.header')
+            }}</template>
+          </a-list>
+        </a-drawer>
+        <a-button type="primary" @click="openImport">
+          <template #icon>
+            <icon-plus />
+          </template>
+          {{ $t('automation.code-gen.button.import') }}
+        </a-button>
+        <a-modal
+          v-model:visible="importDrawer"
+          :width="600"
+          :closable="false"
+          :title="$t('automation.code-gen.modal.import')"
+          @cancel="cancelImport"
+          @ok="okImport"
+        >
+          <a-form style="margin-top: 10px">
+            <a-form-item
+              :label="$t('automation.code-gen.form.app')"
+              :tooltip="$t('automation.code-gen.form.app.tooltip')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="$t('automation.code-gen.form.app.placeholder')"
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.db_name')"
+              :tooltip="$t('automation.code-gen.form.table_schema.tooltip')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.db_name.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.table_name')"
+              :tooltip="$t('automation.code-gen.form.table_name.tooltip')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.table_name.placeholder')
+                "
+              />
+            </a-form-item>
+          </a-form>
+        </a-modal>
+      </a-card>
+      <a-card
+        :title="$t('menu.automation.card.codeGenerate')"
+        class="general-card"
+        style="margin-top: 10px"
+      >
+        <a-tooltip :content="$t('automation.code-gen.tooltip.business')">
+          <a-tag :size="'large'" style="background-color: transparent">
+            <template #icon>
+              <icon-question style="color: rgb(var(--warning-6))" />
+            </template>
+          </a-tag>
+        </a-tooltip>
+        <a-tooltip :content="$t('automation.code-gen.button.tooltip.business')">
+          <a-button
+            type="primary"
+            style="margin: 0 10px 20px 0"
+            @click="openBusiness"
+          >
+            <template #icon>
+              <icon-plus />
+            </template>
+            {{ $t('automation.code-gen.button.business') }}
+          </a-button>
+        </a-tooltip>
+        <a-modal
+          v-model:visible="businessDrawer"
+          :closable="false"
+          :width="650"
+          :title="$t('automation.code-gen.modal.business')"
+          @ok="okBusiness"
+          @cancel="cancelBusiness"
+        >
+          <a-form>
+            <a-form-item
+              :label="$t('automation.code-gen.form.app_name')"
+              :tooltip="$t('automation.code-gen.form.app_name.tooltip')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.app_name.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.table_name_en')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.table_name_en.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.table_name_zh')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.table_name_zh.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.table_simple_name_zh')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t(
+                    'automation.code-gen.form.table_simple_name_zh.placeholder'
+                  )
+                "
+              />
+            </a-form-item>
+            <a-form-item :label="$t('automation.code-gen.form.table_comment')">
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.table_comment.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.schema_name')"
+              :tooltip="$t('automation.code-gen.form.schema_name.tooltip')"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.schema_name.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.default_datetime_column')"
+              :tooltip="
+                $t('automation.code-gen.form.default_datetime_column.tooltip')
+              "
+              :required="true"
+            >
+              <a-switch>
+                <template #checked>
+                  {{ $t('switch.open') }}
+                </template>
+                <template #unchecked>
+                  {{ $t('switch.close') }}
+                </template>
+              </a-switch>
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.api_version')"
+              :tooltip="$t('automation.code-gen.form.api_version.tooltip')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.api_version.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.gen_path')"
+              :tooltip="$t('automation.code-gen.form.gen_path.tooltip')"
+            >
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.gen_path.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item :label="$t('automation.code-gen.form.remark')">
+              <a-textarea
+                :placeholder="$t('automation.code-gen.form.remark.placeholder')"
+              />
+            </a-form-item>
+          </a-form>
+        </a-modal>
+        <a-select
+          :allow-search="false"
+          style="width: 250px"
+          :placeholder="$t('automation.code-gen.select.business')"
+        />
+        <a-table :columns="businessColumns" style="margin-left: 36px" />
+        <a-tooltip :content="$t('automation.code-gen.tooltip.model')">
+          <a-tag
+            :size="'large'"
+            style="margin: 7px 0 10px 0; background-color: transparent"
+          >
+            <template #icon>
+              <icon-question style="color: rgb(var(--warning-6))" />
+            </template>
+          </a-tag>
+        </a-tooltip>
+        <a-button type="primary" style="margin: 20px 0 20px" @click="openModel">
+          <template #icon>
+            <icon-plus />
+          </template>
+          {{ $t('automation.code-gen.button.model') }}
+        </a-button>
+        <a-modal
+          v-model:visible="modelDrawer"
+          :width="600"
+          :closable="false"
+          :title="$t('automation.code-gen.modal.model')"
+          @ok="okModel"
+          @cancel="cancelModel"
+        >
+          <a-form>
+            <a-form-item
+              :label="$t('automation.code-gen.form.name')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="$t('automation.code-gen.form.name.placeholder')"
+              />
+            </a-form-item>
+            <a-form-item :label="$t('automation.code-gen.form.comment')">
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.comment.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.type')"
+              :required="true"
+            >
+              <a-select
+                v-model="selectSQLAType"
+                :field-names="SQLATypeFN"
+                :options="SQLATypeOptions"
+                :placeholder="$t('automation.code-gen.form.type.placeholder')"
+              />
+            </a-form-item>
+            <a-form-item :label="$t('automation.code-gen.form.default')">
+              <a-input
+                :placeholder="
+                  $t('automation.code-gen.form.default.placeholder')
+                "
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.sort')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="$t('automation.code-gen.form.sort.placeholder')"
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.length')"
+              :required="true"
+            >
+              <a-input
+                :placeholder="$t('automation.code-gen.form.length.placeholder')"
+              />
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.is_pk')"
+              :tooltip="$t('automation.code-gen.form.is_pk.tooltip')"
+              :required="true"
+            >
+              <a-switch>
+                <template #checked>
+                  {{ $t('switch.open') }}
+                </template>
+                <template #unchecked>
+                  {{ $t('switch.close') }}
+                </template>
+              </a-switch>
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.is_nullable')"
+              :required="true"
+            >
+              <a-switch>
+                <template #checked>
+                  {{ $t('switch.open') }}
+                </template>
+                <template #unchecked>
+                  {{ $t('switch.close') }}
+                </template>
+              </a-switch>
+            </a-form-item>
+            <a-form-item
+              :label="$t('automation.code-gen.form.gen_business_id')"
+              :required="true"
+            >
+              <a-select
+                :placeholder="
+                  $t('automation.code-gen.form.gen_business_id.placeholder')
+                "
+              />
+            </a-form-item>
+          </a-form>
+        </a-modal>
+        <a-table :columns="modelColumns" style="margin-left: 36px" />
+        <a-space style="margin: 20px 0 20px; float: right">
+          <template #split>
+            <a-divider direction="vertical" />
+          </template>
+          <a-button type="primary" @click="openPreviewDrawer">
+            <template #icon>
+              <icon-eye />
+            </template>
+            {{ $t('automation.code-gen.button.preview') }}
+          </a-button>
+          <a-button type="primary">
+            <template #icon>
+              <icon-import />
+            </template>
+            {{ $t('automation.code-gen.button.write') }}
+          </a-button>
+          <a-button type="primary">
+            <template #icon>
+              <icon-download />
+            </template>
+            {{ $t('automation.code-gen.button.download') }}
+          </a-button>
+        </a-space>
+        <a-drawer
+          v-model:visible="previewDrawer"
+          :footer="false"
+          :width="888"
+          :header="false"
+        >
+          <a-tabs :animation="true" :justify="true">
+            <a-tab-pane key="api" title="api.py">
+              <Codemirror v-model:value="code" :options="cmOptions" />
+            </a-tab-pane>
+            <a-tab-pane key="crud" title="crud.py">
+              <Codemirror v-model:value="code" :options="cmOptions" />
+            </a-tab-pane>
+            <a-tab-pane key="model" title="model.py">
+              <Codemirror v-model:value="code" :options="cmOptions" />
+            </a-tab-pane>
+            <a-tab-pane key="schema" title="schema.py">
+              <Codemirror v-model:value="code" :options="cmOptions" />
+            </a-tab-pane>
+            <a-tab-pane key="service" title="service.py">
+              <Codemirror v-model:value="code" :options="cmOptions" />
+            </a-tab-pane>
+          </a-tabs>
+        </a-drawer>
+      </a-card>
+    </a-layout>
+  </div>
+  <div class="footer">
+    <Footer />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import { useI18n } from 'vue-i18n';
+  import { computed, reactive, ref } from 'vue';
+  import { TableColumnData } from '@arco-design/web-vue';
+  import { EditorConfiguration } from 'codemirror';
+  import Codemirror from 'codemirror-editor-vue3';
+  import useLoading from '@/hooks/loading';
+  import Footer from '@/components/footer/index.vue';
+  // eslint-disable-next-line import/extensions
+  import 'codemirror/mode/python/python.js';
+  import 'codemirror/theme/dracula.css';
+  import 'codemirror/addon/display/autorefresh';
+
+  const { t } = useI18n();
+  const { loading, setLoading } = useLoading(true);
+  const cmOptions: EditorConfiguration = reactive({
+    mode: 'text/x-python',
+    theme: 'dracula',
+    readOnly: true,
+    lineNumbers: true,
+    gutters: ['CodeMirror-lint-markers'],
+    lint: true,
+    autoRefresh: true,
+  });
+  const code = ref<string>('data');
+  const selectSQLAType = ref<string>('VARCHAR');
+  const SQLATypeFN = { value: 'type', label: 'type' };
+  const SQLATypeOptions = reactive([
+    { type: 'BIGINT' },
+    { type: 'BINARY' },
+    { type: 'BIT' },
+    { type: 'BLOB' },
+    { type: 'BOOL' },
+    { type: 'BOOLEAN' },
+    { type: 'CHAR' },
+    { type: 'DATE' },
+    { type: 'DATETIME' },
+    { type: 'DECIMAL' },
+    { type: 'DOUBLE' },
+    { type: 'DOUBLE PRECISION' },
+    { type: 'ENUM' },
+    { type: 'FLOAT' },
+    { type: 'GEOMETRY' },
+    { type: 'GEOMETRYCOLLECTION' },
+    { type: 'INT' },
+    { type: 'INTEGER' },
+    { type: 'JSON' },
+    { type: 'LINESTRING' },
+    { type: 'LONGBLOB' },
+    { type: 'LONGTEXT' },
+    { type: 'MEDIUMBLOB' },
+    { type: 'MEDIUMINT' },
+    { type: 'MEDIUMTEXT' },
+    { type: 'MULTILINESTRING' },
+    { type: 'MULTIPOINT' },
+    { type: 'MULTIPOLYGON' },
+    { type: 'NUMERIC' },
+    { type: 'POINT' },
+    { type: 'POLYGON' },
+    { type: 'REAL' },
+    { type: 'SERIAL' },
+    { type: 'SET' },
+    { type: 'SMALLINT' },
+    { type: 'TEXT' },
+    { type: 'TIME' },
+    { type: 'TIMESTAMP' },
+    { type: 'TINYBLOB' },
+    { type: 'TINYINT' },
+    { type: 'TINYTEXT' },
+    { type: 'VARBINARY' },
+    { type: 'VARCHAR' },
+    { type: 'YEAR' },
+  ]);
+  const getDBDrawer = ref<boolean>(false);
+  const importDrawer = ref<boolean>(false);
+  const businessDrawer = ref<boolean>(false);
+  const modelDrawer = ref<boolean>(false);
+  const previewDrawer = ref<boolean>(false);
+  const openGetDB = () => {
+    getDBDrawer.value = true;
+  };
+  const okGetDB = () => {
+    getDBDrawer.value = false;
+  };
+  const openImport = () => {
+    importDrawer.value = true;
+  };
+  const cancelImport = () => {
+    importDrawer.value = false;
+  };
+  const okImport = () => {
+    importDrawer.value = false;
+  };
+  const openBusiness = () => {
+    businessDrawer.value = true;
+  };
+  const cancelBusiness = () => {
+    businessDrawer.value = false;
+  };
+  const okBusiness = () => {
+    businessDrawer.value = false;
+  };
+  const openModel = () => {
+    modelDrawer.value = true;
+  };
+  const cancelModel = () => {
+    modelDrawer.value = false;
+  };
+  const okModel = () => {
+    modelDrawer.value = false;
+  };
+  const openPreviewDrawer = () => {
+    previewDrawer.value = true;
+  };
+
+  const businessColumns = computed<TableColumnData[]>(() => [
+    {
+      title: t('automation.code-gen.columns.app_name'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.table_name_en'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.table_name_zh'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.table_simple_name_zh'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.table_comment'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.schema_name'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.default_datetime_column'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.api_version'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.gen_path'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.remark'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.operate'),
+      dataIndex: 'operate',
+      slotName: 'operate',
+    },
+  ]);
+  const modelColumns = computed<TableColumnData[]>(() => [
+    {
+      title: 'ID',
+      dataIndex: 'index',
+      slotName: 'index',
+    },
+    {
+      title: t('automation.code-gen.columns.name'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.comment'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.type'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.pd_type'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.default'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.sort'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.length'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.is_pk'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.is_nullable'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.gen_business_id'),
+      dataIndex: '',
+      slotName: '',
+    },
+    {
+      title: t('automation.code-gen.columns.operate'),
+      dataIndex: 'operate',
+      slotName: 'operate',
+    },
+  ]);
+</script>
+
+<style scoped lang="less"></style>

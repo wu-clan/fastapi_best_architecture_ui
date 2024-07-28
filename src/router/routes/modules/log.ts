@@ -9,7 +9,7 @@ const LOG: AppRouteRecordRaw = {
     locale: 'menu.log',
     requiresAuth: true,
     icon: 'icon-bug',
-    order: 2,
+    order: 3,
   },
   children: [
     {
