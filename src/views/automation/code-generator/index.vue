@@ -26,12 +26,11 @@
           :footer="false"
           :width="550"
           :header="false"
-          @ok="okGetDB"
         >
           <a-alert type="warning" style="margin-top: 10px">
             {{ $t('automation.code-gen.alert.getDB') }}
           </a-alert>
-          <a-form ref="formRef" :model="getDBForm" style="margin-top: 20px">
+          <a-form :model="getDBForm" style="margin-top: 20px">
             <a-form-item
               :label="$t('automation.code-gen.form.db_name')"
               :rules="[
@@ -87,25 +86,48 @@
           :width="600"
           :closable="false"
           :title="$t('automation.code-gen.modal.import')"
+          :on-before-ok="beforeSubmit"
           @cancel="cancelImport"
-          @ok="okImport"
+          @ok="importBusinessModel"
         >
-          <a-form style="margin-top: 10px">
+          <a-form
+            ref="formRef"
+            :model="importTableForm"
+            style="margin-top: 10px"
+          >
             <a-form-item
               :label="$t('automation.code-gen.form.app')"
               :tooltip="$t('automation.code-gen.form.app.tooltip')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  match: /^[a-z_]+$/,
+                  lowercase: true,
+                  message: $t('automation.code-gen.form.app.help'),
+                },
+              ]"
+              field="app"
             >
               <a-input
+                v-model="importTableForm.app"
                 :placeholder="$t('automation.code-gen.form.app.placeholder')"
               />
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.db_name')"
-              :tooltip="$t('automation.code-gen.form.table_schema.tooltip')"
-              :required="true"
+              :tooltip="$t('automation.code-gen.form.db_name.tooltip')"
+              :rules="[
+                {
+                  required: true,
+                  match: /^[a-z_]+$/,
+                  lowercase: true,
+                  message: $t('automation.code-gen.form.db_name.help'),
+                },
+              ]"
+              field="table_schema"
             >
               <a-input
+                v-model="importTableForm.table_schema"
                 :placeholder="
                   $t('automation.code-gen.form.db_name.placeholder')
                 "
@@ -114,9 +136,18 @@
             <a-form-item
               :label="$t('automation.code-gen.form.table_name')"
               :tooltip="$t('automation.code-gen.form.table_name.tooltip')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  match: /^[a-z_]+$/,
+                  lowercase: true,
+                  message: $t('automation.code-gen.form.table_name.help'),
+                },
+              ]"
+              field="table_name"
             >
               <a-input
+                v-model="importTableForm.table_name"
                 :placeholder="
                   $t('automation.code-gen.form.table_name.placeholder')
                 "
@@ -162,6 +193,7 @@
               :label="$t('automation.code-gen.form.app_name')"
               :tooltip="$t('automation.code-gen.form.app_name.tooltip')"
               :required="true"
+              field="app_name"
             >
               <a-input
                 :placeholder="
@@ -172,6 +204,7 @@
             <a-form-item
               :label="$t('automation.code-gen.form.table_name_en')"
               :required="true"
+              field="table_name_en"
             >
               <a-input
                 :placeholder="
@@ -182,6 +215,7 @@
             <a-form-item
               :label="$t('automation.code-gen.form.table_name_zh')"
               :required="true"
+              field="table_name_zh"
             >
               <a-input
                 :placeholder="
@@ -192,6 +226,7 @@
             <a-form-item
               :label="$t('automation.code-gen.form.table_simple_name_zh')"
               :required="true"
+              field="table_simple_name_zh"
             >
               <a-input
                 :placeholder="
@@ -201,7 +236,10 @@
                 "
               />
             </a-form-item>
-            <a-form-item :label="$t('automation.code-gen.form.table_comment')">
+            <a-form-item
+              :label="$t('automation.code-gen.form.table_comment')"
+              field="table_comment"
+            >
               <a-input
                 :placeholder="
                   $t('automation.code-gen.form.table_comment.placeholder')
@@ -211,6 +249,7 @@
             <a-form-item
               :label="$t('automation.code-gen.form.schema_name')"
               :tooltip="$t('automation.code-gen.form.schema_name.tooltip')"
+              field="schema_name"
             >
               <a-input
                 :placeholder="
@@ -224,6 +263,7 @@
                 $t('automation.code-gen.form.default_datetime_column.tooltip')
               "
               :required="true"
+              field="default_datetime_column"
             >
               <a-switch>
                 <template #checked>
@@ -238,6 +278,7 @@
               :label="$t('automation.code-gen.form.api_version')"
               :tooltip="$t('automation.code-gen.form.api_version.tooltip')"
               :required="true"
+              field="api_version"
             >
               <a-input
                 :placeholder="
@@ -248,6 +289,7 @@
             <a-form-item
               :label="$t('automation.code-gen.form.gen_path')"
               :tooltip="$t('automation.code-gen.form.gen_path.tooltip')"
+              field="gen_path"
             >
               <a-input
                 :placeholder="
@@ -255,7 +297,10 @@
                 "
               />
             </a-form-item>
-            <a-form-item :label="$t('automation.code-gen.form.remark')">
+            <a-form-item
+              :label="$t('automation.code-gen.form.remark')"
+              field="remark"
+            >
               <a-textarea
                 :placeholder="$t('automation.code-gen.form.remark.placeholder')"
               />
@@ -446,8 +491,8 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref } from 'vue';
-  import { TableColumnData } from '@arco-design/web-vue';
+  import { computed, reactive, ref, watch } from 'vue';
+  import { Message, TableColumnData } from '@arco-design/web-vue';
   import { EditorConfiguration } from 'codemirror';
   import Codemirror from 'codemirror-editor-vue3';
   import useLoading from '@/hooks/loading';
@@ -456,7 +501,12 @@
   import 'codemirror/mode/python/python.js';
   import 'codemirror/theme/dracula.css';
   import 'codemirror/addon/display/autorefresh';
-  import { DBTableParams, queryDBTables } from '@/api/automatiion';
+  import {
+    DBTableParams,
+    ImportReq,
+    importTable,
+    queryDBTables,
+  } from '@/api/automatiion';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(false);
@@ -470,6 +520,7 @@
     autoRefresh: true,
   });
   const code = ref<string>('data');
+  const formRef = ref();
   const selectSQLAType = ref<string>('');
   const SQLATypeFN = { value: 'type', label: 'type' };
   const SQLATypeOptions = reactive([
@@ -526,16 +577,11 @@
   const openGetDB = () => {
     getDBDrawer.value = true;
   };
-  const okGetDB = () => {
-    getDBDrawer.value = false;
-  };
   const openImport = () => {
+    resetImportTableForm(importData);
     importDrawer.value = true;
   };
   const cancelImport = () => {
-    importDrawer.value = false;
-  };
-  const okImport = () => {
     importDrawer.value = false;
   };
   const openBusiness = () => {
@@ -703,7 +749,24 @@
     return !selectBusiness.value;
   };
 
-  const formRef = ref();
+  const importData: ImportReq = {
+    app: '',
+    table_name: '',
+    table_schema: '',
+  };
+  const importTableForm = reactive<ImportReq>({ ...importData });
+
+  // 导入
+  const importBusinessModel = async () => {
+    try {
+      await importTable(importTableForm);
+      Message.success(t('submit.create.success'));
+      importDrawer.value = false;
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
   // 表单校验
   const beforeSubmit = async (done: any) => {
     const res = await formRef.value?.validate();
@@ -713,6 +776,22 @@
     }
     done(false);
   };
+
+  // 重置表单
+  const resetImportTableForm = (data: Record<any, any>) => {
+    Object.keys(data).forEach((key) => {
+      // @ts-ignore
+      importTableForm[key] = data[key];
+    });
+  };
+
+  // 监控
+  watch(getDBDrawer, (newVal) => {
+    if (newVal) {
+      getDBForm.table_schema = '';
+      DBTables.value = [];
+    }
+  });
 </script>
 
 <style scoped lang="less"></style>

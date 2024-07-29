@@ -39,7 +39,7 @@ export interface DBTableParams {
   table_schema: string;
 }
 
-export interface ImportParams {
+export interface ImportReq {
   app: string;
   table_name: string;
   table_schema: string;
@@ -86,13 +86,8 @@ export function queryDBTables(params: DBTableParams): Promise<string[]> {
   });
 }
 
-export function importDBTable(params: ImportParams) {
-  return axios.post('/api/v1/gen/import', {
-    params,
-    paramsSerializer: (obj: AnyObject) => {
-      return qs.stringify(obj);
-    },
-  });
+export function importTable(data: ImportReq) {
+  return axios.post('/api/v1/gen/import', data);
 }
 
 export function previewCode(pk: number): Promise<AnyObject> {

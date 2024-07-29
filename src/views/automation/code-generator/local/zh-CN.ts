@@ -50,16 +50,18 @@ export default {
   'automation.code-gen.form.db_name.placeholder': '请输入数据库名称',
   'automation.code-gen.form.db_name.help':
     '数据库名是必填项，且仅支持小写字母和下划线',
+  'automation.code-gen.form.db_name.tooltip': '建议与“获取数据库表”参数相同',
   'automation.code-gen.form.app': '应用名',
   'automation.code-gen.form.app.tooltip': '用于代码生成到指定后端 app',
   'automation.code-gen.form.app.placeholder': '请输入应用名称',
+  'automation.code-gen.form.app.help':
+    '应用名称是必填项，且仅支持小写字母和下划线',
   'automation.code-gen.form.table_name': '数据库表名',
   'automation.code-gen.form.table_name.tooltip':
     '通过“获取数据库表”查询到的表名',
   'automation.code-gen.form.table_name.placeholder': '请输入数据库表名',
-  'automation.code-gen.form.table_schema.tooltip':
-    '建议与“获取数据库表”参数相同',
-  // ddd
+  'automation.code-gen.form.table_name.help':
+    '数据库表名是必填项，且仅支持小写字母和下划线',
   'automation.code-gen.form.name': '名称',
   'automation.code-gen.form.name.placeholder': '请输入名称',
   'automation.code-gen.form.comment': '描述',
