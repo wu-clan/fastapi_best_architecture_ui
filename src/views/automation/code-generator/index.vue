@@ -8,13 +8,16 @@
         :title="$t('menu.automation.card.dataImport')"
         class="general-card"
       >
-        <a-tooltip :content="$t('automation.code-gen.tooltip.import')">
-          <a-tag :size="'large'" style="background-color: transparent">
-            <template #icon>
-              <icon-question style="color: rgb(var(--warning-6))" />
-            </template>
-          </a-tag>
-        </a-tooltip>
+        <!--<a-tooltip :content="$t('automation.code-gen.tooltip.import')">-->
+        <!--  <a-tag :size="'large'" style="background-color: transparent">-->
+        <!--    <template #icon>-->
+        <!--      <icon-question style="color: rgb(var(&#45;&#45;warning-6))" />-->
+        <!--    </template>-->
+        <!--  </a-tag>-->
+        <!--</a-tooltip>-->
+        <a-alert :type="'warning'" style="margin-bottom: 20px">
+          {{ $t('automation.code-gen.tooltip.import') }}
+        </a-alert>
         <a-button type="primary" style="margin-right: 10px" @click="openGetDB">
           <template #icon>
             <icon-search />
@@ -161,13 +164,16 @@
         class="general-card"
         style="margin-top: 10px"
       >
-        <a-tooltip :content="$t('automation.code-gen.tooltip.business')">
-          <a-tag :size="'large'" style="background-color: transparent">
-            <template #icon>
-              <icon-question style="color: rgb(var(--warning-6))" />
-            </template>
-          </a-tag>
-        </a-tooltip>
+        <!--<a-tooltip :content="$t('automation.code-gen.tooltip.business')">-->
+        <!--  <a-tag :size="'large'" style="background-color: transparent">-->
+        <!--    <template #icon>-->
+        <!--      <icon-question style="color: rgb(var(&#45;&#45;warning-6))" />-->
+        <!--    </template>-->
+        <!--  </a-tag>-->
+        <!--</a-tooltip>-->
+        <a-alert :type="'info'" :closable="true" style="margin-bottom: 20px">
+          {{ $t('automation.code-gen.tooltip.business') }}
+        </a-alert>
         <a-tooltip :content="$t('automation.code-gen.button.tooltip.business')">
           <a-button
             type="primary"
@@ -313,17 +319,20 @@
           style="width: 250px"
           :placeholder="$t('automation.code-gen.select.business')"
         />
-        <a-table :columns="businessColumns" style="margin-left: 36px" />
-        <a-tooltip :content="$t('automation.code-gen.tooltip.model')">
-          <a-tag
-            :size="'large'"
-            style="margin: 7px 0 10px 0; background-color: transparent"
-          >
-            <template #icon>
-              <icon-question style="color: rgb(var(--warning-6))" />
-            </template>
-          </a-tag>
-        </a-tooltip>
+        <a-table :columns="businessColumns" />
+        <!--<a-tooltip :content="$t('automation.code-gen.tooltip.model')">-->
+        <!--  <a-tag-->
+        <!--    :size="'large'"-->
+        <!--    style="margin: 7px 0 10px 0; background-color: transparent"-->
+        <!--  >-->
+        <!--    <template #icon>-->
+        <!--      <icon-question style="color: rgb(var(&#45;&#45;warning-6))" />-->
+        <!--    </template>-->
+        <!--  </a-tag>-->
+        <!--</a-tooltip>-->
+        <a-alert :type="'info'" :closable="true" style="margin-top: 20px">
+          {{ $t('automation.code-gen.tooltip.model') }}
+        </a-alert>
         <a-button
           type="primary"
           style="margin: 20px 0 20px"
@@ -433,7 +442,7 @@
             </a-form-item>
           </a-form>
         </a-modal>
-        <a-table :columns="modelColumns" style="margin-left: 36px" />
+        <a-table :columns="modelColumns" />
         <a-space style="margin: 20px 0 20px; float: right">
           <template #split>
             <a-divider direction="vertical" />

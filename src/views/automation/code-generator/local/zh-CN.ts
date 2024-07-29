@@ -8,7 +8,7 @@ export default {
     '导入：从指定数据库导入指定数据库表，将自动创建用于代码生成的业务和模型',
   'automation.code-gen.tooltip.business': '业务：代码生成的相关配置',
   'automation.code-gen.tooltip.model':
-    '模型：代码生成的相关模型列，选择业务后才能执行相关操作',
+    '模型：代码生成的相关模型列（选择业务后才能执行相关操作）',
   'automation.code-gen.tooltip.gen': '此功能将进行磁盘写入，亲谨慎操作',
   'automation.code-gen.button.tooltip.business':
     '此功能或将弃用，建议优先使用导入功能',
