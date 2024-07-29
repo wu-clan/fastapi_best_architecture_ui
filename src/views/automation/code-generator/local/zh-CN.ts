@@ -47,8 +47,9 @@ export default {
   'automation.code-gen.columns.gen_business_id': '关联业务',
   // form
   'automation.code-gen.form.db_name': '数据库名',
-  'automation.code-gen.form.db_name.tooltip': '仅支持当前系统已连接数据库',
   'automation.code-gen.form.db_name.placeholder': '请输入数据库名称',
+  'automation.code-gen.form.db_name.help':
+    '数据库名是必填项，且仅支持小写字母和下划线',
   'automation.code-gen.form.app': '应用名',
   'automation.code-gen.form.app.tooltip': '用于代码生成到指定后端 app',
   'automation.code-gen.form.app.placeholder': '请输入应用名称',
@@ -64,7 +65,7 @@ export default {
   'automation.code-gen.form.comment': '描述',
   'automation.code-gen.form.comment.placeholder': '请输入描述',
   'automation.code-gen.form.type': 'SQLA 类型',
-  'automation.code-gen.form.type.placeholder': '请选择 SQLA 类型',
+  'automation.code-gen.form.type.placeholder': '请选择 SQLA 类型（首字母排序）',
   'automation.code-gen.form.default': '默认值',
   'automation.code-gen.form.default.placeholder': '请输入默认值',
   'automation.code-gen.form.sort': '排序',
@@ -104,9 +105,12 @@ export default {
   'automation.code-gen.form.remark': '备注',
   'automation.code-gen.form.remark.placeholder': '请输入备注',
   // list
-  'automation.code-gen.list.header': '数据库表',
+  'automation.code-gen.list.header': '数据库表列表',
   // modal
   'automation.code-gen.modal.import': '导入',
   'automation.code-gen.modal.business': '创建业务',
   'automation.code-gen.modal.model': '创建模型列',
+  // alert
+  'automation.code-gen.alert.getDB':
+    '仅支持查询当前系统已连接数据库内已存在的数据库',
 };

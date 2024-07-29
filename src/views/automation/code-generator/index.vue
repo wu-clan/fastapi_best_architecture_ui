@@ -28,30 +28,52 @@
           :header="false"
           @ok="okGetDB"
         >
-          <a-form style="margin-top: 10px">
+          <a-alert type="warning" style="margin-top: 10px">
+            {{ $t('automation.code-gen.alert.getDB') }}
+          </a-alert>
+          <a-form ref="formRef" :model="getDBForm" style="margin-top: 20px">
             <a-form-item
               :label="$t('automation.code-gen.form.db_name')"
-              :tooltip="$t('automation.code-gen.form.db_name.tooltip')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  match: /^[a-z_]+$/,
+                  lowercase: true,
+                  message: $t('automation.code-gen.form.db_name.help'),
+                },
+              ]"
+              field="table_schema"
             >
               <a-input
+                v-model="getDBForm.table_schema"
                 :placeholder="
                   $t('automation.code-gen.form.db_name.placeholder')
                 "
-              ></a-input>
+              />
             </a-form-item>
           </a-form>
           <a-button
             type="primary"
-            :disabled="true"
+            :disabled="getDBButton()"
             style="float: right; margin-bottom: 20px"
+            @click="featDBTables({ ...getDBForm })"
           >
             {{ $t('automation.code-gen.button.getDB.req') }}
           </a-button>
-          <a-list style="margin-top: 53px">
-            <template #header>{{
-              $t('automation.code-gen.list.header')
-            }}</template>
+          <a-list
+            style="margin-top: 55px"
+            :loading="DBTablesStatus"
+            :hoverable="true"
+          >
+            <template #header>
+              {{ $t('automation.code-gen.list.header') }}
+            </template>
+            <a-list-item
+              v-for="(table, index) of DBTables.values()"
+              :key="index"
+            >
+              {{ table }}
+            </a-list-item>
           </a-list>
         </a-drawer>
         <a-button type="primary" @click="openImport">
@@ -241,6 +263,7 @@
           </a-form>
         </a-modal>
         <a-select
+          v-model="selectBusiness"
           :allow-search="false"
           style="width: 250px"
           :placeholder="$t('automation.code-gen.select.business')"
@@ -256,7 +279,12 @@
             </template>
           </a-tag>
         </a-tooltip>
-        <a-button type="primary" style="margin: 20px 0 20px" @click="openModel">
+        <a-button
+          type="primary"
+          style="margin: 20px 0 20px"
+          :disabled="createModelStatus()"
+          @click="openModel"
+        >
           <template #icon>
             <icon-plus />
           </template>
@@ -313,6 +341,7 @@
               />
             </a-form-item>
             <a-form-item
+              v-if="selectSQLAType == 'VARCHAR'"
               :label="$t('automation.code-gen.form.length')"
               :required="true"
             >
@@ -427,9 +456,10 @@
   import 'codemirror/mode/python/python.js';
   import 'codemirror/theme/dracula.css';
   import 'codemirror/addon/display/autorefresh';
+  import { DBTableParams, queryDBTables } from '@/api/automatiion';
 
   const { t } = useI18n();
-  const { loading, setLoading } = useLoading(true);
+  const { loading, setLoading } = useLoading(false);
   const cmOptions: EditorConfiguration = reactive({
     mode: 'text/x-python',
     theme: 'dracula',
@@ -440,7 +470,7 @@
     autoRefresh: true,
   });
   const code = ref<string>('data');
-  const selectSQLAType = ref<string>('VARCHAR');
+  const selectSQLAType = ref<string>('');
   const SQLATypeFN = { value: 'type', label: 'type' };
   const SQLATypeOptions = reactive([
     { type: 'BIGINT' },
@@ -649,6 +679,40 @@
       slotName: 'operate',
     },
   ]);
+  const getDBForm = reactive<DBTableParams>({ table_schema: '' });
+  const getDBButton = () => {
+    return !getDBForm.table_schema;
+  };
+  const DBTables = ref<string[]>([]);
+  const DBTablesStatus = ref<boolean>(false);
+
+  // 请求数据库表
+  const featDBTables = async (params: DBTableParams) => {
+    DBTablesStatus.value = true;
+    try {
+      DBTables.value = await queryDBTables(params);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      DBTablesStatus.value = false;
+    }
+  };
+
+  const selectBusiness = ref<string>('');
+  const createModelStatus = () => {
+    return !selectBusiness.value;
+  };
+
+  const formRef = ref();
+  // 表单校验
+  const beforeSubmit = async (done: any) => {
+    const res = await formRef.value?.validate();
+    if (!res) {
+      // 关闭对话框
+      done(true);
+    }
+    done(false);
+  };
 </script>
 
 <style scoped lang="less"></style>
