@@ -1,6 +1,5 @@
 import axios from 'axios';
 import qs from 'query-string';
-import { AnyObject } from '@/types/global';
 
 export interface BusinessReq {
   app_name: string;
@@ -47,6 +46,14 @@ export interface ImportReq {
   app: string;
   table_name: string;
   table_schema: string;
+}
+
+export interface CodeRes {
+  'py/api.py': string;
+  'py/crud.py': string;
+  'py/model.py': string;
+  'py/schema.py': string;
+  'py/service.py': string;
 }
 
 export function queryBusinessAll(): Promise<BusinessRes[]> {
@@ -98,7 +105,7 @@ export function importTable(data: ImportReq) {
   return axios.post('/api/v1/gen/import', data);
 }
 
-export function previewCode(pk: number): Promise<AnyObject> {
+export function previewCode(pk: number): Promise<CodeRes> {
   return axios.get(`/api/v1/gen/preview/${pk}`);
 }
 

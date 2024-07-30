@@ -599,19 +599,19 @@
         >
           <a-tabs :animation="true" :justify="true">
             <a-tab-pane key="api" title="api.py">
-              <Codemirror v-model:value="code" :options="cmOptions" />
+              <Codemirror v-model:value="apiCode" :options="cmOptions" />
             </a-tab-pane>
             <a-tab-pane key="crud" title="crud.py">
-              <Codemirror v-model:value="code" :options="cmOptions" />
+              <Codemirror v-model:value="crudCode" :options="cmOptions" />
             </a-tab-pane>
             <a-tab-pane key="model" title="model.py">
-              <Codemirror v-model:value="code" :options="cmOptions" />
+              <Codemirror v-model:value="modelCode" :options="cmOptions" />
             </a-tab-pane>
             <a-tab-pane key="schema" title="schema.py">
-              <Codemirror v-model:value="code" :options="cmOptions" />
+              <Codemirror v-model:value="schemaCode" :options="cmOptions" />
             </a-tab-pane>
             <a-tab-pane key="service" title="service.py">
-              <Codemirror v-model:value="code" :options="cmOptions" />
+              <Codemirror v-model:value="serviceCode" :options="cmOptions" />
             </a-tab-pane>
           </a-tabs>
         </a-drawer>
@@ -633,17 +633,19 @@
   import Footer from '@/components/footer/index.vue';
   // eslint-disable-next-line import/extensions
   import 'codemirror/mode/python/python.js';
-  import 'codemirror/theme/dracula.css';
+  import 'codemirror/theme/monokai.css';
   import 'codemirror/addon/display/autorefresh';
   import {
     BusinessDetailRes,
     BusinessReq,
+    CodeRes,
     createBusiness,
     createModel,
     DBTableParams,
     ImportReq,
     importTable,
     ModelReq,
+    previewCode,
     queryBusinessAll,
     queryBusinessDetail,
     queryBusinessModels,
@@ -655,14 +657,18 @@
   const { loading, setLoading } = useLoading(false);
   const cmOptions: EditorConfiguration = reactive({
     mode: 'text/x-python',
-    theme: 'dracula',
+    theme: 'monokai',
     readOnly: true,
     lineNumbers: true,
     gutters: ['CodeMirror-lint-markers'],
     lint: true,
     autoRefresh: true,
   });
-  const code = ref<string>('data');
+  const apiCode = ref<string>();
+  const crudCode = ref<string>();
+  const modelCode = ref<string>();
+  const schemaCode = ref<string>();
+  const serviceCode = ref<string>();
   const formRef = ref();
   const SQLATypeFN = { value: 'type', label: 'type' };
   const BusinessFN = { value: 'id', label: 'table_name_zh' };
@@ -745,6 +751,7 @@
   };
   const openPreviewDrawer = () => {
     previewDrawer.value = true;
+    fetchPreviewCode();
   };
   const businessColumns = computed<TableColumnData[]>(() => [
     {
@@ -1056,6 +1063,20 @@
   const DeleteBusiness = ref();
   const EditModel = ref();
   const DeleteModel = ref();
+
+  // 请求代码预览
+  const fetchPreviewCode = async () => {
+    try {
+      const res = await previewCode(selectBusiness.value || 0);
+      apiCode.value = res['py/api.py'];
+      crudCode.value = res['py/crud.py'];
+      modelCode.value = res['py/model.py'];
+      schemaCode.value = res['py/schema.py'];
+      serviceCode.value = res['py/service.py'];
+    } catch (error) {
+      // console.log(error);
+    }
+  };
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
