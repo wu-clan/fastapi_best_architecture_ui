@@ -53,11 +53,11 @@ export function queryBusinessDetail(pk: number): Promise<BusinessDetailRes> {
   return axios.get(`/api/v1/gen/businesses/${pk}`);
 }
 
-export function createBusiness(data: BusinessRes) {
+export function createBusiness(data: BusinessReq) {
   return axios.post('/api/v1/gen/businesses', data);
 }
 
-export function updateBusiness(pk: number, data: BusinessRes) {
+export function updateBusiness(pk: number, data: BusinessReq) {
   return axios.put(`/api/v1/gen/businesses/${pk}`, data);
 }
 

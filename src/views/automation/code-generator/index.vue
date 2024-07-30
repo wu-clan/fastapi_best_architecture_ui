@@ -8,13 +8,6 @@
         :title="$t('menu.automation.card.dataImport')"
         class="general-card"
       >
-        <!--<a-tooltip :content="$t('automation.code-gen.tooltip.import')">-->
-        <!--  <a-tag :size="'large'" style="background-color: transparent">-->
-        <!--    <template #icon>-->
-        <!--      <icon-question style="color: rgb(var(&#45;&#45;warning-6))" />-->
-        <!--    </template>-->
-        <!--  </a-tag>-->
-        <!--</a-tooltip>-->
         <a-alert :type="'warning'" style="margin-bottom: 20px">
           {{ $t('automation.code-gen.tooltip.import') }}
         </a-alert>
@@ -164,13 +157,6 @@
         class="general-card"
         style="margin-top: 10px"
       >
-        <!--<a-tooltip :content="$t('automation.code-gen.tooltip.business')">-->
-        <!--  <a-tag :size="'large'" style="background-color: transparent">-->
-        <!--    <template #icon>-->
-        <!--      <icon-question style="color: rgb(var(&#45;&#45;warning-6))" />-->
-        <!--    </template>-->
-        <!--  </a-tag>-->
-        <!--</a-tooltip>-->
         <a-alert :type="'info'" :closable="true" style="margin-bottom: 20px">
           {{ $t('automation.code-gen.tooltip.business') }}
         </a-alert>
@@ -191,17 +177,24 @@
           :closable="false"
           :width="650"
           :title="$t('automation.code-gen.modal.business')"
-          @ok="okBusiness"
+          :on-before-ok="beforeSubmit"
+          @ok="submitNewOrEditBusiness"
           @cancel="cancelBusiness"
         >
-          <a-form>
+          <a-form ref="formRef" :model="createBusinessForm">
             <a-form-item
               :label="$t('automation.code-gen.form.app_name')"
               :tooltip="$t('automation.code-gen.form.app_name.tooltip')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.app_name.help'),
+                },
+              ]"
               field="app_name"
             >
               <a-input
+                v-model="createBusinessForm.app_name"
                 :placeholder="
                   $t('automation.code-gen.form.app_name.placeholder')
                 "
@@ -209,10 +202,16 @@
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.table_name_en')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.table_name_en.help'),
+                },
+              ]"
               field="table_name_en"
             >
               <a-input
+                v-model="createBusinessForm.table_name_en"
                 :placeholder="
                   $t('automation.code-gen.form.table_name_en.placeholder')
                 "
@@ -220,10 +219,17 @@
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.table_name_zh')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  match: /^[\u4e00-\u9fa5]+$/,
+                  message: $t('automation.code-gen.form.table_name_zh.help'),
+                },
+              ]"
               field="table_name_zh"
             >
               <a-input
+                v-model="createBusinessForm.table_name_zh"
                 :placeholder="
                   $t('automation.code-gen.form.table_name_zh.placeholder')
                 "
@@ -231,10 +237,19 @@
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.table_simple_name_zh')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  match: /^[\u4e00-\u9fa5]+$/,
+                  message: $t(
+                    'automation.code-gen.form.table_simple_name_zh.help'
+                  ),
+                },
+              ]"
               field="table_simple_name_zh"
             >
               <a-input
+                v-model="createBusinessForm.table_simple_name_zh"
                 :placeholder="
                   $t(
                     'automation.code-gen.form.table_simple_name_zh.placeholder'
@@ -247,6 +262,7 @@
               field="table_comment"
             >
               <a-input
+                v-model="createBusinessForm.table_comment"
                 :placeholder="
                   $t('automation.code-gen.form.table_comment.placeholder')
                 "
@@ -258,6 +274,7 @@
               field="schema_name"
             >
               <a-input
+                v-model="createBusinessForm.schema_name"
                 :placeholder="
                   $t('automation.code-gen.form.schema_name.placeholder')
                 "
@@ -271,7 +288,7 @@
               :required="true"
               field="default_datetime_column"
             >
-              <a-switch>
+              <a-switch v-model="createBusinessForm.default_datetime_column">
                 <template #checked>
                   {{ $t('switch.open') }}
                 </template>
@@ -283,10 +300,16 @@
             <a-form-item
               :label="$t('automation.code-gen.form.api_version')"
               :tooltip="$t('automation.code-gen.form.api_version.tooltip')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.api_version.help'),
+                },
+              ]"
               field="api_version"
             >
               <a-input
+                v-model="createBusinessForm.api_version"
                 :placeholder="
                   $t('automation.code-gen.form.api_version.placeholder')
                 "
@@ -298,6 +321,7 @@
               field="gen_path"
             >
               <a-input
+                v-model="createBusinessForm.gen_path"
                 :placeholder="
                   $t('automation.code-gen.form.gen_path.placeholder')
                 "
@@ -308,6 +332,7 @@
               field="remark"
             >
               <a-textarea
+                v-model="createBusinessForm.remark"
                 :placeholder="$t('automation.code-gen.form.remark.placeholder')"
               />
             </a-form-item>
@@ -320,16 +345,6 @@
           :placeholder="$t('automation.code-gen.select.business')"
         />
         <a-table :columns="businessColumns" />
-        <!--<a-tooltip :content="$t('automation.code-gen.tooltip.model')">-->
-        <!--  <a-tag-->
-        <!--    :size="'large'"-->
-        <!--    style="margin: 7px 0 10px 0; background-color: transparent"-->
-        <!--  >-->
-        <!--    <template #icon>-->
-        <!--      <icon-question style="color: rgb(var(&#45;&#45;warning-6))" />-->
-        <!--    </template>-->
-        <!--  </a-tag>-->
-        <!--</a-tooltip>-->
         <a-alert :type="'info'" :closable="true" style="margin-top: 20px">
           {{ $t('automation.code-gen.tooltip.model') }}
         </a-alert>
@@ -511,11 +526,16 @@
   import 'codemirror/theme/dracula.css';
   import 'codemirror/addon/display/autorefresh';
   import {
+    BusinessReq,
+    BusinessRes,
+    createBusiness,
     DBTableParams,
     ImportReq,
     importTable,
+    queryBusinessDetail,
     queryDBTables,
   } from '@/api/automatiion';
+  import { AnyObject } from '@/types/global';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(false);
@@ -587,19 +607,18 @@
     getDBDrawer.value = true;
   };
   const openImport = () => {
-    resetImportTableForm(importData);
+    resetForm(importTableForm, importData);
     importDrawer.value = true;
   };
   const cancelImport = () => {
     importDrawer.value = false;
   };
   const openBusiness = () => {
+    resetForm(createBusinessForm, createBusinessData);
     businessDrawer.value = true;
+    buttonStatus.value = 'newBusiness';
   };
   const cancelBusiness = () => {
-    businessDrawer.value = false;
-  };
-  const okBusiness = () => {
     businessDrawer.value = false;
   };
   const openModel = () => {
@@ -776,6 +795,46 @@
     }
   };
 
+  const createBusinessData: BusinessReq = {
+    app_name: '',
+    table_name_en: '',
+    table_name_zh: '',
+    table_simple_name_zh: '',
+    table_comment: undefined,
+    schema_name: undefined,
+    default_datetime_column: true,
+    api_version: '',
+    gen_path: undefined,
+    remark: undefined,
+  };
+  const createBusinessForm = reactive<BusinessReq>({ ...createBusinessData });
+  const currentBusiness = ref<number>(0);
+
+  // 提交业务
+  const buttonStatus = ref<string>();
+  const submitNewOrEditBusiness = async () => {
+    try {
+      if (buttonStatus.value === 'newBusiness') {
+        await createBusiness(createBusinessForm);
+        cancelBusiness();
+        Message.success(t('submit.create.success'));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const fetchBusinessList = async (pk: number) => {
+    setLoading(true);
+    try {
+      const res = await queryBusinessDetail(pk);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 表单校验
   const beforeSubmit = async (done: any) => {
     const res = await formRef.value?.validate();
@@ -787,10 +846,10 @@
   };
 
   // 重置表单
-  const resetImportTableForm = (data: Record<any, any>) => {
+  const resetForm = (input: AnyObject, data: Record<any, any>) => {
     Object.keys(data).forEach((key) => {
       // @ts-ignore
-      importTableForm[key] = data[key];
+      input[key] = data[key];
     });
   };
 

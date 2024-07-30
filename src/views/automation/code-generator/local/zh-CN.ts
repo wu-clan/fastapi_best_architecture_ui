@@ -82,13 +82,19 @@ export default {
   'automation.code-gen.form.app_name': '应用名称',
   'automation.code-gen.form.app_name.tooltip': '代码将生成到此 app 目录下',
   'automation.code-gen.form.app_name.placeholder': '请输入应用名称',
+  'automation.code-gen.form.app_name.help': '应用名称是必填项',
   'automation.code-gen.form.table_name_en': '表名称（英）',
   'automation.code-gen.form.table_name_en.placeholder': '请输入英文表名称',
+  'automation.code-gen.form.table_name_en.help': '英文表名称是必填项',
   'automation.code-gen.form.table_name_zh': '表名称（中）',
   'automation.code-gen.form.table_name_zh.placeholder': '请输入中文表名称',
+  'automation.code-gen.form.table_name_zh.help':
+    '中文表名称是必填项，且仅允许中文字符',
   'automation.code-gen.form.table_simple_name_zh': '表名称（中简）',
   'automation.code-gen.form.table_simple_name_zh.placeholder':
     '请输入中文简短表名称',
+  'automation.code-gen.form.table_simple_name_zh.help':
+    '中文简短名称是必填项，且仅允许中文字符',
   'automation.code-gen.form.table_comment': '表描述',
   'automation.code-gen.form.table_comment.placeholder': '请输入表描述',
   'automation.code-gen.form.schema_name': 'Schema 名称',
@@ -100,6 +106,7 @@ export default {
   'automation.code-gen.form.api_version': 'API 版本',
   'automation.code-gen.form.api_version.tooltip': '建议输入默认 API 版本：v1',
   'automation.code-gen.form.api_version.placeholder': '请输入 API 版本',
+  'automation.code-gen.form.api_version.help': 'API 版本是必填项',
   'automation.code-gen.form.gen_path': '生成路径',
   'automation.code-gen.form.gen_path.tooltip':
     '默认代码生成到当前项目 backend 目录下',
