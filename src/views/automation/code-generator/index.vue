@@ -295,10 +295,9 @@
               :tooltip="
                 $t('automation.code-gen.form.default_datetime_column.tooltip')
               "
-              :required="true"
               field="default_datetime_column"
             >
-              <a-switch v-model="createBusinessForm.default_datetime_column">
+              <a-switch v-model="switchStatus">
                 <template #checked>
                   {{ $t('switch.open') }}
                 </template>
@@ -352,17 +351,17 @@
           v-model="selectBusiness"
           :default-active-first-option="false"
           :allow-search="false"
+          :loading="BusinessListStatus"
           style="width: 250px"
           :placeholder="$t('automation.code-gen.select.business')"
           :options="BusinessList"
           :field-names="BusinessFN"
-          @click="fetchBusinessList"
+          @popup-visible-change="fetchBusinessList"
         />
         <a-table
           :size="'medium'"
           :columns="businessColumns"
           :data="businessData"
-          :loading="loading"
           row-key="id"
           :pagination="false"
         >
@@ -400,31 +399,47 @@
           :width="600"
           :closable="false"
           :title="$t('automation.code-gen.modal.model')"
-          @ok="okModel"
+          :on-before-ok="beforeSubmit"
+          @ok="submitNewOrEditModel"
           @cancel="cancelModel"
         >
-          <a-form>
+          <a-form ref="formRef" :model="createModelForm">
             <a-form-item
               :label="$t('automation.code-gen.form.name')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.name.help'),
+                },
+              ]"
+              field="name"
             >
               <a-input
+                v-model="createModelForm.name"
                 :placeholder="$t('automation.code-gen.form.name.placeholder')"
               />
             </a-form-item>
             <a-form-item :label="$t('automation.code-gen.form.comment')">
               <a-input
+                v-model="createModelForm.comment"
                 :placeholder="
                   $t('automation.code-gen.form.comment.placeholder')
                 "
+                field="comment"
               />
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.type')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.type.help'),
+                },
+              ]"
+              field="type"
             >
               <a-select
-                v-model="selectSQLAType"
+                v-model="createModelForm.type"
                 :field-names="SQLATypeFN"
                 :options="SQLATypeOptions"
                 :placeholder="$t('automation.code-gen.form.type.placeholder')"
@@ -432,34 +447,50 @@
             </a-form-item>
             <a-form-item :label="$t('automation.code-gen.form.default')">
               <a-input
+                v-model="createModelForm.default"
                 :placeholder="
                   $t('automation.code-gen.form.default.placeholder')
                 "
+                field="default"
               />
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.sort')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.sort.help'),
+                },
+              ]"
+              field="sort"
             >
-              <a-input
+              <a-input-number
+                v-model="createModelForm.sort"
                 :placeholder="$t('automation.code-gen.form.sort.placeholder')"
               />
             </a-form-item>
             <a-form-item
-              v-if="selectSQLAType == 'VARCHAR'"
+              v-if="createModelForm.type == 'VARCHAR'"
               :label="$t('automation.code-gen.form.length')"
-              :required="true"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.length.help'),
+                },
+              ]"
+              field="length"
             >
-              <a-input
+              <a-input-number
+                v-model="createModelForm.length"
                 :placeholder="$t('automation.code-gen.form.length.placeholder')"
               />
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.is_pk')"
               :tooltip="$t('automation.code-gen.form.is_pk.tooltip')"
-              :required="true"
+              field="is_pk"
             >
-              <a-switch>
+              <a-switch v-model="switchPkStatus">
                 <template #checked>
                   {{ $t('switch.open') }}
                 </template>
@@ -470,9 +501,9 @@
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.is_nullable')"
-              :required="true"
+              field="is_nullable"
             >
-              <a-switch>
+              <a-switch v-model="switchNullableStatus">
                 <template #checked>
                   {{ $t('switch.open') }}
                 </template>
@@ -483,12 +514,22 @@
             </a-form-item>
             <a-form-item
               :label="$t('automation.code-gen.form.gen_business_id')"
-              :required="true"
+              field="gen_business_id"
+              :rules="[
+                {
+                  required: true,
+                  message: $t('automation.code-gen.form.gen_business_id.help'),
+                },
+              ]"
             >
               <a-select
+                v-model="selectBusiness"
                 :placeholder="
                   $t('automation.code-gen.form.gen_business_id.placeholder')
                 "
+                :options="BusinessList"
+                :field-names="BusinessFN"
+                :disabled="true"
               />
             </a-form-item>
           </a-form>
@@ -584,7 +625,7 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, ref, watch } from 'vue';
+  import { computed, reactive, Ref, ref, watch } from 'vue';
   import { Message, TableColumnData } from '@arco-design/web-vue';
   import { EditorConfiguration } from 'codemirror';
   import Codemirror from 'codemirror-editor-vue3';
@@ -598,12 +639,14 @@
     BusinessDetailRes,
     BusinessReq,
     createBusiness,
+    createModel,
     DBTableParams,
     ImportReq,
     importTable,
     ModelReq,
     queryBusinessAll,
     queryBusinessDetail,
+    queryBusinessModels,
     queryDBTables,
   } from '@/api/automatiion';
   import { AnyObject } from '@/types/global';
@@ -621,7 +664,6 @@
   });
   const code = ref<string>('data');
   const formRef = ref();
-  const selectSQLAType = ref<string>('');
   const SQLATypeFN = { value: 'type', label: 'type' };
   const BusinessFN = { value: 'id', label: 'table_name_zh' };
   const SQLATypeOptions = reactive([
@@ -694,12 +736,11 @@
     businessDrawer.value = false;
   };
   const openModel = () => {
+    resetForm(createModelForm, createModelData);
     modelDrawer.value = true;
+    buttonStatus.value = 'newModel';
   };
   const cancelModel = () => {
-    modelDrawer.value = false;
-  };
-  const okModel = () => {
     modelDrawer.value = false;
   };
   const openPreviewDrawer = () => {
@@ -940,13 +981,57 @@
     }
   };
 
+  const createModelData: ModelReq = {
+    name: '',
+    comment: undefined,
+    type: '',
+    default: undefined,
+    sort: 0,
+    length: 0,
+    is_pk: false,
+    is_nullable: false,
+    gen_business_id: undefined,
+  };
+  const createModelForm = reactive<ModelReq>({ ...createModelData });
+
+  // 提交模型
+  const submitNewOrEditModel = async () => {
+    try {
+      if (buttonStatus.value === 'newModel') {
+        createModelForm.gen_business_id = selectBusiness.value;
+        await createModel(createModelForm);
+        cancelModel();
+        Message.success(t('submit.create.success'));
+        await fetchModelList();
+      }
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
   const BusinessList = ref<BusinessDetailRes[]>([]);
+  const BusinessListStatus = ref<boolean>(false);
   // 请求业务列表
   const fetchBusinessList = async () => {
+    BusinessListStatus.value = true;
     try {
       BusinessList.value = await queryBusinessAll();
     } catch (error) {
       // console.log(error);
+    } finally {
+      BusinessListStatus.value = false;
+    }
+  };
+
+  // 请求模型列表
+  const fetchModelList = async () => {
+    setLoading(true);
+    try {
+      modelData.value = await queryBusinessModels(selectBusiness.value || 0);
+    } catch (error) {
+      // console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -999,9 +1084,23 @@
   });
 
   watch(selectBusiness, (newVal, oldVal) => {
+    createModelForm.gen_business_id = newVal;
     if (newVal !== oldVal) {
       fetchBusinessDetail(newVal || 0);
     }
+  });
+
+  const switchStatus = ref<boolean>(true);
+  const switchPkStatus = ref<boolean>(false);
+  const switchNullableStatus = ref<boolean>(false);
+  watch(switchStatus, (newVal) => {
+    createBusinessForm.default_datetime_column = newVal;
+  });
+  watch(switchPkStatus, (newVal) => {
+    createModelForm.is_pk = newVal;
+  });
+  watch(switchNullableStatus, (newVal) => {
+    createModelForm.is_nullable = newVal;
   });
 </script>
 

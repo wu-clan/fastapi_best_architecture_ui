@@ -35,6 +35,10 @@ export interface BusinessDetailRes extends BusinessRes {
   gen_model?: ModelReq[];
 }
 
+export interface ModelRes extends ModelReq {
+  id: number;
+}
+
 export interface DBTableParams {
   table_schema: string;
 }
@@ -51,6 +55,10 @@ export function queryBusinessAll(): Promise<BusinessRes[]> {
 
 export function queryBusinessDetail(pk: number): Promise<BusinessDetailRes> {
   return axios.get(`/api/v1/gen/businesses/${pk}`);
+}
+
+export function queryBusinessModels(pk: number): Promise<ModelRes[]> {
+  return axios.get(`/api/v1/gen/businesses/${pk}/models`);
 }
 
 export function createBusiness(data: BusinessReq) {
