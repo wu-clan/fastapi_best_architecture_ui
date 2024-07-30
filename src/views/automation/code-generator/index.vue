@@ -340,11 +340,20 @@
         </a-modal>
         <a-select
           v-model="selectBusiness"
+          :default-active-first-option="false"
           :allow-search="false"
           style="width: 250px"
           :placeholder="$t('automation.code-gen.select.business')"
+          :options="BusinessList"
+          :field-names="BusinessFN"
+          @click="fetchBusinessList"
         />
-        <a-table :columns="businessColumns" />
+        <a-table
+          :columns="businessColumns"
+          :data="businessData"
+          :loading="loading"
+          row-key="id"
+        />
         <a-alert :type="'info'" :closable="true" style="margin-top: 20px">
           {{ $t('automation.code-gen.tooltip.model') }}
         </a-alert>
@@ -457,7 +466,12 @@
             </a-form-item>
           </a-form>
         </a-modal>
-        <a-table :columns="modelColumns" />
+        <a-table
+          :columns="modelColumns"
+          :data="modelData"
+          :loading="loading"
+          row-key="id"
+        />
         <a-space style="margin: 20px 0 20px; float: right">
           <template #split>
             <a-divider direction="vertical" />
@@ -526,12 +540,14 @@
   import 'codemirror/theme/dracula.css';
   import 'codemirror/addon/display/autorefresh';
   import {
+    BusinessDetailRes,
     BusinessReq,
-    BusinessRes,
     createBusiness,
     DBTableParams,
     ImportReq,
     importTable,
+    ModelReq,
+    queryBusinessAll,
     queryBusinessDetail,
     queryDBTables,
   } from '@/api/automatiion';
@@ -552,6 +568,7 @@
   const formRef = ref();
   const selectSQLAType = ref<string>('');
   const SQLATypeFN = { value: 'type', label: 'type' };
+  const BusinessFN = { value: 'id', label: 'table_name_zh' };
   const SQLATypeOptions = reactive([
     { type: 'BIGINT' },
     { type: 'BINARY' },
@@ -637,58 +654,59 @@
   const businessColumns = computed<TableColumnData[]>(() => [
     {
       title: t('automation.code-gen.columns.app_name'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'app_name',
+      slotName: 'app_name',
     },
     {
       title: t('automation.code-gen.columns.table_name_en'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'table_name_en',
+      slotName: 'table_name_en',
     },
     {
       title: t('automation.code-gen.columns.table_name_zh'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'table_name_zh',
+      slotName: 'table_name_zh',
     },
     {
       title: t('automation.code-gen.columns.table_simple_name_zh'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'table_simple_name_zh',
+      slotName: 'table_simple_name_zh',
     },
     {
       title: t('automation.code-gen.columns.table_comment'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'table_comment',
+      slotName: 'table_comment',
     },
     {
       title: t('automation.code-gen.columns.schema_name'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'schema_name',
+      slotName: 'schema_name',
     },
     {
       title: t('automation.code-gen.columns.default_datetime_column'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'default_datetime_column',
+      slotName: 'default_datetime_column',
     },
     {
       title: t('automation.code-gen.columns.api_version'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'api_version',
+      slotName: 'api_version',
     },
     {
       title: t('automation.code-gen.columns.gen_path'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'gen_path',
+      slotName: 'gen_path',
     },
     {
       title: t('automation.code-gen.columns.remark'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'remark',
+      slotName: 'remark',
     },
     {
       title: t('automation.code-gen.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
+      align: 'center',
     },
   ]);
   const modelColumns = computed<TableColumnData[]>(() => [
@@ -699,58 +717,59 @@
     },
     {
       title: t('automation.code-gen.columns.name'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'name',
+      slotName: 'name',
     },
     {
       title: t('automation.code-gen.columns.comment'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'comment',
+      slotName: 'comment',
     },
     {
       title: t('automation.code-gen.columns.type'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'type',
+      slotName: 'type',
     },
     {
       title: t('automation.code-gen.columns.pd_type'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'pd_type',
+      slotName: 'pd_type',
     },
     {
       title: t('automation.code-gen.columns.default'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'default',
+      slotName: 'default',
     },
     {
       title: t('automation.code-gen.columns.sort'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'sort',
+      slotName: 'sort',
     },
     {
       title: t('automation.code-gen.columns.length'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'length',
+      slotName: 'length',
     },
     {
       title: t('automation.code-gen.columns.is_pk'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'is_pk',
+      slotName: 'is_pk',
     },
     {
       title: t('automation.code-gen.columns.is_nullable'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'is_nullable',
+      slotName: 'is_nullable',
     },
     {
       title: t('automation.code-gen.columns.gen_business_id'),
-      dataIndex: '',
-      slotName: '',
+      dataIndex: 'gen_business_id',
+      slotName: 'gen_business_id',
     },
     {
       title: t('automation.code-gen.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
+      align: 'center',
     },
   ]);
   const getDBForm = reactive<DBTableParams>({ table_schema: '' });
@@ -772,7 +791,7 @@
     }
   };
 
-  const selectBusiness = ref<string>('');
+  const selectBusiness = ref<number>();
   const createModelStatus = () => {
     return !selectBusiness.value;
   };
@@ -808,7 +827,6 @@
     remark: undefined,
   };
   const createBusinessForm = reactive<BusinessReq>({ ...createBusinessData });
-  const currentBusiness = ref<number>(0);
 
   // 提交业务
   const buttonStatus = ref<string>();
@@ -820,16 +838,32 @@
         Message.success(t('submit.create.success'));
       }
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     }
   };
 
-  const fetchBusinessList = async (pk: number) => {
+  const BusinessList = ref<BusinessDetailRes[]>([]);
+  // 请求业务列表
+  const fetchBusinessList = async () => {
+    try {
+      BusinessList.value = await queryBusinessAll();
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  const businessData = ref<BusinessDetailRes[]>([]);
+  const modelData = ref<ModelReq[]>([]);
+  // 请求业务详情
+  const fetchBusinessDetail = async (pk: number) => {
     setLoading(true);
     try {
       const res = await queryBusinessDetail(pk);
+      modelData.value = res.gen_model || [];
+      delete res.gen_model;
+      businessData.value = [res];
     } catch (error) {
-      console.log(error);
+      // console.log(error);
     } finally {
       setLoading(false);
     }
@@ -858,6 +892,12 @@
     if (newVal) {
       getDBForm.table_schema = '';
       DBTables.value = [];
+    }
+  });
+
+  watch(selectBusiness, (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      fetchBusinessDetail(newVal || 0);
     }
   });
 </script>

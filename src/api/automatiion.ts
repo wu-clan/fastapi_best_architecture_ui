@@ -32,7 +32,7 @@ export interface BusinessRes extends BusinessReq {
 }
 
 export interface BusinessDetailRes extends BusinessRes {
-  models?: ModelReq[];
+  gen_model?: ModelReq[];
 }
 
 export interface DBTableParams {
