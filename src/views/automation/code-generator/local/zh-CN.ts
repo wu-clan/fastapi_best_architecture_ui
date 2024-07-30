@@ -7,11 +7,11 @@ export default {
   'automation.code-gen.tooltip.import':
     '导入：从指定数据库导入指定数据库表，将自动创建用于代码生成的业务和模型',
   'automation.code-gen.tooltip.business': '业务：代码生成的相关配置',
-  'automation.code-gen.tooltip.model':
-    '模型：代码生成的相关模型列（选择业务后才能执行相关操作）',
+  'automation.code-gen.tooltip.model': '模型：代码生成的相关模型列',
   'automation.code-gen.tooltip.gen': '此功能将进行磁盘写入，亲谨慎操作',
   'automation.code-gen.button.tooltip.business':
     '此功能或将弃用，建议优先使用导入功能',
+  'automation.code-gen.tooltip.pcd': '部分功能需要选择业务后才能执行相关操作',
   // button
   'automation.code-gen.button.getDB': '获取数据库表',
   'automation.code-gen.button.getDB.req': '获取',
@@ -44,7 +44,6 @@ export default {
   'automation.code-gen.columns.length': '长度',
   'automation.code-gen.columns.is_pk': '主键',
   'automation.code-gen.columns.is_nullable': '空值',
-  'automation.code-gen.columns.gen_business_id': '关联业务',
   // form
   'automation.code-gen.form.db_name': '数据库名',
   'automation.code-gen.form.db_name.placeholder': '请输入数据库名称',
@@ -76,7 +75,7 @@ export default {
   'automation.code-gen.form.length.placeholder': '请输入长度',
   'automation.code-gen.form.is_pk': '是否主键',
   'automation.code-gen.form.is_pk.tooltip': '默认主键为 pk，不建议开启',
-  'automation.code-gen.form.is_nullable': '是否为空',
+  'automation.code-gen.form.is_nullable': '是否允许为空',
   'automation.code-gen.form.gen_business_id': '业务绑定',
   'automation.code-gen.form.gen_business_id.placeholder': '请选择业务',
   'automation.code-gen.form.app_name': '应用名称',

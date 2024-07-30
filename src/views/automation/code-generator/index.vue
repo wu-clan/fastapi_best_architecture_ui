@@ -157,8 +157,18 @@
         class="general-card"
         style="margin-top: 10px"
       >
-        <a-alert :type="'info'" :closable="true" style="margin-bottom: 20px">
+        <a-alert :type="'warning'">
+          {{ $t('automation.code-gen.tooltip.pcd') }}
+        </a-alert>
+        <a-alert
+          :type="'info'"
+          :show-icon="false"
+          :closable="true"
+          style="margin: 20px 0 20px"
+        >
           {{ $t('automation.code-gen.tooltip.business') }}
+          <br />
+          {{ $t('automation.code-gen.tooltip.model') }}
         </a-alert>
         <a-tooltip :content="$t('automation.code-gen.button.tooltip.business')">
           <a-button
@@ -349,18 +359,35 @@
           @click="fetchBusinessList"
         />
         <a-table
+          :size="'medium'"
           :columns="businessColumns"
           :data="businessData"
           :loading="loading"
           row-key="id"
-        />
-        <a-alert :type="'info'" :closable="true" style="margin-top: 20px">
-          {{ $t('automation.code-gen.tooltip.model') }}
-        </a-alert>
+          :pagination="false"
+        >
+          <template #default_datetime_column="{ record }">
+            <a-badge
+              v-if="record.default_datetime_column === 1"
+              :status="'success'"
+            />
+            <a-badge v-else :status="'danger'" />
+          </template>
+          <template #operate="{ record }">
+            <a-space>
+              <a-link @click="EditBusiness(record.id)">
+                {{ $t(`admin.menu.columns.edit`) }}
+              </a-link>
+              <a-link :status="'danger'" @click="DeleteBusiness(record.id)">
+                {{ $t(`admin.menu.columns.delete`) }}
+              </a-link>
+            </a-space>
+          </template>
+        </a-table>
         <a-button
           type="primary"
           style="margin: 20px 0 20px"
-          :disabled="createModelStatus()"
+          :disabled="selectBusinessStatus()"
           @click="openModel"
         >
           <template #icon>
@@ -467,28 +494,56 @@
           </a-form>
         </a-modal>
         <a-table
+          :size="'medium'"
           :columns="modelColumns"
           :data="modelData"
           :loading="loading"
           row-key="id"
-        />
+          :pagination="false"
+        >
+          <template #index="{ rowIndex }">
+            {{ rowIndex + 1 }}
+          </template>
+          <template #is_pk="{ record }">
+            <a-badge v-if="record.is_pk === 1" :status="'success'" />
+            <a-badge v-else :status="'danger'" />
+          </template>
+          <template #is_nullable="{ record }">
+            <a-badge v-if="record.is_nullable === 1" :status="'success'" />
+            <a-badge v-else :status="'danger'" />
+          </template>
+          <template #operate="{ record }">
+            <a-space>
+              <a-link @click="EditModel(record.id)">
+                {{ $t(`admin.menu.columns.edit`) }}
+              </a-link>
+              <a-link :status="'danger'" @click="DeleteModel(record.id)">
+                {{ $t(`admin.menu.columns.delete`) }}
+              </a-link>
+            </a-space>
+          </template>
+        </a-table>
         <a-space style="margin: 20px 0 20px; float: right">
           <template #split>
             <a-divider direction="vertical" />
           </template>
-          <a-button type="primary" @click="openPreviewDrawer">
+          <a-button
+            type="primary"
+            :disabled="selectBusinessStatus()"
+            @click="openPreviewDrawer"
+          >
             <template #icon>
               <icon-eye />
             </template>
             {{ $t('automation.code-gen.button.preview') }}
           </a-button>
-          <a-button type="primary">
+          <a-button type="primary" :disabled="selectBusinessStatus()">
             <template #icon>
               <icon-import />
             </template>
             {{ $t('automation.code-gen.button.write') }}
           </a-button>
-          <a-button type="primary">
+          <a-button type="primary" :disabled="selectBusinessStatus()">
             <template #icon>
               <icon-download />
             </template>
@@ -650,63 +705,87 @@
   const openPreviewDrawer = () => {
     previewDrawer.value = true;
   };
-
   const businessColumns = computed<TableColumnData[]>(() => [
     {
       title: t('automation.code-gen.columns.app_name'),
       dataIndex: 'app_name',
       slotName: 'app_name',
+      ellipsis: true,
+      tooltip: true,
+      width: 100,
     },
     {
       title: t('automation.code-gen.columns.table_name_en'),
       dataIndex: 'table_name_en',
       slotName: 'table_name_en',
+      ellipsis: true,
+      tooltip: true,
+      width: 130,
     },
     {
       title: t('automation.code-gen.columns.table_name_zh'),
       dataIndex: 'table_name_zh',
       slotName: 'table_name_zh',
+      ellipsis: true,
+      tooltip: true,
+      width: 150,
     },
     {
       title: t('automation.code-gen.columns.table_simple_name_zh'),
       dataIndex: 'table_simple_name_zh',
       slotName: 'table_simple_name_zh',
+      width: 150,
     },
     {
       title: t('automation.code-gen.columns.table_comment'),
       dataIndex: 'table_comment',
       slotName: 'table_comment',
+      ellipsis: true,
+      tooltip: true,
+      width: 180,
     },
     {
       title: t('automation.code-gen.columns.schema_name'),
       dataIndex: 'schema_name',
       slotName: 'schema_name',
+      width: 150,
     },
     {
       title: t('automation.code-gen.columns.default_datetime_column'),
       dataIndex: 'default_datetime_column',
       slotName: 'default_datetime_column',
+      align: 'center',
+      width: 120,
     },
     {
       title: t('automation.code-gen.columns.api_version'),
       dataIndex: 'api_version',
       slotName: 'api_version',
+      align: 'center',
+      width: 100,
     },
     {
       title: t('automation.code-gen.columns.gen_path'),
       dataIndex: 'gen_path',
       slotName: 'gen_path',
+      ellipsis: true,
+      tooltip: true,
+      width: 250,
     },
     {
       title: t('automation.code-gen.columns.remark'),
       dataIndex: 'remark',
       slotName: 'remark',
+      ellipsis: true,
+      tooltip: true,
+      width: 150,
     },
     {
       title: t('automation.code-gen.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
       align: 'center',
+      width: 200,
     },
   ]);
   const modelColumns = computed<TableColumnData[]>(() => [
@@ -714,62 +793,81 @@
       title: 'ID',
       dataIndex: 'index',
       slotName: 'index',
+      ellipsis: true,
+      tooltip: true,
+      width: 50,
     },
     {
       title: t('automation.code-gen.columns.name'),
       dataIndex: 'name',
       slotName: 'name',
+      ellipsis: true,
+      tooltip: true,
+      width: 180,
     },
     {
       title: t('automation.code-gen.columns.comment'),
       dataIndex: 'comment',
       slotName: 'comment',
+      ellipsis: true,
+      tooltip: true,
+      width: 180,
     },
     {
       title: t('automation.code-gen.columns.type'),
       dataIndex: 'type',
       slotName: 'type',
+      width: 120,
     },
     {
       title: t('automation.code-gen.columns.pd_type'),
       dataIndex: 'pd_type',
       slotName: 'pd_type',
+      align: 'center',
+      width: 140,
     },
     {
       title: t('automation.code-gen.columns.default'),
       dataIndex: 'default',
       slotName: 'default',
+      ellipsis: true,
+      tooltip: true,
+      width: 250,
     },
     {
       title: t('automation.code-gen.columns.sort'),
       dataIndex: 'sort',
       slotName: 'sort',
+      align: 'center',
+      width: 100,
     },
     {
       title: t('automation.code-gen.columns.length'),
       dataIndex: 'length',
       slotName: 'length',
+      align: 'center',
+      width: 100,
     },
     {
       title: t('automation.code-gen.columns.is_pk'),
       dataIndex: 'is_pk',
       slotName: 'is_pk',
+      align: 'center',
+      width: 80,
     },
     {
       title: t('automation.code-gen.columns.is_nullable'),
       dataIndex: 'is_nullable',
       slotName: 'is_nullable',
-    },
-    {
-      title: t('automation.code-gen.columns.gen_business_id'),
-      dataIndex: 'gen_business_id',
-      slotName: 'gen_business_id',
+      align: 'center',
+      width: 80,
     },
     {
       title: t('automation.code-gen.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
       align: 'center',
+      width: 220,
     },
   ]);
   const getDBForm = reactive<DBTableParams>({ table_schema: '' });
@@ -792,7 +890,7 @@
   };
 
   const selectBusiness = ref<number>();
-  const createModelStatus = () => {
+  const selectBusinessStatus = () => {
     return !selectBusiness.value;
   };
 
@@ -868,6 +966,11 @@
       setLoading(false);
     }
   };
+
+  const EditBusiness = ref();
+  const DeleteBusiness = ref();
+  const EditModel = ref();
+  const DeleteModel = ref();
 
   // 表单校验
   const beforeSubmit = async (done: any) => {
