@@ -124,6 +124,12 @@ export default {
   'automation.code-gen.modal.import': '导入',
   'automation.code-gen.modal.business': '创建业务',
   'automation.code-gen.modal.model': '创建模型列',
+  'automation.code-gen.modal.generate': '代码生成',
+  'automation.code-gen.modal.generate.warning':
+    '代码生成将进行磁盘IO写入，如果生成的代码文件与当前系统内代码文件重叠，文件将被覆盖写入，请谨慎操作！',
+  'automation.code-gen.modal.generate.okText': '不怂！就是干！',
+  'automation.code-gen.modal.generate.list.header': '代码写入路径',
+  'automation.code-gen.modal.generate.submit': '代码生成成功',
   // alert
   'automation.code-gen.alert.getDB':
     '仅支持查询当前系统已连接数据库内已存在的数据库',

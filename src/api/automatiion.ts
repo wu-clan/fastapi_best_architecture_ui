@@ -48,13 +48,7 @@ export interface ImportReq {
   table_schema: string;
 }
 
-export interface CodeRes {
-  'py/api.py': string;
-  'py/crud.py': string;
-  'py/model.py': string;
-  'py/schema.py': string;
-  'py/service.py': string;
-}
+export const TemplateBackendDirName = 'py';
 
 export function queryBusinessAll(): Promise<BusinessRes[]> {
   return axios.get('/api/v1/gen/businesses/all');
@@ -105,14 +99,18 @@ export function importTable(data: ImportReq) {
   return axios.post('/api/v1/gen/import', data);
 }
 
-export function previewCode(pk: number): Promise<CodeRes> {
+export function previewCode(pk: number): Promise<{ [key: string]: string }> {
   return axios.get(`/api/v1/gen/preview/${pk}`);
+}
+
+export function queryGeneratePath(pk: number): Promise<string[]> {
+  return axios.get(`/api/v1/gen/generate/${pk}/path`);
 }
 
 export function generateCode(pk: number) {
   return axios.post(`/api/v1/gen/generate/${pk}`);
 }
 
-export function downloadCode(pk: number) {
-  return axios.get(`/api/v1/gen/download/${pk}`);
+export function downloadCode(pk: number): Promise<Blob> {
+  return axios.get(`/api/v1/gen/download/${pk}`, { responseType: 'blob' });
 }

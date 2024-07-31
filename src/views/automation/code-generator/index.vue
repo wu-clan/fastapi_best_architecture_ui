@@ -578,13 +578,21 @@
             </template>
             {{ $t('automation.code-gen.button.preview') }}
           </a-button>
-          <a-button type="primary" :disabled="selectBusinessStatus()">
+          <a-button
+            type="primary"
+            :disabled="selectBusinessStatus()"
+            @click="openGenerate"
+          >
             <template #icon>
               <icon-import />
             </template>
             {{ $t('automation.code-gen.button.write') }}
           </a-button>
-          <a-button type="primary" :disabled="selectBusinessStatus()">
+          <a-button
+            type="primary"
+            :disabled="selectBusinessStatus()"
+            @click="fetchDownloadCode"
+          >
             <template #icon>
               <icon-download />
             </template>
@@ -628,6 +636,28 @@
             </a-tab-pane>
           </a-tabs>
         </a-drawer>
+        <a-modal
+          v-model:visible="generateModal"
+          :title="$t('automation.code-gen.modal.generate')"
+          :ok-text="$t('automation.code-gen.modal.generate.okText')"
+          @cancel="cancelGenerate"
+          @ok="fetchGenerateCode"
+          @before-open="fetchGenerateCodePath"
+        >
+          <a-space>
+            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+            {{ $t('automation.code-gen.modal.generate.warning') }}
+          </a-space>
+          <a-list :hoverable="true" :size="'small'" style="margin-top: 16px">
+            <a-list-item
+              v-for="(path, index) of generateCodePath.values()"
+              :key="index"
+              class="genCodePath"
+            >
+              {{ path }}
+            </a-list-item>
+          </a-list>
+        </a-modal>
       </a-card>
     </a-layout>
   </div>
@@ -655,6 +685,8 @@
     createBusiness,
     createModel,
     DBTableParams,
+    downloadCode,
+    generateCode,
     ImportReq,
     importTable,
     ModelReq,
@@ -663,6 +695,8 @@
     queryBusinessDetail,
     queryBusinessModels,
     queryDBTables,
+    queryGeneratePath,
+    TemplateBackendDirName,
   } from '@/api/automatiion';
   import { AnyObject } from '@/types/global';
 
@@ -766,6 +800,12 @@
   const openPreviewDrawer = () => {
     previewDrawer.value = true;
     fetchPreviewCode();
+  };
+  const openGenerate = () => {
+    generateModal.value = true;
+  };
+  const cancelGenerate = () => {
+    generateModal.value = false;
   };
   const businessColumns = computed<TableColumnData[]>(() => [
     {
@@ -1082,11 +1122,51 @@
   const fetchPreviewCode = async () => {
     try {
       const res = await previewCode(selectBusiness.value);
-      apiCode.value = res['py/api.py'];
-      crudCode.value = res['py/crud.py'];
-      modelCode.value = res['py/model.py'];
-      schemaCode.value = res['py/schema.py'];
-      serviceCode.value = res['py/service.py'];
+      apiCode.value = res[`${TemplateBackendDirName}/api.py`];
+      crudCode.value = res[`${TemplateBackendDirName}/crud.py`];
+      modelCode.value = res[`${TemplateBackendDirName}/model.py`];
+      schemaCode.value = res[`${TemplateBackendDirName}/schema.py`];
+      serviceCode.value = res[`${TemplateBackendDirName}/service.py`];
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  const generateCodePath = ref<string[]>([]);
+  // 请求生成代码路径
+  const fetchGenerateCodePath = async () => {
+    try {
+      generateCodePath.value = await queryGeneratePath(selectBusiness.value);
+    } catch (error) {
+      // console.log(error)
+    }
+  };
+
+  const generateModal = ref<boolean>(false);
+  // 请求生成代码
+  const fetchGenerateCode = async () => {
+    try {
+      await generateCode(selectBusiness.value);
+      cancelGenerate();
+      Message.success(t('automation.code-gen.modal.generate.submit'));
+    } catch (error) {
+      // console.error(error);
+    }
+  };
+
+  // 请求下载代码
+  const fetchDownloadCode = async () => {
+    try {
+      const res = await downloadCode(selectBusiness.value);
+      const blob = new Blob([res]);
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'fba_generator.zip');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
     } catch (error) {
       // console.log(error);
     }
@@ -1173,6 +1253,11 @@
 
     &:hover {
       opacity: 1;
+    }
+  }
+  .genCodePath {
+    ::v-deep(.arco-list-item-content) {
+      color: #e6a23c;
     }
   }
 </style>
