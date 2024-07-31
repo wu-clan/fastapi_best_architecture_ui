@@ -597,7 +597,20 @@
           :width="888"
           :header="false"
         >
-          <a-tabs :animation="true" :justify="true">
+          <a-tabs
+            v-model:active-key="previewCodeTab"
+            :animation="true"
+            :justify="true"
+          >
+            <a-tooltip
+              :mini="true"
+              :position="'left'"
+              :content="$t('automation.code-gen.tooltip.code.copy')"
+            >
+              <a-button class="copy-button" @click="copyCode">
+                <template #icon><icon-copy /></template>
+              </a-button>
+            </a-tooltip>
             <a-tab-pane key="api" title="api.py">
               <Codemirror v-model:value="apiCode" :options="cmOptions" />
             </a-tab-pane>
@@ -625,10 +638,11 @@
 
 <script setup lang="ts">
   import { useI18n } from 'vue-i18n';
-  import { computed, reactive, Ref, ref, watch } from 'vue';
+  import { computed, reactive, ref, watch } from 'vue';
   import { Message, TableColumnData } from '@arco-design/web-vue';
   import { EditorConfiguration } from 'codemirror';
   import Codemirror from 'codemirror-editor-vue3';
+  import { useClipboard } from '@vueuse/core';
   import useLoading from '@/hooks/loading';
   import Footer from '@/components/footer/index.vue';
   // eslint-disable-next-line import/extensions
@@ -638,7 +652,6 @@
   import {
     BusinessDetailRes,
     BusinessReq,
-    CodeRes,
     createBusiness,
     createModel,
     DBTableParams,
@@ -660,9 +673,10 @@
     theme: 'monokai',
     readOnly: true,
     lineNumbers: true,
-    gutters: ['CodeMirror-lint-markers'],
-    lint: true,
     autoRefresh: true,
+    smartIndent: false,
+    tabSize: 4,
+    indentUnit: 4,
   });
   const apiCode = ref<string>();
   const crudCode = ref<string>();
@@ -937,7 +951,7 @@
     }
   };
 
-  const selectBusiness = ref<number>();
+  const selectBusiness = ref(); // type: number
   const selectBusinessStatus = () => {
     return !selectBusiness.value;
   };
@@ -1034,7 +1048,7 @@
   const fetchModelList = async () => {
     setLoading(true);
     try {
-      modelData.value = await queryBusinessModels(selectBusiness.value || 0);
+      modelData.value = await queryBusinessModels(selectBusiness.value);
     } catch (error) {
       // console.log(error);
     } finally {
@@ -1067,7 +1081,7 @@
   // 请求代码预览
   const fetchPreviewCode = async () => {
     try {
-      const res = await previewCode(selectBusiness.value || 0);
+      const res = await previewCode(selectBusiness.value);
       apiCode.value = res['py/api.py'];
       crudCode.value = res['py/crud.py'];
       modelCode.value = res['py/model.py'];
@@ -1075,6 +1089,29 @@
       serviceCode.value = res['py/service.py'];
     } catch (error) {
       // console.log(error);
+    }
+  };
+
+  const previewCodeTab = ref<string>('api');
+  const copyCodeButton = (): string => {
+    const codeMap = {
+      api: apiCode.value,
+      crud: crudCode.value,
+      model: modelCode.value,
+      schema: schemaCode.value,
+      service: serviceCode.value,
+    };
+    return codeMap[previewCodeTab.value];
+  };
+
+  // 复制代码
+  const copyCode = () => {
+    const { copy, copied } = useClipboard();
+    copy(copyCodeButton());
+    if (copied) {
+      Message.success(t('copy.success'));
+    } else {
+      Message.error(t('copy.error'));
     }
   };
 
@@ -1107,7 +1144,7 @@
   watch(selectBusiness, (newVal, oldVal) => {
     createModelForm.gen_business_id = newVal;
     if (newVal !== oldVal) {
-      fetchBusinessDetail(newVal || 0);
+      fetchBusinessDetail(newVal);
     }
   });
 
@@ -1125,4 +1162,17 @@
   });
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+  .copy-button {
+    position: absolute;
+    z-index: 1;
+    top: 68px;
+    right: 10px;
+    opacity: 0.5;
+    transition: opacity 0.5s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+</style>

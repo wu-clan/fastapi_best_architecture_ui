@@ -31,6 +31,8 @@ export default {
   'submit.create.success': 'Created success',
   'submit.update.success': 'Updated success',
   'submit.delete.success': 'Deleted success',
+  'copy.success': 'Copy success',
+  'copy.error': 'Copy failed',
   ...localeSettings,
   ...localeLogin,
   ...localeWorkplace,

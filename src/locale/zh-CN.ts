@@ -31,6 +31,8 @@ export default {
   'submit.create.success': '创建成功',
   'submit.update.success': '更新成功',
   'submit.delete.success': '删除成功',
+  'copy.success': '复制成功',
+  'copy.error': '复制失败',
   ...localeSettings,
   ...localeLogin,
   ...localeWorkplace,

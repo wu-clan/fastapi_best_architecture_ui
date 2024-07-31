@@ -12,6 +12,7 @@ export default {
   'automation.code-gen.button.tooltip.business':
     '此功能或将弃用，建议优先使用导入功能',
   'automation.code-gen.tooltip.pcd': '部分功能需要选择业务后才能执行相关操作',
+  'automation.code-gen.tooltip.code.copy': '复制代码',
   // button
   'automation.code-gen.button.getDB': '获取数据库表',
   'automation.code-gen.button.getDB.req': '获取',
