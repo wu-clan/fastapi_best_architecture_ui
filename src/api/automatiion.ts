@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import qs from 'query-string';
 
 export interface BusinessReq {
@@ -49,6 +49,7 @@ export interface ImportReq {
 }
 
 export const TemplateBackendDirName = 'py';
+export const ZipFilename = 'fba_generator';
 
 export function queryBusinessAll(): Promise<BusinessRes[]> {
   return axios.get('/api/v1/gen/businesses/all');
@@ -111,6 +112,6 @@ export function generateCode(pk: number) {
   return axios.post(`/api/v1/gen/generate/${pk}`);
 }
 
-export function downloadCode(pk: number): Promise<Blob> {
+export function downloadCode(pk: number): Promise<AxiosResponse<Blob>> {
   return axios.get(`/api/v1/gen/download/${pk}`, { responseType: 'blob' });
 }

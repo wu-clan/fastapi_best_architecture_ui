@@ -697,6 +697,7 @@
     queryDBTables,
     queryGeneratePath,
     TemplateBackendDirName,
+    ZipFilename,
   } from '@/api/automatiion';
   import { AnyObject } from '@/types/global';
 
@@ -1158,15 +1159,17 @@
   const fetchDownloadCode = async () => {
     try {
       const res = await downloadCode(selectBusiness.value);
-      const blob = new Blob([res]);
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'fba_generator.zip');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
+      const blobFile = new Blob([res.data], {
+        type: 'application/x-zip-compressed',
+      });
+      const blobUrl = URL.createObjectURL(blobFile);
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = `${ZipFilename}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
     } catch (error) {
       // console.log(error);
     }

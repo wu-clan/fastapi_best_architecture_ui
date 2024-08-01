@@ -39,7 +39,13 @@ axios.interceptors.request.use(
 
 // add response interceptors
 axios.interceptors.response.use(
-  (response: AxiosResponse<HttpResponse>) => {
+  (response: AxiosResponse) => {
+    // Blob 类型直接返回
+    if (response.config.responseType === 'blob') {
+      return response;
+    }
+
+    // 直接提取状态吗和返回内容
     const { code }: { code: number } = response.data;
     const { data }: { data: HttpResponse } = response.data;
 
