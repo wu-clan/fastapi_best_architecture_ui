@@ -86,11 +86,7 @@
           @cancel="cancelImport"
           @ok="importBusinessModel"
         >
-          <a-form
-            ref="formRef"
-            :model="importTableForm"
-            style="margin-top: 10px"
-          >
+          <a-form ref="formRef" :model="importForm" style="margin-top: 10px">
             <a-form-item
               :label="$t('automation.code-gen.form.app')"
               :tooltip="$t('automation.code-gen.form.app.tooltip')"
@@ -105,7 +101,7 @@
               field="app"
             >
               <a-input
-                v-model="importTableForm.app"
+                v-model="importForm.app"
                 :placeholder="$t('automation.code-gen.form.app.placeholder')"
               />
             </a-form-item>
@@ -123,7 +119,7 @@
               field="table_schema"
             >
               <a-input
-                v-model="importTableForm.table_schema"
+                v-model="importForm.table_schema"
                 :placeholder="
                   $t('automation.code-gen.form.db_name.placeholder')
                 "
@@ -143,7 +139,7 @@
               field="table_name"
             >
               <a-input
-                v-model="importTableForm.table_name"
+                v-model="importForm.table_name"
                 :placeholder="
                   $t('automation.code-gen.form.table_name.placeholder')
                 "
@@ -157,18 +153,8 @@
         class="general-card"
         style="margin-top: 10px"
       >
-        <a-alert :type="'warning'">
-          {{ $t('automation.code-gen.tooltip.pcd') }}
-        </a-alert>
-        <a-alert
-          :type="'info'"
-          :show-icon="false"
-          :closable="true"
-          style="margin: 20px 0 20px"
-        >
+        <a-alert :type="'warning'" :closable="true" style="margin-bottom: 20px">
           {{ $t('automation.code-gen.tooltip.business') }}
-          <br />
-          {{ $t('automation.code-gen.tooltip.model') }}
         </a-alert>
         <a-tooltip :content="$t('automation.code-gen.button.tooltip.business')">
           <a-button
@@ -186,12 +172,12 @@
           v-model:visible="businessDrawer"
           :closable="false"
           :width="650"
-          :title="$t('automation.code-gen.modal.business')"
+          :title="businessDrawerTitle"
           :on-before-ok="beforeSubmit"
           @ok="submitNewOrEditBusiness"
           @cancel="cancelBusiness"
         >
-          <a-form ref="formRef" :model="createBusinessForm">
+          <a-form ref="formRef" :model="businessForm">
             <a-form-item
               :label="$t('automation.code-gen.form.app_name')"
               :tooltip="$t('automation.code-gen.form.app_name.tooltip')"
@@ -204,7 +190,7 @@
               field="app_name"
             >
               <a-input
-                v-model="createBusinessForm.app_name"
+                v-model="businessForm.app_name"
                 :placeholder="
                   $t('automation.code-gen.form.app_name.placeholder')
                 "
@@ -221,7 +207,7 @@
               field="table_name_en"
             >
               <a-input
-                v-model="createBusinessForm.table_name_en"
+                v-model="businessForm.table_name_en"
                 :placeholder="
                   $t('automation.code-gen.form.table_name_en.placeholder')
                 "
@@ -239,7 +225,7 @@
               field="table_name_zh"
             >
               <a-input
-                v-model="createBusinessForm.table_name_zh"
+                v-model="businessForm.table_name_zh"
                 :placeholder="
                   $t('automation.code-gen.form.table_name_zh.placeholder')
                 "
@@ -259,7 +245,7 @@
               field="table_simple_name_zh"
             >
               <a-input
-                v-model="createBusinessForm.table_simple_name_zh"
+                v-model="businessForm.table_simple_name_zh"
                 :placeholder="
                   $t(
                     'automation.code-gen.form.table_simple_name_zh.placeholder'
@@ -272,7 +258,7 @@
               field="table_comment"
             >
               <a-input
-                v-model="createBusinessForm.table_comment"
+                v-model="businessForm.table_comment"
                 :placeholder="
                   $t('automation.code-gen.form.table_comment.placeholder')
                 "
@@ -284,7 +270,7 @@
               field="schema_name"
             >
               <a-input
-                v-model="createBusinessForm.schema_name"
+                v-model="businessForm.schema_name"
                 :placeholder="
                   $t('automation.code-gen.form.schema_name.placeholder')
                 "
@@ -318,7 +304,7 @@
               field="api_version"
             >
               <a-input
-                v-model="createBusinessForm.api_version"
+                v-model="businessForm.api_version"
                 :placeholder="
                   $t('automation.code-gen.form.api_version.placeholder')
                 "
@@ -330,7 +316,7 @@
               field="gen_path"
             >
               <a-input
-                v-model="createBusinessForm.gen_path"
+                v-model="businessForm.gen_path"
                 :placeholder="
                   $t('automation.code-gen.form.gen_path.placeholder')
                 "
@@ -341,7 +327,7 @@
               field="remark"
             >
               <a-textarea
-                v-model="createBusinessForm.remark"
+                v-model="businessForm.remark"
                 :placeholder="$t('automation.code-gen.form.remark.placeholder')"
               />
             </a-form-item>
@@ -374,7 +360,7 @@
           </template>
           <template #operate="{ record }">
             <a-space>
-              <a-link @click="EditBusiness(record.id)">
+              <a-link @click="EditBusiness">
                 {{ $t(`admin.menu.columns.edit`) }}
               </a-link>
               <a-link :status="'danger'" @click="DeleteBusiness(record.id)">
@@ -394,16 +380,19 @@
           </template>
           {{ $t('automation.code-gen.button.model') }}
         </a-button>
+        <a-alert :type="'warning'" :closable="true" style="margin-bottom: 20px">
+          {{ $t('automation.code-gen.tooltip.model') }}
+        </a-alert>
         <a-modal
           v-model:visible="modelDrawer"
           :width="600"
           :closable="false"
-          :title="$t('automation.code-gen.modal.model')"
+          :title="modelDrawerTitle"
           :on-before-ok="beforeSubmit"
           @ok="submitNewOrEditModel"
           @cancel="cancelModel"
         >
-          <a-form ref="formRef" :model="createModelForm">
+          <a-form ref="formRef" :model="modelForm">
             <a-form-item
               :label="$t('automation.code-gen.form.name')"
               :rules="[
@@ -415,13 +404,13 @@
               field="name"
             >
               <a-input
-                v-model="createModelForm.name"
+                v-model="modelForm.name"
                 :placeholder="$t('automation.code-gen.form.name.placeholder')"
               />
             </a-form-item>
             <a-form-item :label="$t('automation.code-gen.form.comment')">
               <a-input
-                v-model="createModelForm.comment"
+                v-model="modelForm.comment"
                 :placeholder="
                   $t('automation.code-gen.form.comment.placeholder')
                 "
@@ -439,7 +428,7 @@
               field="type"
             >
               <a-select
-                v-model="createModelForm.type"
+                v-model="modelForm.type"
                 :field-names="SQLATypeFN"
                 :options="SQLATypeOptions"
                 :placeholder="$t('automation.code-gen.form.type.placeholder')"
@@ -447,7 +436,7 @@
             </a-form-item>
             <a-form-item :label="$t('automation.code-gen.form.default')">
               <a-input
-                v-model="createModelForm.default"
+                v-model="modelForm.default"
                 :placeholder="
                   $t('automation.code-gen.form.default.placeholder')
                 "
@@ -465,12 +454,12 @@
               field="sort"
             >
               <a-input-number
-                v-model="createModelForm.sort"
+                v-model="modelForm.sort"
                 :placeholder="$t('automation.code-gen.form.sort.placeholder')"
               />
             </a-form-item>
             <a-form-item
-              v-if="createModelForm.type == 'VARCHAR'"
+              v-if="modelForm.type == 'VARCHAR'"
               :label="$t('automation.code-gen.form.length')"
               :rules="[
                 {
@@ -481,7 +470,7 @@
               field="length"
             >
               <a-input-number
-                v-model="createModelForm.length"
+                v-model="modelForm.length"
                 :placeholder="$t('automation.code-gen.form.length.placeholder')"
               />
             </a-form-item>
@@ -542,6 +531,11 @@
           row-key="id"
           :pagination="false"
         >
+          <template #empty>
+            <a-empty
+              :description="$t('automation.code-gen.table.model.empty')"
+            />
+          </template>
           <template #index="{ rowIndex }">
             {{ rowIndex + 1 }}
           </template>
@@ -696,7 +690,10 @@
     queryBusinessModels,
     queryDBTables,
     queryGeneratePath,
+    queryModelDetail,
     TemplateBackendDirName,
+    updateBusiness,
+    updateModel,
     ZipFilename,
   } from '@/api/automatiion';
   import { AnyObject } from '@/types/global';
@@ -776,24 +773,24 @@
     getDBDrawer.value = true;
   };
   const openImport = () => {
-    resetForm(importTableForm, importData);
+    resetForm(importForm, importFormData);
     importDrawer.value = true;
   };
   const cancelImport = () => {
     importDrawer.value = false;
   };
   const openBusiness = () => {
-    resetForm(createBusinessForm, createBusinessData);
+    resetForm(businessForm, businessFormData);
     businessDrawer.value = true;
-    buttonStatus.value = 'newBusiness';
+    cuButtonStatus.value = 'newBusiness';
   };
   const cancelBusiness = () => {
     businessDrawer.value = false;
   };
   const openModel = () => {
-    resetForm(createModelForm, createModelData);
+    resetForm(modelForm, modelFormData);
     modelDrawer.value = true;
-    buttonStatus.value = 'newModel';
+    cuButtonStatus.value = 'newModel';
   };
   const cancelModel = () => {
     modelDrawer.value = false;
@@ -840,14 +837,6 @@
       width: 150,
     },
     {
-      title: t('automation.code-gen.columns.table_comment'),
-      dataIndex: 'table_comment',
-      slotName: 'table_comment',
-      ellipsis: true,
-      tooltip: true,
-      width: 180,
-    },
-    {
       title: t('automation.code-gen.columns.schema_name'),
       dataIndex: 'schema_name',
       slotName: 'schema_name',
@@ -866,6 +855,14 @@
       slotName: 'api_version',
       align: 'center',
       width: 100,
+    },
+    {
+      title: t('automation.code-gen.columns.table_comment'),
+      dataIndex: 'table_comment',
+      slotName: 'table_comment',
+      ellipsis: true,
+      tooltip: true,
+      width: 180,
     },
     {
       title: t('automation.code-gen.columns.gen_path'),
@@ -997,17 +994,17 @@
     return !selectBusiness.value;
   };
 
-  const importData: ImportReq = {
+  const importFormData: ImportReq = {
     app: '',
     table_name: '',
     table_schema: '',
   };
-  const importTableForm = reactive<ImportReq>({ ...importData });
+  const importForm = reactive<ImportReq>({ ...importFormData });
 
   // 导入
   const importBusinessModel = async () => {
     try {
-      await importTable(importTableForm);
+      await importTable(importForm);
       Message.success(t('submit.create.success'));
       importDrawer.value = false;
     } catch (error) {
@@ -1015,7 +1012,7 @@
     }
   };
 
-  const createBusinessData: BusinessReq = {
+  const businessFormData: BusinessReq = {
     app_name: '',
     table_name_en: '',
     table_name_zh: '',
@@ -1027,23 +1024,28 @@
     gen_path: undefined,
     remark: undefined,
   };
-  const createBusinessForm = reactive<BusinessReq>({ ...createBusinessData });
+  const businessForm = reactive<BusinessReq>({ ...businessFormData });
 
   // 提交业务
-  const buttonStatus = ref<string>();
+  const cuButtonStatus = ref<string>();
   const submitNewOrEditBusiness = async () => {
     try {
-      if (buttonStatus.value === 'newBusiness') {
-        await createBusiness(createBusinessForm);
+      if (cuButtonStatus.value === 'newBusiness') {
+        await createBusiness(businessForm);
         cancelBusiness();
         Message.success(t('submit.create.success'));
+      } else if (cuButtonStatus.value === 'editBusiness') {
+        await updateBusiness(selectBusiness.value, businessForm);
+        cancelBusiness();
+        Message.success(t('submit.update.success'));
+        await fetchBusinessDetail(selectBusiness.value, false);
       }
     } catch (error) {
       // console.log(error);
     }
   };
 
-  const createModelData: ModelReq = {
+  const modelFormData: ModelReq = {
     name: '',
     comment: undefined,
     type: '',
@@ -1054,17 +1056,23 @@
     is_nullable: false,
     gen_business_id: undefined,
   };
-  const createModelForm = reactive<ModelReq>({ ...createModelData });
+  const modelForm = reactive<ModelReq>({ ...modelFormData });
 
+  const operateModelRow = ref<number>(0);
   // 提交模型
   const submitNewOrEditModel = async () => {
     try {
-      if (buttonStatus.value === 'newModel') {
-        createModelForm.gen_business_id = selectBusiness.value;
-        await createModel(createModelForm);
+      if (cuButtonStatus.value === 'newModel') {
+        modelForm.gen_business_id = selectBusiness.value;
+        await createModel(modelForm);
         cancelModel();
         Message.success(t('submit.create.success'));
         await fetchModelList();
+      } else if (cuButtonStatus.value === 'editModel') {
+        await updateModel(operateModelRow.value, modelForm);
+        cancelModel();
+        Message.success(t('submit.update.success'));
+        await fetchBusinessDetail(selectBusiness.value, true);
       }
     } catch (error) {
       // console.log(error);
@@ -1100,11 +1108,15 @@
   const businessData = ref<BusinessDetailRes[]>([]);
   const modelData = ref<ModelReq[]>([]);
   // 请求业务详情
-  const fetchBusinessDetail = async (pk: number) => {
-    setLoading(true);
+  const fetchBusinessDetail = async (pk: number, relate: boolean) => {
+    if (relate) {
+      setLoading(true);
+    }
     try {
       const res = await queryBusinessDetail(pk);
-      modelData.value = res.gen_model || [];
+      if (relate) {
+        modelData.value = res.gen_model || [];
+      }
       delete res.gen_model;
       businessData.value = [res];
     } catch (error) {
@@ -1114,10 +1126,41 @@
     }
   };
 
-  const EditBusiness = ref();
+  // 请求模型列详情
+  const fetchModelDetail = async (pk: number) => {
+    try {
+      const res = await queryModelDetail(pk);
+      resetForm(modelForm, res);
+    } catch (error) {
+      // console.log();
+    }
+  };
+
+  const businessDrawerTitle = ref<string>(
+    t('automation.code-gen.modal.business')
+  );
+
+  const EditBusiness = async () => {
+    businessDrawerTitle.value = t('automation.code-gen.modal.business.edit');
+    cuButtonStatus.value = 'editBusiness';
+    await fetchBusinessDetail(selectBusiness.value, false);
+    resetForm(businessForm, businessData.value[0]);
+    businessDrawer.value = true;
+  };
+
   const DeleteBusiness = ref();
-  const EditModel = ref();
+
+  const modelDrawerTitle = ref<string>(t('automation.code-gen.modal.model'));
+  const EditModel = async (pk: number) => {
+    modelDrawerTitle.value = t('automation.code-gen.modal.model.edit');
+    cuButtonStatus.value = 'editModel';
+    operateModelRow.value = pk;
+    await fetchModelDetail(pk);
+    modelDrawer.value = true;
+  };
+  // 请求编辑模型
   const DeleteModel = ref();
+  // 请求删除模型
 
   // 请求代码预览
   const fetchPreviewCode = async () => {
@@ -1224,10 +1267,10 @@
     }
   });
 
-  watch(selectBusiness, (newVal, oldVal) => {
-    createModelForm.gen_business_id = newVal;
+  watch(selectBusiness, async (newVal, oldVal) => {
+    modelForm.gen_business_id = newVal;
     if (newVal !== oldVal) {
-      fetchBusinessDetail(newVal);
+      await fetchBusinessDetail(newVal, true);
     }
   });
 
@@ -1235,13 +1278,13 @@
   const switchPkStatus = ref<boolean>(false);
   const switchNullableStatus = ref<boolean>(false);
   watch(switchStatus, (newVal) => {
-    createBusinessForm.default_datetime_column = newVal;
+    businessForm.default_datetime_column = newVal;
   });
   watch(switchPkStatus, (newVal) => {
-    createModelForm.is_pk = newVal;
+    modelForm.is_pk = newVal;
   });
   watch(switchNullableStatus, (newVal) => {
-    createModelForm.is_nullable = newVal;
+    modelForm.is_nullable = newVal;
   });
 </script>
 

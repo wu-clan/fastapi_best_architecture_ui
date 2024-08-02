@@ -6,12 +6,13 @@ export default {
   // tooltip
   'automation.code-gen.tooltip.import':
     '导入：从指定数据库导入指定数据库表，将自动创建用于代码生成的业务和模型',
-  'automation.code-gen.tooltip.business': '业务：代码生成的相关配置',
-  'automation.code-gen.tooltip.model': '模型：代码生成的相关模型列',
+  'automation.code-gen.tooltip.business':
+    '业务：代码生成的相关配置（部分功能需要选择业务后才能执行相关操作）',
+  'automation.code-gen.tooltip.model':
+    '模型：代码生成的相关模型列（默认存在 id 主键自增列，请勿重复添加）',
   'automation.code-gen.tooltip.gen': '此功能将进行磁盘写入，亲谨慎操作',
   'automation.code-gen.button.tooltip.business':
     '此功能或将弃用，建议优先使用导入功能',
-  'automation.code-gen.tooltip.pcd': '部分功能需要选择业务后才能执行相关操作',
   'automation.code-gen.tooltip.code.copy': '复制代码',
   // button
   'automation.code-gen.button.getDB': '获取数据库表',
@@ -79,7 +80,7 @@ export default {
   'automation.code-gen.form.length.placeholder': '请输入长度',
   'automation.code-gen.form.length.help': '长度是必填项',
   'automation.code-gen.form.is_pk': '是否主键',
-  'automation.code-gen.form.is_pk.tooltip': '默认主键为 pk，不建议开启',
+  'automation.code-gen.form.is_pk.tooltip': '默认主键为 id，不建议开启',
   'automation.code-gen.form.is_nullable': '是否允许为空',
   'automation.code-gen.form.gen_business_id': '业务绑定',
   'automation.code-gen.form.gen_business_id.placeholder': '请选择业务',
@@ -123,7 +124,9 @@ export default {
   // modal
   'automation.code-gen.modal.import': '导入',
   'automation.code-gen.modal.business': '创建业务',
+  'automation.code-gen.modal.business.edit': '编辑业务',
   'automation.code-gen.modal.model': '创建模型列',
+  'automation.code-gen.modal.model.edit': '创建模型列',
   'automation.code-gen.modal.generate': '代码生成',
   'automation.code-gen.modal.generate.warning':
     '代码生成将进行磁盘IO写入，如果生成的代码文件与当前系统内代码文件重叠，文件将被覆盖写入，请谨慎操作！',
@@ -133,4 +136,6 @@ export default {
   // alert
   'automation.code-gen.alert.getDB':
     '仅支持查询当前系统已连接数据库内已存在的数据库',
+  // table
+  'automation.code-gen.table.model.empty': '此业务模型列为空，但默认存在 id 列',
 };

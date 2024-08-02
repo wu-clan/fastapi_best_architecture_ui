@@ -75,6 +75,10 @@ export function deleteBusiness(id: number) {
   return axios.delete(`/api/v1/gen/businesses/${id}`);
 }
 
+export function queryModelDetail(pk: number): Promise<ModelRes> {
+  return axios.get(`/api/v1/gen/models/${pk}`);
+}
+
 export function createModel(data: ModelReq) {
   return axios.post('/api/v1/gen/models', data);
 }
