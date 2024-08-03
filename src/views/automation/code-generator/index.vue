@@ -1025,7 +1025,6 @@
   };
 
   const selectBusiness = ref(); // type: number
-  console.log(selectBusiness.value);
   const selectBusinessStatus = () => {
     return !selectBusiness.value;
   };
