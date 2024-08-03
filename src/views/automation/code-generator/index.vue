@@ -369,6 +369,18 @@
             </a-space>
           </template>
         </a-table>
+        <a-modal
+          v-model:visible="businessDeleteModal"
+          :title="$t('modal.title.tips')"
+          :closable="false"
+          @cancel="cancelDeleteBusiness"
+          @ok="submitDelete"
+        >
+          <a-space>
+            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+            {{ $t('automation.code-gen.modal.business.delete') }}
+          </a-space>
+        </a-modal>
         <a-button
           type="primary"
           style="margin: 20px 0 20px"
@@ -533,8 +545,10 @@
         >
           <template #empty>
             <a-empty
+              v-if="selectBusiness"
               :description="$t('automation.code-gen.table.model.empty')"
             />
+            <a-empty v-else />
           </template>
           <template #index="{ rowIndex }">
             {{ rowIndex + 1 }}
@@ -558,6 +572,19 @@
             </a-space>
           </template>
         </a-table>
+        <a-modal
+          v-model:visible="modelDeleteModal"
+          :title="$t('modal.title.tips')"
+          :closable="false"
+          :width="360"
+          @cancel="cancelDeleteModel"
+          @ok="submitDelete"
+        >
+          <a-space>
+            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+            {{ $t('modal.title.tips.delete') }}
+          </a-space>
+        </a-modal>
         <a-space style="margin: 20px 0 20px; float: right">
           <template #split>
             <a-divider direction="vertical" />
@@ -631,7 +658,7 @@
           </a-tabs>
         </a-drawer>
         <a-modal
-          v-model:visible="generateModal"
+          v-model:visible="openGenerateModal"
           :title="$t('automation.code-gen.modal.generate')"
           :ok-text="$t('automation.code-gen.modal.generate.okText')"
           @cancel="cancelGenerate"
@@ -679,6 +706,8 @@
     createBusiness,
     createModel,
     DBTableParams,
+    deleteBusiness,
+    deleteModel,
     downloadCode,
     generateCode,
     ImportReq,
@@ -787,6 +816,9 @@
   const cancelBusiness = () => {
     businessDrawer.value = false;
   };
+  const cancelDeleteBusiness = () => {
+    businessDeleteModal.value = false;
+  };
   const openModel = () => {
     resetForm(modelForm, modelFormData);
     modelDrawer.value = true;
@@ -795,15 +827,18 @@
   const cancelModel = () => {
     modelDrawer.value = false;
   };
+  const cancelDeleteModel = () => {
+    modelDeleteModal.value = false;
+  };
   const openPreviewDrawer = () => {
     previewDrawer.value = true;
     fetchPreviewCode();
   };
   const openGenerate = () => {
-    generateModal.value = true;
+    openGenerateModal.value = true;
   };
   const cancelGenerate = () => {
-    generateModal.value = false;
+    openGenerateModal.value = false;
   };
   const businessColumns = computed<TableColumnData[]>(() => [
     {
@@ -990,6 +1025,7 @@
   };
 
   const selectBusiness = ref(); // type: number
+  console.log(selectBusiness.value);
   const selectBusinessStatus = () => {
     return !selectBusiness.value;
   };
@@ -1028,6 +1064,7 @@
 
   // 提交业务
   const cuButtonStatus = ref<string>();
+  const dLinkStatus = ref<string>();
   const submitNewOrEditBusiness = async () => {
     try {
       if (cuButtonStatus.value === 'newBusiness') {
@@ -1058,6 +1095,7 @@
   };
   const modelForm = reactive<ModelReq>({ ...modelFormData });
 
+  const operateBusinessRow = ref<number>(0);
   const operateModelRow = ref<number>(0);
   // 提交模型
   const submitNewOrEditModel = async () => {
@@ -1072,7 +1110,7 @@
         await updateModel(operateModelRow.value, modelForm);
         cancelModel();
         Message.success(t('submit.update.success'));
-        await fetchBusinessDetail(selectBusiness.value, true);
+        await fetchModelList();
       }
     } catch (error) {
       // console.log(error);
@@ -1148,7 +1186,11 @@
     businessDrawer.value = true;
   };
 
-  const DeleteBusiness = ref();
+  const DeleteBusiness = (pk: number) => {
+    dLinkStatus.value = 'delBusiness';
+    operateBusinessRow.value = pk;
+    businessDeleteModal.value = true;
+  };
 
   const modelDrawerTitle = ref<string>(t('automation.code-gen.modal.model'));
   const EditModel = async (pk: number) => {
@@ -1158,9 +1200,32 @@
     await fetchModelDetail(pk);
     modelDrawer.value = true;
   };
-  // 请求编辑模型
-  const DeleteModel = ref();
-  // 请求删除模型
+  const DeleteModel = (pk: number) => {
+    dLinkStatus.value = 'delModel';
+    operateModelRow.value = pk;
+    modelDeleteModal.value = true;
+  };
+
+  // 请求删除
+  const submitDelete = async () => {
+    try {
+      if (dLinkStatus.value === 'delBusiness') {
+        await deleteBusiness(operateBusinessRow.value);
+        cancelDeleteBusiness();
+        Message.success(t('submit.delete.success'));
+        selectBusiness.value = undefined;
+        businessData.value = [];
+        modelData.value = [];
+      } else if (dLinkStatus.value === 'delModel') {
+        await deleteModel(operateModelRow.value);
+        cancelDeleteModel();
+        Message.success(t('submit.delete.success'));
+        await fetchModelList();
+      }
+    } catch (error) {
+      // console.log(error);
+    }
+  };
 
   // 请求代码预览
   const fetchPreviewCode = async () => {
@@ -1186,7 +1251,9 @@
     }
   };
 
-  const generateModal = ref<boolean>(false);
+  const openGenerateModal = ref<boolean>(false);
+  const businessDeleteModal = ref<boolean>(false);
+  const modelDeleteModal = ref<boolean>(false);
   // 请求生成代码
   const fetchGenerateCode = async () => {
     try {
@@ -1269,7 +1336,7 @@
 
   watch(selectBusiness, async (newVal, oldVal) => {
     modelForm.gen_business_id = newVal;
-    if (newVal !== oldVal) {
+    if (newVal !== oldVal && newVal !== undefined) {
       await fetchBusinessDetail(newVal, true);
     }
   });

@@ -9,7 +9,7 @@ export default {
   'automation.code-gen.tooltip.business':
     '业务：代码生成的相关配置（部分功能需要选择业务后才能执行相关操作）',
   'automation.code-gen.tooltip.model':
-    '模型：代码生成的相关模型列（默认存在 id 主键自增列，请勿重复添加）',
+    '模型：代码生成的相关模型列（默认存在 id 主键自增列，默认时间列请查看业务配置）',
   'automation.code-gen.tooltip.gen': '此功能将进行磁盘写入，亲谨慎操作',
   'automation.code-gen.button.tooltip.business':
     '此功能或将弃用，建议优先使用导入功能',
@@ -108,7 +108,7 @@ export default {
   'automation.code-gen.form.schema_name.placeholder': '请输入 Schema 名称',
   'automation.code-gen.form.default_datetime_column': '默认时间列',
   'automation.code-gen.form.default_datetime_column.tooltip':
-    '默认时间列将包含 created_time 和 updated_time',
+    '业务模型是否包含默认时间列 created_time 和 updated_time',
   'automation.code-gen.form.api_version': 'API 版本',
   'automation.code-gen.form.api_version.tooltip': '建议输入默认 API 版本：v1',
   'automation.code-gen.form.api_version.placeholder': '请输入 API 版本',
@@ -125,6 +125,8 @@ export default {
   'automation.code-gen.modal.import': '导入',
   'automation.code-gen.modal.business': '创建业务',
   'automation.code-gen.modal.business.edit': '编辑业务',
+  'automation.code-gen.modal.business.delete':
+    '删除业务会同步删除所有关联模型列，确定删除吗？',
   'automation.code-gen.modal.model': '创建模型列',
   'automation.code-gen.modal.model.edit': '创建模型列',
   'automation.code-gen.modal.generate': '代码生成',
@@ -137,5 +139,5 @@ export default {
   'automation.code-gen.alert.getDB':
     '仅支持查询当前系统已连接数据库内已存在的数据库',
   // table
-  'automation.code-gen.table.model.empty': '此业务模型列为空，但默认存在 id 列',
+  'automation.code-gen.table.model.empty': '此业务暂无模型数据',
 };
