@@ -89,7 +89,7 @@ export default {
   'automation.code-gen.form.length': 'Length',
   'automation.code-gen.form.length.placeholder': 'Please enter the length',
   'automation.code-gen.form.length.help': 'Length is required',
-  'automation.code-gen.form.is_pk': 'Is Primary Key',
+  'automation.code-gen.form.is_pk': 'Primary Key',
   'automation.code-gen.form.is_pk.tooltip':
     'The default primary key is "id", it is not recommended to enable this',
   'automation.code-gen.form.is_nullable': 'Is Nullable',

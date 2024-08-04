@@ -20,7 +20,7 @@
         <a-drawer
           v-model:visible="getDBDrawer"
           :footer="false"
-          :width="550"
+          :width="688"
           :header="false"
         >
           <a-alert type="warning" style="margin-top: 10px">
@@ -720,6 +720,7 @@
     queryDBTables,
     queryGeneratePath,
     queryModelDetail,
+    SQLATypeOptionsList,
     TemplateBackendDirName,
     updateBusiness,
     updateModel,
@@ -729,117 +730,66 @@
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(false);
-  const cmOptions: EditorConfiguration = reactive({
-    mode: 'text/x-python',
-    theme: 'monokai',
-    readOnly: true,
-    lineNumbers: true,
-    autoRefresh: true,
-    smartIndent: false,
-    tabSize: 4,
-    indentUnit: 4,
-  });
-  const apiCode = ref<string>();
-  const crudCode = ref<string>();
-  const modelCode = ref<string>();
-  const schemaCode = ref<string>();
-  const serviceCode = ref<string>();
+
+  // 表单
   const formRef = ref();
   const SQLATypeFN = { value: 'type', label: 'type' };
   const BusinessFN = { value: 'id', label: 'table_name_zh' };
-  const SQLATypeOptions = reactive([
-    { type: 'BIGINT' },
-    { type: 'BINARY' },
-    { type: 'BIT' },
-    { type: 'BLOB' },
-    { type: 'BOOL' },
-    { type: 'BOOLEAN' },
-    { type: 'CHAR' },
-    { type: 'DATE' },
-    { type: 'DATETIME' },
-    { type: 'DECIMAL' },
-    { type: 'DOUBLE' },
-    { type: 'DOUBLE PRECISION' },
-    { type: 'ENUM' },
-    { type: 'FLOAT' },
-    { type: 'GEOMETRY' },
-    { type: 'GEOMETRYCOLLECTION' },
-    { type: 'INT' },
-    { type: 'INTEGER' },
-    { type: 'JSON' },
-    { type: 'LINESTRING' },
-    { type: 'LONGBLOB' },
-    { type: 'LONGTEXT' },
-    { type: 'MEDIUMBLOB' },
-    { type: 'MEDIUMINT' },
-    { type: 'MEDIUMTEXT' },
-    { type: 'MULTILINESTRING' },
-    { type: 'MULTIPOINT' },
-    { type: 'MULTIPOLYGON' },
-    { type: 'NUMERIC' },
-    { type: 'POINT' },
-    { type: 'POLYGON' },
-    { type: 'REAL' },
-    { type: 'SERIAL' },
-    { type: 'SET' },
-    { type: 'SMALLINT' },
-    { type: 'TEXT' },
-    { type: 'TIME' },
-    { type: 'TIMESTAMP' },
-    { type: 'TINYBLOB' },
-    { type: 'TINYINT' },
-    { type: 'TINYTEXT' },
-    { type: 'VARBINARY' },
-    { type: 'VARCHAR' },
-    { type: 'YEAR' },
-  ]);
-  const getDBDrawer = ref<boolean>(false);
-  const importDrawer = ref<boolean>(false);
-  const businessDrawer = ref<boolean>(false);
-  const modelDrawer = ref<boolean>(false);
-  const previewDrawer = ref<boolean>(false);
-  const openGetDB = () => {
-    getDBDrawer.value = true;
+  const SQLATypeOptions = reactive(SQLATypeOptionsList);
+  const getDBForm = reactive<DBTableParams>({ table_schema: '' });
+  const getDBButton = () => {
+    return !getDBForm.table_schema;
   };
-  const openImport = () => {
-    resetForm(importForm, importFormData);
-    importDrawer.value = true;
+  const DBTables = ref<string[]>([]);
+  const DBTablesStatus = ref<boolean>(false);
+  const selectBusiness = ref(); // type: number
+  const selectBusinessStatus = () => {
+    return !selectBusiness.value;
   };
-  const cancelImport = () => {
-    importDrawer.value = false;
+  const importFormData: ImportReq = {
+    app: '',
+    table_name: '',
+    table_schema: '',
   };
-  const openBusiness = () => {
-    resetForm(businessForm, businessFormData);
-    businessDrawer.value = true;
-    cuButtonStatus.value = 'newBusiness';
+  const importForm = reactive<ImportReq>({ ...importFormData });
+  const businessFormData: BusinessReq = {
+    app_name: '',
+    table_name_en: '',
+    table_name_zh: '',
+    table_simple_name_zh: '',
+    table_comment: undefined,
+    schema_name: undefined,
+    default_datetime_column: true,
+    api_version: '',
+    gen_path: undefined,
+    remark: undefined,
   };
-  const cancelBusiness = () => {
-    businessDrawer.value = false;
+  const businessForm = reactive<BusinessReq>({ ...businessFormData });
+  const modelFormData: ModelReq = {
+    name: '',
+    comment: undefined,
+    type: '',
+    default: undefined,
+    sort: 0,
+    length: 0,
+    is_pk: false,
+    is_nullable: false,
+    gen_business_id: undefined,
   };
-  const cancelDeleteBusiness = () => {
-    businessDeleteModal.value = false;
-  };
-  const openModel = () => {
-    resetForm(modelForm, modelFormData);
-    modelDrawer.value = true;
-    cuButtonStatus.value = 'newModel';
-  };
-  const cancelModel = () => {
-    modelDrawer.value = false;
-  };
-  const cancelDeleteModel = () => {
-    modelDeleteModal.value = false;
-  };
-  const openPreviewDrawer = () => {
-    previewDrawer.value = true;
-    fetchPreviewCode();
-  };
-  const openGenerate = () => {
-    openGenerateModal.value = true;
-  };
-  const cancelGenerate = () => {
-    openGenerateModal.value = false;
-  };
+  const modelForm = reactive<ModelReq>({ ...modelFormData });
+  const BusinessList = ref<BusinessDetailRes[]>([]);
+  const BusinessListStatus = ref<boolean>(false);
+  const businessData = ref<BusinessDetailRes[]>([]);
+  const modelData = ref<ModelReq[]>([]);
+  const switchStatus = ref<boolean>(true);
+  const switchPkStatus = ref<boolean>(false);
+  const switchNullableStatus = ref<boolean>(false);
+  const cuButtonStatus = ref<string>();
+  const dLinkStatus = ref<string>();
+  const operateBusinessRow = ref<number>(0);
+  const operateModelRow = ref<number>(0);
+
+  // 表格
   const businessColumns = computed<TableColumnData[]>(() => [
     {
       title: t('automation.code-gen.columns.app_name'),
@@ -869,6 +819,8 @@
       title: t('automation.code-gen.columns.table_simple_name_zh'),
       dataIndex: 'table_simple_name_zh',
       slotName: 'table_simple_name_zh',
+      ellipsis: true,
+      tooltip: true,
       width: 150,
     },
     {
@@ -882,6 +834,8 @@
       dataIndex: 'default_datetime_column',
       slotName: 'default_datetime_column',
       align: 'center',
+      ellipsis: true,
+      tooltip: true,
       width: 120,
     },
     {
@@ -889,6 +843,8 @@
       dataIndex: 'api_version',
       slotName: 'api_version',
       align: 'center',
+      ellipsis: true,
+      tooltip: true,
       width: 100,
     },
     {
@@ -913,16 +869,17 @@
       slotName: 'remark',
       ellipsis: true,
       tooltip: true,
-      width: 150,
+      width: 200,
     },
     {
       title: t('automation.code-gen.columns.operate'),
       dataIndex: 'operate',
       slotName: 'operate',
       align: 'center',
-      width: 200,
+      width: 180,
     },
   ]);
+
   const modelColumns = computed<TableColumnData[]>(() => [
     {
       title: 'ID',
@@ -988,6 +945,8 @@
       dataIndex: 'is_pk',
       slotName: 'is_pk',
       align: 'center',
+      ellipsis: true,
+      tooltip: true,
       width: 80,
     },
     {
@@ -1002,15 +961,83 @@
       dataIndex: 'operate',
       slotName: 'operate',
       align: 'center',
-      width: 220,
+      width: 180,
     },
   ]);
-  const getDBForm = reactive<DBTableParams>({ table_schema: '' });
-  const getDBButton = () => {
-    return !getDBForm.table_schema;
+
+  // 代码
+  const cmOptions: EditorConfiguration = reactive({
+    mode: 'text/x-python',
+    theme: 'monokai',
+    readOnly: true,
+    lineNumbers: true,
+    autoRefresh: true,
+    smartIndent: false,
+    tabSize: 4,
+    indentUnit: 4,
+  });
+  const apiCode = ref<string>();
+  const crudCode = ref<string>();
+  const modelCode = ref<string>();
+  const schemaCode = ref<string>();
+  const serviceCode = ref<string>();
+  const previewCodeTab = ref<string>('api');
+
+  // 对话框
+  const getDBDrawer = ref<boolean>(false);
+  const importDrawer = ref<boolean>(false);
+  const businessDrawer = ref<boolean>(false);
+  const modelDrawer = ref<boolean>(false);
+  const previewDrawer = ref<boolean>(false);
+  const openGenerateModal = ref<boolean>(false);
+  const businessDeleteModal = ref<boolean>(false);
+  const modelDeleteModal = ref<boolean>(false);
+  const businessDrawerTitle = ref<string>(
+    t('automation.code-gen.modal.business')
+  );
+  const generateCodePath = ref<string[]>([]);
+  const openGetDB = () => {
+    getDBDrawer.value = true;
   };
-  const DBTables = ref<string[]>([]);
-  const DBTablesStatus = ref<boolean>(false);
+  const openImport = () => {
+    resetForm(importForm, importFormData);
+    importDrawer.value = true;
+  };
+  const cancelImport = () => {
+    importDrawer.value = false;
+  };
+  const openBusiness = () => {
+    resetForm(businessForm, businessFormData);
+    businessDrawer.value = true;
+    cuButtonStatus.value = 'newBusiness';
+  };
+  const cancelBusiness = () => {
+    businessDrawer.value = false;
+  };
+  const cancelDeleteBusiness = () => {
+    businessDeleteModal.value = false;
+  };
+  const openModel = () => {
+    resetForm(modelForm, modelFormData);
+    modelDrawer.value = true;
+    cuButtonStatus.value = 'newModel';
+  };
+  const cancelModel = () => {
+    modelDrawer.value = false;
+  };
+  const cancelDeleteModel = () => {
+    modelDeleteModal.value = false;
+  };
+  const openPreviewDrawer = () => {
+    previewDrawer.value = true;
+    fetchPreviewCode();
+  };
+  const openGenerate = () => {
+    openGenerateModal.value = true;
+  };
+  const cancelGenerate = () => {
+    openGenerateModal.value = false;
+  };
 
   // 请求数据库表
   const featDBTables = async (params: DBTableParams) => {
@@ -1024,18 +1051,6 @@
     }
   };
 
-  const selectBusiness = ref(); // type: number
-  const selectBusinessStatus = () => {
-    return !selectBusiness.value;
-  };
-
-  const importFormData: ImportReq = {
-    app: '',
-    table_name: '',
-    table_schema: '',
-  };
-  const importForm = reactive<ImportReq>({ ...importFormData });
-
   // 导入
   const importBusinessModel = async () => {
     try {
@@ -1047,23 +1062,7 @@
     }
   };
 
-  const businessFormData: BusinessReq = {
-    app_name: '',
-    table_name_en: '',
-    table_name_zh: '',
-    table_simple_name_zh: '',
-    table_comment: undefined,
-    schema_name: undefined,
-    default_datetime_column: true,
-    api_version: '',
-    gen_path: undefined,
-    remark: undefined,
-  };
-  const businessForm = reactive<BusinessReq>({ ...businessFormData });
-
   // 提交业务
-  const cuButtonStatus = ref<string>();
-  const dLinkStatus = ref<string>();
   const submitNewOrEditBusiness = async () => {
     try {
       if (cuButtonStatus.value === 'newBusiness') {
@@ -1081,21 +1080,6 @@
     }
   };
 
-  const modelFormData: ModelReq = {
-    name: '',
-    comment: undefined,
-    type: '',
-    default: undefined,
-    sort: 0,
-    length: 0,
-    is_pk: false,
-    is_nullable: false,
-    gen_business_id: undefined,
-  };
-  const modelForm = reactive<ModelReq>({ ...modelFormData });
-
-  const operateBusinessRow = ref<number>(0);
-  const operateModelRow = ref<number>(0);
   // 提交模型
   const submitNewOrEditModel = async () => {
     try {
@@ -1116,8 +1100,6 @@
     }
   };
 
-  const BusinessList = ref<BusinessDetailRes[]>([]);
-  const BusinessListStatus = ref<boolean>(false);
   // 请求业务列表
   const fetchBusinessList = async () => {
     BusinessListStatus.value = true;
@@ -1142,8 +1124,6 @@
     }
   };
 
-  const businessData = ref<BusinessDetailRes[]>([]);
-  const modelData = ref<ModelReq[]>([]);
   // 请求业务详情
   const fetchBusinessDetail = async (pk: number, relate: boolean) => {
     if (relate) {
@@ -1172,10 +1152,6 @@
       // console.log();
     }
   };
-
-  const businessDrawerTitle = ref<string>(
-    t('automation.code-gen.modal.business')
-  );
 
   const EditBusiness = async () => {
     businessDrawerTitle.value = t('automation.code-gen.modal.business.edit');
@@ -1240,7 +1216,6 @@
     }
   };
 
-  const generateCodePath = ref<string[]>([]);
   // 请求生成代码路径
   const fetchGenerateCodePath = async () => {
     try {
@@ -1250,9 +1225,6 @@
     }
   };
 
-  const openGenerateModal = ref<boolean>(false);
-  const businessDeleteModal = ref<boolean>(false);
-  const modelDeleteModal = ref<boolean>(false);
   // 请求生成代码
   const fetchGenerateCode = async () => {
     try {
@@ -1284,7 +1256,6 @@
     }
   };
 
-  const previewCodeTab = ref<string>('api');
   const copyCodeButton = (): string => {
     const codeMap = {
       api: apiCode.value,
@@ -1332,17 +1303,12 @@
       DBTables.value = [];
     }
   });
-
   watch(selectBusiness, async (newVal, oldVal) => {
     modelForm.gen_business_id = newVal;
     if (newVal !== oldVal && newVal !== undefined) {
       await fetchBusinessDetail(newVal, true);
     }
   });
-
-  const switchStatus = ref<boolean>(true);
-  const switchPkStatus = ref<boolean>(false);
-  const switchNullableStatus = ref<boolean>(false);
   watch(switchStatus, (newVal) => {
     businessForm.default_datetime_column = newVal;
   });
