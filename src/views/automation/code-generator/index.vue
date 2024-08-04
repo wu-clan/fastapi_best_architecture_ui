@@ -976,11 +976,11 @@
     tabSize: 4,
     indentUnit: 4,
   });
-  const apiCode = ref<string>();
-  const crudCode = ref<string>();
-  const modelCode = ref<string>();
-  const schemaCode = ref<string>();
-  const serviceCode = ref<string>();
+  const apiCode = ref<string>('');
+  const crudCode = ref<string>('');
+  const modelCode = ref<string>('');
+  const schemaCode = ref<string>('');
+  const serviceCode = ref<string>('');
   const previewCodeTab = ref<string>('api');
 
   // 对话框
@@ -1257,14 +1257,14 @@
   };
 
   const copyCodeButton = (): string => {
-    const codeMap = {
+    const codeMap: { [key: string]: string } = {
       api: apiCode.value,
       crud: crudCode.value,
       model: modelCode.value,
       schema: schemaCode.value,
       service: serviceCode.value,
     };
-    return codeMap[previewCodeTab.value];
+    return codeMap[previewCodeTab.value as keyof typeof codeMap];
   };
 
   // 复制代码
