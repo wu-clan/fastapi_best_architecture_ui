@@ -1,5 +1,5 @@
 export default {
-  'menu.admin.sysMenu': 'Menu manage',
+  'menu.admin.sysMenu': 'Menu Manage',
   // form
   'admin.menu.form.name': 'Menu name',
   'admin.menu.form.name.placeholder': 'Please enter a menu name',

@@ -1,5 +1,5 @@
 export default {
-  'menu.admin.sysRole': 'Role manage',
+  'menu.admin.sysRole': 'Role Manage',
   // form
   'admin.role.form.name': 'Menu name',
   'admin.role.form.name.placeholder': 'Please enter a menu name',
