@@ -115,7 +115,8 @@ export default {
   'automation.code-gen.form.api_version.help': 'API 版本是必填项',
   'automation.code-gen.form.gen_path': '生成路径',
   'automation.code-gen.form.gen_path.tooltip':
-    '默认代码生成到当前项目 backend 目录下',
+    '默认代码生成到当前项目 app 目录下，自定义路径时，生成目录规则为：自定义路径 + app/...；例如，' +
+    '如果自定义路径为 "root/fba/backend"，那么最终代码将生成到 "root/fba/backend/app/..." 目录下',
   'automation.code-gen.form.gen_path.placeholder': '请输入生成路径',
   'automation.code-gen.form.remark': '备注',
   'automation.code-gen.form.remark.placeholder': '请输入备注',

@@ -171,7 +171,7 @@
         <a-modal
           v-model:visible="businessDrawer"
           :closable="false"
-          :width="650"
+          :width="688"
           :title="businessDrawerTitle"
           :on-before-ok="beforeSubmit"
           @ok="submitNewOrEditBusiness"

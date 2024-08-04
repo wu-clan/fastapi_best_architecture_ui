@@ -5,11 +5,14 @@ export default {
   'menu.automation.card.codeGenerate': 'Code Generate',
   // tooltip
   'automation.code-gen.tooltip.import':
-    'Import: Import specified database tables from the specified database, automatically creating businesses and models for code generation',
+    'Import: Import specified database tables from the specified database, ' +
+    'automatically creating businesses and models for code generation',
   'automation.code-gen.tooltip.business':
-    'Business: Related configurations for code generation (some functions require selecting a business before performing operations)',
+    'Business: Related configurations for code generation ' +
+    '(some functions require selecting a business before performing operations)',
   'automation.code-gen.tooltip.model':
-    'Model: Related model columns for code generation (by default, there is an auto-increment primary key column "id" and default time columns, please check the business configuration)',
+    'Model: Related model columns for code generation (by default, there is an ' +
+    'auto-increment primary key column "id" and default time columns, please check the business configuration)',
   'automation.code-gen.tooltip.gen':
     'This function will perform disk writes, please operate with caution',
   'automation.code-gen.button.tooltip.business':
@@ -135,9 +138,11 @@ export default {
   'automation.code-gen.form.api_version.placeholder':
     'Please enter the API version',
   'automation.code-gen.form.api_version.help': 'API version is required',
-  'automation.code-gen.form.gen_path': 'Generation Path',
+  'automation.code-gen.form.gen_path': 'Generate Path',
   'automation.code-gen.form.gen_path.tooltip':
-    'By default, code is generated under the backend directory of the current project',
+    "The default code is generated into the current project's `app` directory. " +
+    'When a custom path is specified, the generation rule is: custom path + `app/...`. For example, ' +
+    'if the custom path is `"root/fba/backend"`, the final code will be generated into the `"root/fba/backend/app/..."` directory.',
   'automation.code-gen.form.gen_path.placeholder':
     'Please enter the generation path',
   'automation.code-gen.form.remark': 'Remark',
@@ -154,7 +159,8 @@ export default {
   'automation.code-gen.modal.model.edit': 'Edit Model Columns',
   'automation.code-gen.modal.generate': 'Code Generation',
   'automation.code-gen.modal.generate.warning':
-    'Code generation will perform disk I/O writes. If the generated code files overlap with the current system code files, the files will be overwritten. Please operate with caution!',
+    'Code generation will perform disk I/O writes. If the generated code files ' +
+    'overlap with the current system code files, the files will be overwritten. Please operate with caution!',
   'automation.code-gen.modal.generate.okText': 'Don’t worry! Just do it!',
   'automation.code-gen.modal.generate.list.header': 'Code Write Path',
   'automation.code-gen.modal.generate.submit': 'Code Generation Successful',
