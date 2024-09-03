@@ -1021,6 +1021,7 @@
     resetForm(modelForm, modelFormData);
     modelDrawer.value = true;
     cuButtonStatus.value = 'newModel';
+    modelForm.gen_business_id = selectBusiness.value;
   };
   const cancelModel = () => {
     modelDrawer.value = false;
@@ -1084,7 +1085,6 @@
   const submitNewOrEditModel = async () => {
     try {
       if (cuButtonStatus.value === 'newModel') {
-        modelForm.gen_business_id = selectBusiness.value;
         await createModel(modelForm);
         cancelModel();
         Message.success(t('submit.create.success'));

@@ -166,7 +166,7 @@ export default {
   'automation.code-gen.modal.generate.submit': 'Code Generation Successful',
   // alert
   'automation.code-gen.alert.getDB':
-    'Only supports querying existing databases within the currently connected system',
+    'Only supports querying existing databases within the currently connected system, (database name not database table name)',
   // table
   'automation.code-gen.table.model.empty':
     'No model data for this business yet',

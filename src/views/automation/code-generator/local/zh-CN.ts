@@ -138,7 +138,7 @@ export default {
   'automation.code-gen.modal.generate.submit': '代码生成成功',
   // alert
   'automation.code-gen.alert.getDB':
-    '仅支持查询当前系统已连接数据库内已存在的数据库',
+    '仅支持查询当前系统已连接数据库内已存在的数据库（数据库名非数据库表名）',
   // table
   'automation.code-gen.table.model.empty': '此业务暂无模型数据',
 };
