@@ -60,7 +60,7 @@ yarn build
 
 ## Interactivity
 
-[WeChat / QQ](https://github.com/wu-clan)
+[WeChat / QQ](https://wu-clan.github.io/homepage/)
 
 ## Sponsor us
 
