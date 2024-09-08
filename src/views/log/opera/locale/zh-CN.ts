@@ -12,7 +12,7 @@ export default {
   'log.opera.form.search': '搜索',
   'log.opera.form.reset': '重置',
   // columns
-  'log.opera.columns.index': 'ID',
+  'log.opera.columns.trace_id': '跟踪 ID',
   'log.opera.columns.username': '用户名',
   'log.opera.columns.method': '请求方式',
   'log.opera.columns.title': '操作名称',

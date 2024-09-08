@@ -15,6 +15,7 @@ export interface LoginLogRes {
 
 export interface OperaLogRes {
   id: number;
+  trace_id: string;
   username?: string;
   method: string;
   title: string;

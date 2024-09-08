@@ -12,7 +12,7 @@ export default {
   'log.opera.form.search': 'Search',
   'log.opera.form.reset': 'Reset',
   // columns
-  'log.opera.columns.index': 'ID',
+  'log.opera.columns.trace_id': 'Trace ID',
   'log.opera.columns.username': 'Username',
   'log.opera.columns.method': 'Method',
   'log.opera.columns.title': 'Title',

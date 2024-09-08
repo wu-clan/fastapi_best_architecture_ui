@@ -176,6 +176,7 @@
       title: t('log.login.columns.login_time'),
       dataIndex: 'created_time',
       slotName: 'created_time',
+      width: 200,
     },
   ]);
   const statusOptions = computed<SelectOptionData[]>(() => [

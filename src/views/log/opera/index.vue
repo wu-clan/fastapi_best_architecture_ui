@@ -79,9 +79,6 @@
             @page-change="onPageChange"
             @page-size-change="onPageSizeChange"
           >
-            <template #index="{ rowIndex }">
-              {{ rowIndex + 1 }}
-            </template>
             <template #method="{ record }">
               <a-tag
                 v-if="record.method === 'GET'"
@@ -167,12 +164,12 @@
   });
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: t('log.opera.columns.index'),
-      dataIndex: 'index',
-      slotName: 'index',
+      title: t('log.opera.columns.trace_id'),
+      dataIndex: 'trace_id',
+      slotName: 'trace_id',
       ellipsis: true,
       tooltip: true,
-      width: 50,
+      width: 300,
     },
     {
       title: t('log.opera.columns.username'),
@@ -270,7 +267,7 @@
       title: t('log.opera.columns.opera_time'),
       dataIndex: 'opera_time',
       slotName: 'opera_time',
-      width: 180,
+      width: 200,
     },
   ]);
   const statusOptions = computed<SelectOptionData[]>(() => [
