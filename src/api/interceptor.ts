@@ -18,21 +18,12 @@ export interface HttpError {
 axios.defaults.baseURL = import.meta.env.VITE_API_BASE_URL || '';
 axios.defaults.withCredentials = true;
 
-// 防止重复提示错误的标记
-let isShowingError = false;
-
 // 封装错误提示逻辑
 const showError = (message: string) => {
-  if (!isShowingError) {
-    isShowingError = true;
-    Message.error({
-      content: message,
-      duration: 5000, // 5秒
-      onClose: () => {
-        isShowingError = false; // 提示消失后可以再次显示
-      },
-    });
-  }
+  Message.error({
+    content: message,
+    duration: 5000, // 5秒
+  });
 };
 
 // 请求拦截器
