@@ -54,4 +54,5 @@ export default {
   'admin.menu.columns.edit.drawer': '编辑菜单',
   'admin.menu.columns.delete': '删除',
   'admin.menu.columns.delete.drawer': '删除菜单',
+  'admin.menu.columns.view': '查看',
 };

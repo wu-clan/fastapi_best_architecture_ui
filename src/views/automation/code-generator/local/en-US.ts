@@ -27,8 +27,6 @@ export default {
   'automation.code-gen.button.preview': 'Preview',
   'automation.code-gen.button.write': 'Generate',
   'automation.code-gen.button.download': 'Download',
-  // select
-  'automation.code-gen.select.business': 'Please select a business',
   // columns
   'automation.code-gen.columns.app_name': 'Application Name',
   'automation.code-gen.columns.table_name_en': 'Table Name (EN)',

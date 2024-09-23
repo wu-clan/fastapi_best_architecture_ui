@@ -333,34 +333,26 @@
             </a-form-item>
           </a-form>
         </a-modal>
-        <a-select
-          v-model="selectBusiness"
-          :default-active-first-option="false"
-          :allow-search="false"
-          :loading="BusinessListStatus"
-          style="width: 250px"
-          :placeholder="$t('automation.code-gen.select.business')"
-          :options="BusinessList"
-          :field-names="BusinessFN"
-          @popup-visible-change="fetchBusinessList"
-        />
         <a-table
           :size="'medium'"
           :columns="businessColumns"
-          :data="businessData"
+          :data="businessList"
           row-key="id"
           :pagination="false"
         >
           <template #default_datetime_column="{ record }">
             <a-badge
-              v-if="record.default_datetime_column === 1"
+              v-if="record.default_datetime_column === true"
               :status="'success'"
             />
             <a-badge v-else :status="'danger'" />
           </template>
           <template #operate="{ record }">
             <a-space>
-              <a-link @click="EditBusiness">
+              <a-link @click="viewBusiness(record.id)">
+                {{ $t(`admin.menu.columns.view`) }}
+              </a-link>
+              <a-link @click="EditBusiness(record.id)">
                 {{ $t(`admin.menu.columns.edit`) }}
               </a-link>
               <a-link :status="'danger'" @click="DeleteBusiness(record.id)">
@@ -381,249 +373,269 @@
             {{ $t('automation.code-gen.modal.business.delete') }}
           </a-space>
         </a-modal>
-        <a-button
-          type="primary"
-          style="margin: 20px 0 20px"
-          :disabled="selectBusinessStatus()"
-          @click="openModel"
+        <a-drawer
+          v-model:visible="genModelDrawer"
+          :footer="false"
+          :width="1440"
+          :header="false"
         >
-          <template #icon>
-            <icon-plus />
-          </template>
-          {{ $t('automation.code-gen.button.model') }}
-        </a-button>
-        <a-alert :type="'warning'" :closable="true" style="margin-bottom: 20px">
-          {{ $t('automation.code-gen.tooltip.model') }}
-        </a-alert>
-        <a-modal
-          v-model:visible="modelDrawer"
-          :width="600"
-          :closable="false"
-          :title="modelDrawerTitle"
-          :on-before-ok="beforeSubmit"
-          @ok="submitNewOrEditModel"
-          @cancel="cancelModel"
-        >
-          <a-form ref="formRef" :model="modelForm">
-            <a-form-item
-              :label="$t('automation.code-gen.form.name')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('automation.code-gen.form.name.help'),
-                },
-              ]"
-              field="name"
-            >
-              <a-input
-                v-model="modelForm.name"
-                :placeholder="$t('automation.code-gen.form.name.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item :label="$t('automation.code-gen.form.comment')">
-              <a-input
-                v-model="modelForm.comment"
-                :placeholder="
-                  $t('automation.code-gen.form.comment.placeholder')
+          <a-button
+            type="primary"
+            style="margin: 20px 0 20px"
+            @click="openModel"
+          >
+            <template #icon>
+              <icon-plus />
+            </template>
+            {{ $t('automation.code-gen.button.model') }}
+          </a-button>
+          <a-alert
+            :type="'warning'"
+            :closable="true"
+            style="margin-bottom: 20px"
+          >
+            {{ $t('automation.code-gen.tooltip.model') }}
+          </a-alert>
+          <a-modal
+            v-model:visible="modelDrawer"
+            :width="600"
+            :closable="false"
+            :title="modelDrawerTitle"
+            :on-before-ok="beforeSubmit"
+            @ok="submitNewOrEditModel"
+            @cancel="cancelModel"
+          >
+            <a-form ref="formRef" :model="modelForm">
+              <a-form-item
+                :label="$t('automation.code-gen.form.name')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('automation.code-gen.form.name.help'),
+                  },
+                ]"
+                field="name"
+              >
+                <a-input
+                  v-model="modelForm.name"
+                  :placeholder="$t('automation.code-gen.form.name.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item :label="$t('automation.code-gen.form.comment')">
+                <a-input
+                  v-model="modelForm.comment"
+                  :placeholder="
+                    $t('automation.code-gen.form.comment.placeholder')
+                  "
+                  field="comment"
+                />
+              </a-form-item>
+              <a-form-item
+                :label="$t('automation.code-gen.form.type')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('automation.code-gen.form.type.help'),
+                  },
+                ]"
+                field="type"
+              >
+                <a-select
+                  v-model="modelForm.type"
+                  :allow-search="true"
+                  :field-names="SQLATypeFN"
+                  :options="SQLATypeOptions"
+                  :placeholder="$t('automation.code-gen.form.type.placeholder')"
+                  @click="fetchModelType"
+                />
+              </a-form-item>
+              <a-form-item :label="$t('automation.code-gen.form.default')">
+                <a-input
+                  v-model="modelForm.default"
+                  :placeholder="
+                    $t('automation.code-gen.form.default.placeholder')
+                  "
+                  field="default"
+                />
+              </a-form-item>
+              <a-form-item
+                :label="$t('automation.code-gen.form.sort')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('automation.code-gen.form.sort.help'),
+                  },
+                ]"
+                field="sort"
+              >
+                <a-input-number
+                  v-model="modelForm.sort"
+                  :placeholder="$t('automation.code-gen.form.sort.placeholder')"
+                />
+              </a-form-item>
+              <a-form-item
+                v-show="
+                  ['NVARCHAR', 'String', 'Unicode', 'VARCHAR'].includes(
+                    modelForm.type
+                  )
                 "
-                field="comment"
+                :label="$t('automation.code-gen.form.length')"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t('automation.code-gen.form.length.help'),
+                  },
+                ]"
+                field="length"
+              >
+                <a-input-number
+                  v-model="modelForm.length"
+                  :placeholder="
+                    $t('automation.code-gen.form.length.placeholder')
+                  "
+                />
+              </a-form-item>
+              <a-form-item
+                :label="$t('automation.code-gen.form.is_pk')"
+                :tooltip="$t('automation.code-gen.form.is_pk.tooltip')"
+                field="is_pk"
+              >
+                <a-switch v-model="switchPkStatus">
+                  <template #checked>
+                    {{ $t('switch.open') }}
+                  </template>
+                  <template #unchecked>
+                    {{ $t('switch.close') }}
+                  </template>
+                </a-switch>
+              </a-form-item>
+              <a-form-item
+                :label="$t('automation.code-gen.form.is_nullable')"
+                field="is_nullable"
+              >
+                <a-switch v-model="switchNullableStatus">
+                  <template #checked>
+                    {{ $t('switch.open') }}
+                  </template>
+                  <template #unchecked>
+                    {{ $t('switch.close') }}
+                  </template>
+                </a-switch>
+              </a-form-item>
+              <a-form-item
+                :label="$t('automation.code-gen.form.gen_business_id')"
+                field="gen_business_id"
+                :rules="[
+                  {
+                    required: true,
+                    message: $t(
+                      'automation.code-gen.form.gen_business_id.help'
+                    ),
+                  },
+                ]"
+              >
+                <a-select
+                  v-model="operateBusinessRow"
+                  :placeholder="
+                    $t('automation.code-gen.form.gen_business_id.placeholder')
+                  "
+                  :options="businessList"
+                  :field-names="BusinessFN"
+                  :disabled="true"
+                />
+              </a-form-item>
+            </a-form>
+          </a-modal>
+          <a-table
+            :size="'medium'"
+            :columns="modelColumns"
+            :data="modelList"
+            :loading="loading"
+            row-key="id"
+            :pagination="false"
+          >
+            <template #empty>
+              <a-empty
+                v-if="operateBusinessRow"
+                :description="$t('automation.code-gen.table.model.empty')"
               />
-            </a-form-item>
-            <a-form-item
-              :label="$t('automation.code-gen.form.type')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('automation.code-gen.form.type.help'),
-                },
-              ]"
-              field="type"
-            >
-              <a-select
-                v-model="modelForm.type"
-                :field-names="SQLATypeFN"
-                :options="SQLATypeOptions"
-                :placeholder="$t('automation.code-gen.form.type.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item :label="$t('automation.code-gen.form.default')">
-              <a-input
-                v-model="modelForm.default"
-                :placeholder="
-                  $t('automation.code-gen.form.default.placeholder')
-                "
-                field="default"
-              />
-            </a-form-item>
-            <a-form-item
-              :label="$t('automation.code-gen.form.sort')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('automation.code-gen.form.sort.help'),
-                },
-              ]"
-              field="sort"
-            >
-              <a-input-number
-                v-model="modelForm.sort"
-                :placeholder="$t('automation.code-gen.form.sort.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item
-              v-if="modelForm.type == 'VARCHAR'"
-              :label="$t('automation.code-gen.form.length')"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('automation.code-gen.form.length.help'),
-                },
-              ]"
-              field="length"
-            >
-              <a-input-number
-                v-model="modelForm.length"
-                :placeholder="$t('automation.code-gen.form.length.placeholder')"
-              />
-            </a-form-item>
-            <a-form-item
-              :label="$t('automation.code-gen.form.is_pk')"
-              :tooltip="$t('automation.code-gen.form.is_pk.tooltip')"
-              field="is_pk"
-            >
-              <a-switch v-model="switchPkStatus">
-                <template #checked>
-                  {{ $t('switch.open') }}
-                </template>
-                <template #unchecked>
-                  {{ $t('switch.close') }}
-                </template>
-              </a-switch>
-            </a-form-item>
-            <a-form-item
-              :label="$t('automation.code-gen.form.is_nullable')"
-              field="is_nullable"
-            >
-              <a-switch v-model="switchNullableStatus">
-                <template #checked>
-                  {{ $t('switch.open') }}
-                </template>
-                <template #unchecked>
-                  {{ $t('switch.close') }}
-                </template>
-              </a-switch>
-            </a-form-item>
-            <a-form-item
-              :label="$t('automation.code-gen.form.gen_business_id')"
-              field="gen_business_id"
-              :rules="[
-                {
-                  required: true,
-                  message: $t('automation.code-gen.form.gen_business_id.help'),
-                },
-              ]"
-            >
-              <a-select
-                v-model="selectBusiness"
-                :placeholder="
-                  $t('automation.code-gen.form.gen_business_id.placeholder')
-                "
-                :options="BusinessList"
-                :field-names="BusinessFN"
-                :disabled="true"
-              />
-            </a-form-item>
-          </a-form>
-        </a-modal>
-        <a-table
-          :size="'medium'"
-          :columns="modelColumns"
-          :data="modelData"
-          :loading="loading"
-          row-key="id"
-          :pagination="false"
-        >
-          <template #empty>
-            <a-empty
-              v-if="selectBusiness"
-              :description="$t('automation.code-gen.table.model.empty')"
-            />
-            <a-empty v-else />
-          </template>
-          <template #index="{ rowIndex }">
-            {{ rowIndex + 1 }}
-          </template>
-          <template #is_pk="{ record }">
-            <a-badge v-if="record.is_pk === 1" :status="'success'" />
-            <a-badge v-else :status="'danger'" />
-          </template>
-          <template #is_nullable="{ record }">
-            <a-badge v-if="record.is_nullable === 1" :status="'success'" />
-            <a-badge v-else :status="'danger'" />
-          </template>
-          <template #operate="{ record }">
+              <a-empty v-else />
+            </template>
+            <template #index="{ rowIndex }">
+              {{ rowIndex + 1 }}
+            </template>
+            <template #is_pk="{ record }">
+              <a-badge v-if="record.is_pk === 1" :status="'success'" />
+              <a-badge v-else :status="'danger'" />
+            </template>
+            <template #is_nullable="{ record }">
+              <a-badge v-if="record.is_nullable === true" :status="'success'" />
+              <a-badge v-else :status="'danger'" />
+            </template>
+            <template #operate="{ record }">
+              <a-space>
+                <a-link @click="EditModel(record.id)">
+                  {{ $t(`admin.menu.columns.edit`) }}
+                </a-link>
+                <a-link :status="'danger'" @click="DeleteModel(record.id)">
+                  {{ $t(`admin.menu.columns.delete`) }}
+                </a-link>
+              </a-space>
+            </template>
+          </a-table>
+          <a-modal
+            v-model:visible="modelDeleteModal"
+            :title="$t('modal.title.tips')"
+            :closable="false"
+            :width="360"
+            @cancel="cancelDeleteModel"
+            @ok="submitDelete"
+          >
             <a-space>
-              <a-link @click="EditModel(record.id)">
-                {{ $t(`admin.menu.columns.edit`) }}
-              </a-link>
-              <a-link :status="'danger'" @click="DeleteModel(record.id)">
-                {{ $t(`admin.menu.columns.delete`) }}
-              </a-link>
+              <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
+              {{ $t('modal.title.tips.delete') }}
             </a-space>
-          </template>
-        </a-table>
-        <a-modal
-          v-model:visible="modelDeleteModal"
-          :title="$t('modal.title.tips')"
-          :closable="false"
-          :width="360"
-          @cancel="cancelDeleteModel"
-          @ok="submitDelete"
-        >
-          <a-space>
-            <icon-exclamation-circle-fill size="24" style="color: #e6a23c" />
-            {{ $t('modal.title.tips.delete') }}
+          </a-modal>
+          <a-space style="margin: 20px 0 20px; float: right">
+            <template #split>
+              <a-divider direction="vertical" />
+            </template>
+            <a-button
+              type="primary"
+              :disabled="operateBusinessRowStatus()"
+              @click="openPreviewDrawer"
+            >
+              <template #icon>
+                <icon-eye />
+              </template>
+              {{ $t('automation.code-gen.button.preview') }}
+            </a-button>
+            <a-button
+              type="primary"
+              :disabled="operateBusinessRowStatus()"
+              @click="openGenerate"
+            >
+              <template #icon>
+                <icon-import />
+              </template>
+              {{ $t('automation.code-gen.button.write') }}
+            </a-button>
+            <a-button
+              type="primary"
+              :disabled="operateBusinessRowStatus()"
+              @click="fetchDownloadCode"
+            >
+              <template #icon>
+                <icon-download />
+              </template>
+              {{ $t('automation.code-gen.button.download') }}
+            </a-button>
           </a-space>
-        </a-modal>
-        <a-space style="margin: 20px 0 20px; float: right">
-          <template #split>
-            <a-divider direction="vertical" />
-          </template>
-          <a-button
-            type="primary"
-            :disabled="selectBusinessStatus()"
-            @click="openPreviewDrawer"
-          >
-            <template #icon>
-              <icon-eye />
-            </template>
-            {{ $t('automation.code-gen.button.preview') }}
-          </a-button>
-          <a-button
-            type="primary"
-            :disabled="selectBusinessStatus()"
-            @click="openGenerate"
-          >
-            <template #icon>
-              <icon-import />
-            </template>
-            {{ $t('automation.code-gen.button.write') }}
-          </a-button>
-          <a-button
-            type="primary"
-            :disabled="selectBusinessStatus()"
-            @click="fetchDownloadCode"
-          >
-            <template #icon>
-              <icon-download />
-            </template>
-            {{ $t('automation.code-gen.button.download') }}
-          </a-button>
-        </a-space>
+        </a-drawer>
         <a-drawer
           v-model:visible="previewDrawer"
           :footer="false"
-          :width="888"
+          :width="1024"
           :header="false"
         >
           <a-tabs
@@ -701,8 +713,8 @@
   import 'codemirror/theme/monokai.css';
   import 'codemirror/addon/display/autorefresh';
   import {
-    BusinessDetailRes,
     BusinessReq,
+    BusinessRes,
     createBusiness,
     createModel,
     DBTableParams,
@@ -719,12 +731,13 @@
     queryBusinessModels,
     queryDBTables,
     queryGeneratePath,
+    queryModelType,
     queryModelDetail,
-    SQLATypeOptionsList,
     TemplateBackendDirName,
     updateBusiness,
     updateModel,
     ZipFilename,
+    ModelRes,
   } from '@/api/automatiion';
   import { AnyObject } from '@/types/global';
 
@@ -735,16 +748,15 @@
   const formRef = ref();
   const SQLATypeFN = { value: 'type', label: 'type' };
   const BusinessFN = { value: 'id', label: 'table_name_zh' };
-  const SQLATypeOptions = reactive(SQLATypeOptionsList);
+  const SQLATypeOptions = ref<string[]>([]);
   const getDBForm = reactive<DBTableParams>({ table_schema: '' });
   const getDBButton = () => {
     return !getDBForm.table_schema;
   };
   const DBTables = ref<string[]>([]);
   const DBTablesStatus = ref<boolean>(false);
-  const selectBusiness = ref(); // type: number
-  const selectBusinessStatus = () => {
-    return !selectBusiness.value;
+  const operateBusinessRowStatus = (): boolean => {
+    return modelList.value.length === 0;
   };
   const importFormData: ImportReq = {
     app: '',
@@ -777,10 +789,10 @@
     gen_business_id: undefined,
   };
   const modelForm = reactive<ModelReq>({ ...modelFormData });
-  const BusinessList = ref<BusinessDetailRes[]>([]);
-  const BusinessListStatus = ref<boolean>(false);
-  const businessData = ref<BusinessDetailRes[]>([]);
-  const modelData = ref<ModelReq[]>([]);
+  const businessList = ref<BusinessRes[]>([]);
+  const businessData = ref<BusinessRes>();
+  const modelList = ref<ModelReq[]>([]);
+  const modelData = ref<ModelRes>();
   const switchStatus = ref<boolean>(true);
   const switchPkStatus = ref<boolean>(false);
   const switchNullableStatus = ref<boolean>(false);
@@ -877,6 +889,7 @@
       slotName: 'operate',
       align: 'center',
       width: 180,
+      fixed: 'right',
     },
   ]);
 
@@ -895,7 +908,16 @@
       slotName: 'name',
       ellipsis: true,
       tooltip: true,
-      width: 180,
+      width: 120,
+    },
+    {
+      title: t('automation.code-gen.columns.is_pk'),
+      dataIndex: 'is_pk',
+      slotName: 'is_pk',
+      align: 'center',
+      ellipsis: true,
+      tooltip: true,
+      width: 80,
     },
     {
       title: t('automation.code-gen.columns.comment'),
@@ -924,7 +946,7 @@
       slotName: 'default',
       ellipsis: true,
       tooltip: true,
-      width: 250,
+      width: 180,
     },
     {
       title: t('automation.code-gen.columns.sort'),
@@ -941,15 +963,6 @@
       width: 100,
     },
     {
-      title: t('automation.code-gen.columns.is_pk'),
-      dataIndex: 'is_pk',
-      slotName: 'is_pk',
-      align: 'center',
-      ellipsis: true,
-      tooltip: true,
-      width: 80,
-    },
-    {
       title: t('automation.code-gen.columns.is_nullable'),
       dataIndex: 'is_nullable',
       slotName: 'is_nullable',
@@ -961,7 +974,7 @@
       dataIndex: 'operate',
       slotName: 'operate',
       align: 'center',
-      width: 180,
+      width: 120,
     },
   ]);
 
@@ -988,6 +1001,7 @@
   const importDrawer = ref<boolean>(false);
   const businessDrawer = ref<boolean>(false);
   const modelDrawer = ref<boolean>(false);
+  const genModelDrawer = ref<boolean>(false);
   const previewDrawer = ref<boolean>(false);
   const openGenerateModal = ref<boolean>(false);
   const businessDeleteModal = ref<boolean>(false);
@@ -1021,7 +1035,7 @@
     resetForm(modelForm, modelFormData);
     modelDrawer.value = true;
     cuButtonStatus.value = 'newModel';
-    modelForm.gen_business_id = selectBusiness.value;
+    modelForm.gen_business_id = operateBusinessRow.value;
   };
   const cancelModel = () => {
     modelDrawer.value = false;
@@ -1038,6 +1052,43 @@
   };
   const cancelGenerate = () => {
     openGenerateModal.value = false;
+  };
+
+  const viewBusiness = async (pk: number) => {
+    operateBusinessRow.value = pk;
+    await fetchModelList();
+    genModelDrawer.value = true;
+    previewCodeTab.value = 'api';
+  };
+
+  const EditBusiness = async (pk: number) => {
+    businessDrawerTitle.value = t('automation.code-gen.modal.business.edit');
+    cuButtonStatus.value = 'editBusiness';
+    operateBusinessRow.value = pk;
+    await fetchBusinessDetail(operateBusinessRow.value);
+    resetForm(businessForm, businessData.value);
+    businessDrawer.value = true;
+  };
+
+  const DeleteBusiness = (pk: number) => {
+    dLinkStatus.value = 'delBusiness';
+    operateBusinessRow.value = pk;
+    businessDeleteModal.value = true;
+  };
+
+  const modelDrawerTitle = ref<string>(t('automation.code-gen.modal.model'));
+  const EditModel = async (pk: number) => {
+    modelDrawerTitle.value = t('automation.code-gen.modal.model.edit');
+    cuButtonStatus.value = 'editModel';
+    operateModelRow.value = pk;
+    await fetchModelDetail(pk);
+    resetForm(modelForm, modelData.value);
+    modelDrawer.value = true;
+  };
+  const DeleteModel = (pk: number) => {
+    dLinkStatus.value = 'delModel';
+    operateModelRow.value = pk;
+    modelDeleteModal.value = true;
   };
 
   // 请求数据库表
@@ -1069,12 +1120,13 @@
       if (cuButtonStatus.value === 'newBusiness') {
         await createBusiness(businessForm);
         cancelBusiness();
+        await fetchBusinessList();
         Message.success(t('submit.create.success'));
       } else if (cuButtonStatus.value === 'editBusiness') {
-        await updateBusiness(selectBusiness.value, businessForm);
+        await updateBusiness(operateBusinessRow.value, businessForm);
         cancelBusiness();
         Message.success(t('submit.update.success'));
-        await fetchBusinessDetail(selectBusiness.value, false);
+        await fetchBusinessList();
       }
     } catch (error) {
       // console.log(error);
@@ -1102,21 +1154,19 @@
 
   // 请求业务列表
   const fetchBusinessList = async () => {
-    BusinessListStatus.value = true;
     try {
-      BusinessList.value = await queryBusinessAll();
+      businessList.value = await queryBusinessAll();
     } catch (error) {
       // console.log(error);
-    } finally {
-      BusinessListStatus.value = false;
     }
   };
+  fetchBusinessList();
 
   // 请求模型列表
   const fetchModelList = async () => {
     setLoading(true);
     try {
-      modelData.value = await queryBusinessModels(selectBusiness.value);
+      modelList.value = await queryBusinessModels(operateBusinessRow.value);
     } catch (error) {
       // console.log(error);
     } finally {
@@ -1125,17 +1175,10 @@
   };
 
   // 请求业务详情
-  const fetchBusinessDetail = async (pk: number, relate: boolean) => {
-    if (relate) {
-      setLoading(true);
-    }
+  const fetchBusinessDetail = async (pk: number) => {
+    setLoading(true);
     try {
-      const res = await queryBusinessDetail(pk);
-      if (relate) {
-        modelData.value = res.gen_model || [];
-      }
-      delete res.gen_model;
-      businessData.value = [res];
+      businessData.value = await queryBusinessDetail(pk);
     } catch (error) {
       // console.log(error);
     } finally {
@@ -1147,38 +1190,20 @@
   const fetchModelDetail = async (pk: number) => {
     try {
       const res = await queryModelDetail(pk);
-      resetForm(modelForm, res);
+      delete (res as any).pd_type;
+      modelData.value = res;
     } catch (error) {
       // console.log();
     }
   };
 
-  const EditBusiness = async () => {
-    businessDrawerTitle.value = t('automation.code-gen.modal.business.edit');
-    cuButtonStatus.value = 'editBusiness';
-    await fetchBusinessDetail(selectBusiness.value, false);
-    resetForm(businessForm, businessData.value[0]);
-    businessDrawer.value = true;
-  };
-
-  const DeleteBusiness = (pk: number) => {
-    dLinkStatus.value = 'delBusiness';
-    operateBusinessRow.value = pk;
-    businessDeleteModal.value = true;
-  };
-
-  const modelDrawerTitle = ref<string>(t('automation.code-gen.modal.model'));
-  const EditModel = async (pk: number) => {
-    modelDrawerTitle.value = t('automation.code-gen.modal.model.edit');
-    cuButtonStatus.value = 'editModel';
-    operateModelRow.value = pk;
-    await fetchModelDetail(pk);
-    modelDrawer.value = true;
-  };
-  const DeleteModel = (pk: number) => {
-    dLinkStatus.value = 'delModel';
-    operateModelRow.value = pk;
-    modelDeleteModal.value = true;
+  // 请求模型列类型
+  const fetchModelType = async () => {
+    try {
+      SQLATypeOptions.value = await queryModelType();
+    } catch (error) {
+      // console.log(error);
+    }
   };
 
   // 请求删除
@@ -1188,9 +1213,8 @@
         await deleteBusiness(operateBusinessRow.value);
         cancelDeleteBusiness();
         Message.success(t('submit.delete.success'));
-        selectBusiness.value = undefined;
-        businessData.value = [];
-        modelData.value = [];
+        operateBusinessRow.value = 0;
+        await fetchBusinessList();
       } else if (dLinkStatus.value === 'delModel') {
         await deleteModel(operateModelRow.value);
         cancelDeleteModel();
@@ -1205,7 +1229,7 @@
   // 请求代码预览
   const fetchPreviewCode = async () => {
     try {
-      const res = await previewCode(selectBusiness.value);
+      const res = await previewCode(operateBusinessRow.value);
       apiCode.value = res[`${TemplateBackendDirName}/api.py`];
       crudCode.value = res[`${TemplateBackendDirName}/crud.py`];
       modelCode.value = res[`${TemplateBackendDirName}/model.py`];
@@ -1219,7 +1243,9 @@
   // 请求生成代码路径
   const fetchGenerateCodePath = async () => {
     try {
-      generateCodePath.value = await queryGeneratePath(selectBusiness.value);
+      generateCodePath.value = await queryGeneratePath(
+        operateBusinessRow.value
+      );
     } catch (error) {
       // console.log(error)
     }
@@ -1228,7 +1254,7 @@
   // 请求生成代码
   const fetchGenerateCode = async () => {
     try {
-      await generateCode(selectBusiness.value);
+      await generateCode(operateBusinessRow.value);
       cancelGenerate();
       Message.success(t('automation.code-gen.modal.generate.submit'));
     } catch (error) {
@@ -1239,7 +1265,7 @@
   // 请求下载代码
   const fetchDownloadCode = async () => {
     try {
-      const res = await downloadCode(selectBusiness.value);
+      const res = await downloadCode(operateBusinessRow.value);
       const blobFile = new Blob([res.data], {
         type: 'application/x-zip-compressed',
       });
@@ -1289,7 +1315,7 @@
   };
 
   // 重置表单
-  const resetForm = (input: AnyObject, data: Record<any, any>) => {
+  const resetForm = (input: AnyObject, data: any) => {
     Object.keys(data).forEach((key) => {
       // @ts-ignore
       input[key] = data[key];
@@ -1303,10 +1329,10 @@
       DBTables.value = [];
     }
   });
-  watch(selectBusiness, async (newVal, oldVal) => {
+  watch(operateBusinessRow, async (newVal, oldVal) => {
     modelForm.gen_business_id = newVal;
-    if (newVal !== oldVal && newVal !== undefined) {
-      await fetchBusinessDetail(newVal, true);
+    if (newVal !== oldVal && newVal !== 0) {
+      await fetchBusinessDetail(newVal);
     }
   });
   watch(switchStatus, (newVal) => {

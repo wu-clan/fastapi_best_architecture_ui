@@ -55,4 +55,5 @@ export default {
   'admin.menu.columns.edit.drawer': 'Edit menu',
   'admin.menu.columns.delete': 'Delete',
   'admin.menu.columns.delete.drawer': 'Delete menu',
+  'admin.menu.columns.view': 'View',
 };

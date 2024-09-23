@@ -30,12 +30,9 @@ export interface BusinessRes extends BusinessReq {
   id: number;
 }
 
-export interface BusinessDetailRes extends BusinessRes {
-  gen_model?: ModelReq[];
-}
-
 export interface ModelRes extends ModelReq {
   id: number;
+  pd_type: string;
 }
 
 export interface DBTableParams {
@@ -50,58 +47,12 @@ export interface ImportReq {
 
 export const TemplateBackendDirName = 'py';
 export const ZipFilename = 'fba_generator';
-export const SQLATypeOptionsList = [
-  { type: 'BIGINT' },
-  { type: 'BINARY' },
-  { type: 'BIT' },
-  { type: 'BLOB' },
-  { type: 'BOOL' },
-  { type: 'BOOLEAN' },
-  { type: 'CHAR' },
-  { type: 'DATE' },
-  { type: 'DATETIME' },
-  { type: 'DECIMAL' },
-  { type: 'DOUBLE' },
-  { type: 'DOUBLE PRECISION' },
-  { type: 'ENUM' },
-  { type: 'FLOAT' },
-  { type: 'GEOMETRY' },
-  { type: 'GEOMETRYCOLLECTION' },
-  { type: 'INT' },
-  { type: 'INTEGER' },
-  { type: 'JSON' },
-  { type: 'LINESTRING' },
-  { type: 'LONGBLOB' },
-  { type: 'LONGTEXT' },
-  { type: 'MEDIUMBLOB' },
-  { type: 'MEDIUMINT' },
-  { type: 'MEDIUMTEXT' },
-  { type: 'MULTILINESTRING' },
-  { type: 'MULTIPOINT' },
-  { type: 'MULTIPOLYGON' },
-  { type: 'NUMERIC' },
-  { type: 'POINT' },
-  { type: 'POLYGON' },
-  { type: 'REAL' },
-  { type: 'SERIAL' },
-  { type: 'SET' },
-  { type: 'SMALLINT' },
-  { type: 'TEXT' },
-  { type: 'TIME' },
-  { type: 'TIMESTAMP' },
-  { type: 'TINYBLOB' },
-  { type: 'TINYINT' },
-  { type: 'TINYTEXT' },
-  { type: 'VARBINARY' },
-  { type: 'VARCHAR' },
-  { type: 'YEAR' },
-];
 
 export function queryBusinessAll(): Promise<BusinessRes[]> {
   return axios.get('/api/v1/gen/businesses/all');
 }
 
-export function queryBusinessDetail(pk: number): Promise<BusinessDetailRes> {
+export function queryBusinessDetail(pk: number): Promise<BusinessRes> {
   return axios.get(`/api/v1/gen/businesses/${pk}`);
 }
 
@@ -123,6 +74,10 @@ export function deleteBusiness(id: number) {
 
 export function queryModelDetail(pk: number): Promise<ModelRes> {
   return axios.get(`/api/v1/gen/models/${pk}`);
+}
+
+export function queryModelType(): Promise<string[]> {
+  return axios.get('/api/v1/gen/models/types');
 }
 
 export function createModel(data: ModelReq) {

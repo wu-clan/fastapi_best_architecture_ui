@@ -23,8 +23,6 @@ export default {
   'automation.code-gen.button.preview': '预览',
   'automation.code-gen.button.write': '生成',
   'automation.code-gen.button.download': '下载',
-  // select
-  'automation.code-gen.select.business': '请选择业务',
   // columns
   'automation.code-gen.columns.app_name': '应用名称',
   'automation.code-gen.columns.table_name_en': '表名称（英）',
@@ -45,7 +43,7 @@ export default {
   'automation.code-gen.columns.sort': '排序',
   'automation.code-gen.columns.length': '长度',
   'automation.code-gen.columns.is_pk': '主键',
-  'automation.code-gen.columns.is_nullable': '空值',
+  'automation.code-gen.columns.is_nullable': '允许空值',
   // form
   'automation.code-gen.form.db_name': '数据库名',
   'automation.code-gen.form.db_name.placeholder': '请输入数据库名称',
