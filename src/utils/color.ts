@@ -1,11 +1,12 @@
 // 随机十六进制颜色
-function getRandomColor(): string {
-  const letters = '0123456789ABCDEF';
-  let color = '#';
-  for (let i = 0; i < 6; i += 1) {
-    color += letters[Math.floor(Math.random() * 16)];
+const getRandomColor = (sign: string): string => {
+  let hash = 0;
+  for (let i = 0; i < sign.length; i += 1) {
+    hash += sign.charCodeAt(i);
   }
-  return color;
-}
+
+  // eslint-disable-next-line no-bitwise
+  return `#${((1 << 24) + (hash % 16777215)).toString(16).slice(1)}`;
+};
 
 export default getRandomColor;
