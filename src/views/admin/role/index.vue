@@ -224,14 +224,16 @@
                     :style="{ width: '360px' }"
                   />
                 </a-space>
-                <a-tree
-                  ref="menuTreeDataRef"
-                  v-model:checked-keys="menuCheckedKeys"
-                  :checkable="true"
-                  :data="filterMenuTreeData"
-                  :field-names="selectMenuTreeFieldNames"
-                  style="margin-left: 20px"
-                ></a-tree>
+                <a-scrollbar style="height: 690px; overflow: auto">
+                  <a-tree
+                    ref="menuTreeDataRef"
+                    v-model:checked-keys="menuCheckedKeys"
+                    :checkable="true"
+                    :data="filterMenuTreeData"
+                    :field-names="selectMenuTreeFieldNames"
+                    style="margin-left: 20px"
+                  ></a-tree>
+                </a-scrollbar>
               </a-tab-pane>
               <a-tab-pane
                 key="api"
@@ -252,14 +254,16 @@
                     :style="{ width: '360px' }"
                   />
                 </a-space>
-                <a-tree
-                  ref="apiDataRef"
-                  v-model:checked-keys="apiCheckedKeys"
-                  :checkable="true"
-                  :data="filterApiData"
-                  :field-names="selectApiFieldNames"
-                  style="margin-left: 10px"
-                ></a-tree>
+                <a-scrollbar style="height: 690px; overflow: auto">
+                  <a-tree
+                    ref="apiDataRef"
+                    v-model:checked-keys="apiCheckedKeys"
+                    :checkable="true"
+                    :data="filterApiData"
+                    :field-names="selectApiFieldNames"
+                    style="margin-left: 10px"
+                  ></a-tree>
+                </a-scrollbar>
               </a-tab-pane>
             </a-tabs>
           </a-drawer>
