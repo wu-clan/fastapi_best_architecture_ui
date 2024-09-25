@@ -227,7 +227,6 @@
                 <a-tree
                   ref="menuTreeDataRef"
                   v-model:checked-keys="menuCheckedKeys"
-                  :check-strictly="true"
                   :checkable="true"
                   :data="filterMenuTreeData"
                   :field-names="selectMenuTreeFieldNames"
@@ -256,7 +255,6 @@
                 <a-tree
                   ref="apiDataRef"
                   v-model:checked-keys="apiCheckedKeys"
-                  :check-strictly="true"
                   :checkable="true"
                   :data="filterApiData"
                   :field-names="selectApiFieldNames"
@@ -623,10 +621,10 @@
     try {
       if (menuCheckedKeys.value.length > 0) {
         checkedParentNode(menuTreeDataRef.value.getCheckedNodes('all'));
-        await updateSysRoleMenu(operateRow.value, {
-          menus: menuCheckedKeys.value,
-        });
       }
+      await updateSysRoleMenu(operateRow.value, {
+        menus: menuCheckedKeys.value,
+      });
       cancelReq();
       Message.success(t('submit.update.success'));
     } catch (error) {
