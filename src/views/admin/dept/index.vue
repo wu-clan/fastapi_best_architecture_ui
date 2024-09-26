@@ -310,13 +310,7 @@
       slotName: 'name',
       ellipsis: true,
       tooltip: true,
-      width: 100,
-    },
-    {
-      title: t('admin.dept.columns.sort'),
-      dataIndex: 'sort',
-      slotName: 'sort',
-      align: 'center',
+      width: 250,
     },
     {
       title: t('admin.dept.columns.leader'),
@@ -332,6 +326,12 @@
       title: t('admin.dept.columns.email'),
       dataIndex: 'email',
       slotName: 'email',
+    },
+    {
+      title: t('admin.dept.columns.sort'),
+      dataIndex: 'sort',
+      slotName: 'sort',
+      align: 'center',
     },
     {
       title: t('admin.dept.columns.status'),
