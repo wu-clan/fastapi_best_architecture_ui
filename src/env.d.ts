@@ -7,6 +7,12 @@ declare module '*.vue' {
   export default component;
 }
 
+declare namespace JSX {
+  interface IntrinsicElements {
+    [elem: string]: any;
+  }
+}
+
 interface ImportMetaEnv {
   readonly VITE_API_BASE_URL: string;
 }

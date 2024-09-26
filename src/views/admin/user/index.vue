@@ -131,7 +131,7 @@
               </a-avatar>
               <a-avatar
                 v-else
-                :style="{ backgroundColor: getRandomColor() }"
+                :style="{ backgroundColor: getRandomColor(record.username) }"
                 trigger-type="mask"
                 @click="updateAvatar(record.username)"
               >
@@ -678,45 +678,39 @@
       width: 150,
     },
     {
-      title: t('admin.user.columns.join_time'),
-      dataIndex: 'join_time',
-      slotName: 'join_time',
-    },
-    {
-      title: t('admin.user.columns.last_login_time'),
-      dataIndex: 'last_login_time',
-      slotName: 'last_login_time',
-    },
-    {
       title: t('admin.user.columns.status'),
       dataIndex: 'status',
       slotName: 'status',
       align: 'center',
-      fixed: 'right',
-      width: 100,
     },
     {
       title: t('admin.user.columns.is_superuser'),
       dataIndex: 'is_superuser',
       slotName: 'is_superuser',
       align: 'center',
-      fixed: 'right',
-      width: 120,
     },
     {
       title: t('admin.user.columns.is_staff'),
       dataIndex: 'is_staff',
       slotName: 'is_staff',
       align: 'center',
-      fixed: 'right',
-      width: 120,
     },
     {
       title: t('admin.user.columns.is_multi_login'),
       dataIndex: 'is_multi_login',
       slotName: 'is_multi_login',
-      fixed: 'right',
-      width: 100,
+    },
+    {
+      title: t('admin.user.columns.join_time'),
+      dataIndex: 'join_time',
+      slotName: 'join_time',
+      width: 180,
+    },
+    {
+      title: t('admin.user.columns.last_login_time'),
+      dataIndex: 'last_login_time',
+      slotName: 'last_login_time',
+      width: 180,
     },
     {
       title: t('admin.user.columns.operate'),
