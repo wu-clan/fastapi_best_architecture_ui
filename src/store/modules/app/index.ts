@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import { Notification } from '@arco-design/web-vue';
-import type { NotificationReturn } from '@arco-design/web-vue/es/notification/interface';
 import { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
 import { getUserMenuList } from '@/api/user';
@@ -19,17 +18,23 @@ function generateMenu(
 
   data.forEach((menu) => {
     const localeName = convertToCamelCase(menu.name);
+
+    // Generate route path
+    const path = menu.path ? menu.path : `/${convertToKebabCase(menu.name)}`;
+
+    // Generate component import
+    const component = menu.component
+      ? views[`/src/views${menu.component}`]
+      : () => import('@/layout/default-layout.vue');
+
     const menuItem: AppRouteRecordRaw = {
-      path: !menu.path ? `/${convertToKebabCase(menu.name)}` : menu.path,
+      path,
       name: menu.name,
-      component: !menu.component
-        ? () => import('@/layout/default-layout.vue')
-        : views[`/src/views${menu.component}`],
+      component,
       children: [],
       meta: {
         title: menu.title,
-        // roles: menu.perms ? menu.perms.split(',') : [],
-        roles: ['*'],
+        roles: ['*'], // TODO: menu.perms ? menu.perms.split(',') : [],
         requiresAuth: !WHITE_LIST.some((item) => item.name === menu.name),
         icon: menu.icon,
         hideInMenu: menu.show === 0,
@@ -75,20 +80,21 @@ const useAppStore = defineStore('app', {
 
     // Change theme color
     toggleTheme(dark: boolean) {
-      if (dark) {
-        this.theme = 'dark';
-        document.body.setAttribute('arco-theme', 'dark');
-      } else {
-        this.theme = 'light';
-        document.body.removeAttribute('arco-theme');
-      }
+      this.theme = dark ? 'dark' : 'light';
+      document.body.setAttribute('arco-theme', this.theme);
     },
+
+    // Toggle device type
     toggleDevice(device: string) {
       this.device = device;
     },
+
+    // Toggle menu visibility
     toggleMenu(value: boolean) {
       this.hideMenu = value;
     },
+
+    // Fetch server menu configuration
     async fetchServerMenuConfig() {
       let notifyInstance: NotificationReturn | null = null;
       try {
@@ -97,10 +103,13 @@ const useAppStore = defineStore('app', {
           content: 'loading',
           closable: true,
         });
+
         const data = await getUserMenuList();
-        if (data.length === 0) {
-          this.serverMenu = [DASHBOARD] as unknown as RouteRecordNormalized[];
-        } else if (!data.some((item) => item.name === 'dashboard')) {
+
+        if (
+          data.length === 0 ||
+          !data.some((item) => item.name === 'dashboard')
+        ) {
           this.serverMenu = [DASHBOARD].concat(
             generateMenu(data)
           ) as unknown as RouteRecordNormalized[];
@@ -109,13 +118,13 @@ const useAppStore = defineStore('app', {
             data
           ) as unknown as RouteRecordNormalized[];
         }
+
         notifyInstance = Notification.success({
           id: 'menuNotice',
           content: 'success',
           closable: true,
         });
       } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         notifyInstance = Notification.error({
           id: 'menuNotice',
           content: 'error',
@@ -123,6 +132,8 @@ const useAppStore = defineStore('app', {
         });
       }
     },
+
+    // Clear server menu
     clearServerMenu() {
       this.serverMenu = [];
     },
