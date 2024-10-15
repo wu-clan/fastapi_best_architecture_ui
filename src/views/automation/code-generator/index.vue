@@ -20,7 +20,7 @@
         <a-drawer
           v-model:visible="getDBDrawer"
           :footer="false"
-          :width="688"
+          width="35%"
           :header="false"
         >
           <a-alert type="warning" style="margin-top: 10px">
@@ -376,7 +376,7 @@
         <a-drawer
           v-model:visible="genModelDrawer"
           :footer="false"
-          :width="1440"
+          width="80%"
           :header="false"
         >
           <a-button
@@ -635,7 +635,7 @@
         <a-drawer
           v-model:visible="previewDrawer"
           :footer="false"
-          :width="1024"
+          width="80%"
           :header="false"
         >
           <a-tabs
@@ -1344,6 +1344,12 @@
   watch(switchNullableStatus, (newVal) => {
     modelForm.is_nullable = newVal;
   });
+</script>
+
+<script lang="ts">
+  export default {
+    name: 'CodeGenerator',
+  };
 </script>
 
 <style scoped lang="less">

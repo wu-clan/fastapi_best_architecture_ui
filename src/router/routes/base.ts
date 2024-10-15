@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import { REDIRECT_ROUTE_NAME } from '@/router/constants';
 
 export const DEFAULT_LAYOUT = () => import('@/layout/default-layout.vue');
+export const NOTFOUND_LAYOUT = () => import('@/views/not-found/index.vue');
 
 export const REDIRECT_MAIN: RouteRecordRaw = {
   path: '/redirect',
@@ -27,7 +28,7 @@ export const REDIRECT_MAIN: RouteRecordRaw = {
 export const NOT_FOUND_ROUTE: RouteRecordRaw = {
   path: '/:pathMatch(.*)*',
   name: 'notFound',
-  component: () => import('@/views/not-found/index.vue'),
+  component: NOTFOUND_LAYOUT,
 };
 
 export const OAUTH2_CALLBACK: RouteRecordRaw = {

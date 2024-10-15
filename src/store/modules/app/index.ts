@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Notification } from '@arco-design/web-vue';
+import { Notification, NotificationReturn } from '@arco-design/web-vue';
 import { RouteRecordNormalized } from 'vue-router';
 import defaultSettings from '@/config/settings.json';
 import { getUserMenuList } from '@/api/user';
@@ -7,6 +7,8 @@ import convertToCamelCase, { convertToKebabCase } from '@/utils/string';
 import { WHITE_LIST } from '@/router/constants';
 import { AppRouteRecordRaw } from '@/router/routes/types';
 import DASHBOARD from '@/router/routes/modules/dashboard';
+import { DEFAULT_LAYOUT } from '@/router/routes/base';
+import router from '@/router';
 import { AppState, MenuItem } from './types';
 
 function generateMenu(
@@ -18,14 +20,10 @@ function generateMenu(
 
   data.forEach((menu) => {
     const localeName = convertToCamelCase(menu.name);
-
-    // Generate route path
-    const path = menu.path ? menu.path : `/${convertToKebabCase(menu.name)}`;
-
-    // Generate component import
+    const path = menu.path || `${convertToKebabCase(menu.name)}`;
     const component = menu.component
       ? views[`/src/views${menu.component}`]
-      : () => import('@/layout/default-layout.vue');
+      : DEFAULT_LAYOUT;
 
     const menuItem: AppRouteRecordRaw = {
       path,
