@@ -21,8 +21,46 @@
 
 <script lang="ts" setup>
   import Footer from '@/components/footer/index.vue';
+  import { Notification } from '@arco-design/web-vue';
+  import { h } from 'vue';
   import LoginBanner from './components/banner.vue';
   import LoginForm from './components/login-form.vue';
+
+  Notification.info({
+    title: '互动',
+    content: () =>
+      h('div', { style: 'line-height: 1.75; font-size: 14px;' }, [
+        // 第一句话和链接在一起
+        h('p', { style: 'margin-bottom: 12px; color: #333;' }, [
+          '欢迎加入我们的唯一社区：',
+          h(
+            'a',
+            {
+              href: 'https://discord.gg/yNN3wTbVAC',
+              target: '_blank',
+              rel: 'noopener noreferrer',
+              style: {
+                color: '#7289da',
+                textDecoration: 'none',
+                borderBottom: '1px solid #7289da',
+                transition: 'border-bottom 0.2s ease',
+              },
+            },
+            'Discord'
+          ),
+        ]),
+
+        // 第二段文字
+        h(
+          'p',
+          { style: 'margin-bottom: 5px; color: #333;' },
+          '在这里，你可以进行很多有趣的讨论，还有很多好玩的机器人等你来探索哟'
+        ),
+      ]),
+    showIcon: false,
+    closable: true,
+    duration: 1000 * 15,
+  });
 </script>
 
 <style lang="less" scoped>
