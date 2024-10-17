@@ -8,7 +8,6 @@ import { WHITE_LIST } from '@/router/constants';
 import { AppRouteRecordRaw } from '@/router/routes/types';
 import DASHBOARD from '@/router/routes/modules/dashboard';
 import { DEFAULT_LAYOUT } from '@/router/routes/base';
-import router from '@/router';
 import { AppState, MenuItem } from './types';
 
 function generateMenu(
@@ -123,6 +122,7 @@ const useAppStore = defineStore('app', {
           closable: true,
         });
       } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         notifyInstance = Notification.error({
           id: 'menuNotice',
           content: 'error',
