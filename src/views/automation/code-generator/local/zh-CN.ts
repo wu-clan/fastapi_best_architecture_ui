@@ -15,8 +15,8 @@ export default {
     '此功能或将弃用，建议优先使用导入功能',
   'automation.code-gen.tooltip.code.copy': '复制代码',
   // button
-  'automation.code-gen.button.getDB': '获取数据库表',
-  'automation.code-gen.button.getDB.req': '获取',
+  'automation.code-gen.button.getDB': '查询数据库表',
+  'automation.code-gen.button.getDB.req': '查询',
   'automation.code-gen.button.import': '导入',
   'automation.code-gen.button.business': '创建业务表',
   'automation.code-gen.button.model': '创建模型列',
@@ -48,19 +48,19 @@ export default {
   'automation.code-gen.form.db_name': '数据库名',
   'automation.code-gen.form.db_name.placeholder': '请输入数据库名称',
   'automation.code-gen.form.db_name.help':
-    '数据库名是必填项，且仅支持小写字母和下划线',
+    '数据库名是必填项，且仅支持大小写字母和下划线',
   'automation.code-gen.form.db_name.tooltip': '建议与“获取数据库表”参数相同',
   'automation.code-gen.form.app': '应用名',
   'automation.code-gen.form.app.tooltip': '用于代码生成到指定后端 app',
   'automation.code-gen.form.app.placeholder': '请输入应用名称',
   'automation.code-gen.form.app.help':
-    '应用名称是必填项，且仅支持小写字母和下划线',
+    '应用名称是必填项，且仅支持大小写字母和下划线',
   'automation.code-gen.form.table_name': '数据库表名',
   'automation.code-gen.form.table_name.tooltip':
     '通过“获取数据库表”查询到的表名',
   'automation.code-gen.form.table_name.placeholder': '请输入数据库表名',
   'automation.code-gen.form.table_name.help':
-    '数据库表名是必填项，且仅支持小写字母和下划线',
+    '数据库表名是必填项，且仅支持大小写字母和下划线',
   'automation.code-gen.form.name': '名称',
   'automation.code-gen.form.name.placeholder': '请输入名称',
   'automation.code-gen.form.name.help': '名称是必填项',
@@ -93,12 +93,12 @@ export default {
   'automation.code-gen.form.table_name_zh': '表名称（中）',
   'automation.code-gen.form.table_name_zh.placeholder': '请输入中文表名称',
   'automation.code-gen.form.table_name_zh.help':
-    '中文表名称是必填项，且仅允许中文字符',
+    '中文表名称是必填项，且至少包含一个中文',
   'automation.code-gen.form.table_simple_name_zh': '表名称（中简）',
   'automation.code-gen.form.table_simple_name_zh.placeholder':
     '请输入中文简短表名称',
   'automation.code-gen.form.table_simple_name_zh.help':
-    '中文简短名称是必填项，且仅允许中文字符',
+    '中文简短名称是必填项，且至少包含一个中文',
   'automation.code-gen.form.table_comment': '表描述',
   'automation.code-gen.form.table_comment.placeholder': '请输入表描述',
   'automation.code-gen.form.schema_name': 'Schema 名称',

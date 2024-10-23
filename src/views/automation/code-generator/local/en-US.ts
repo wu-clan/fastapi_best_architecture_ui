@@ -19,8 +19,8 @@ export default {
     'This function may be deprecated, it is recommended to use the import function first',
   'automation.code-gen.tooltip.code.copy': 'Copy Code',
   // button
-  'automation.code-gen.button.getDB': 'Get Database Tables',
-  'automation.code-gen.button.getDB.req': 'Get',
+  'automation.code-gen.button.getDB': 'Query Database Tables',
+  'automation.code-gen.button.getDB.req': 'Query',
   'automation.code-gen.button.import': 'Import',
   'automation.code-gen.button.business': 'Create Business Table',
   'automation.code-gen.button.model': 'Create Model Columns',
@@ -54,7 +54,7 @@ export default {
   'automation.code-gen.form.db_name.placeholder':
     'Please enter the database name',
   'automation.code-gen.form.db_name.help':
-    'Database name is required and only supports lowercase letters and underscores',
+    'Database name is required and only supports uppercase and lowercase letters and underscores',
   'automation.code-gen.form.db_name.tooltip':
     'It is recommended to be the same as the "Get Database Tables" parameter',
   'automation.code-gen.form.app': 'Application Name',
@@ -63,14 +63,14 @@ export default {
   'automation.code-gen.form.app.placeholder':
     'Please enter the application name',
   'automation.code-gen.form.app.help':
-    'Application name is required and only supports lowercase letters and underscores',
+    'Application name is required and only support uppercase and lowercase letters and underscores',
   'automation.code-gen.form.table_name': 'Database Table Name',
   'automation.code-gen.form.table_name.tooltip':
     'Table name obtained through "Get Database Tables"',
   'automation.code-gen.form.table_name.placeholder':
     'Please enter the database table name',
   'automation.code-gen.form.table_name.help':
-    'Database table name is required and only supports lowercase letters and underscores',
+    'Database table name is required and only support uppercase and lowercase letters and underscores',
   'automation.code-gen.form.name': 'Name',
   'automation.code-gen.form.name.placeholder': 'Please enter the name',
   'automation.code-gen.form.name.help': 'Name is required',
@@ -113,12 +113,12 @@ export default {
   'automation.code-gen.form.table_name_zh.placeholder':
     'Please enter the Chinese table name',
   'automation.code-gen.form.table_name_zh.help':
-    'Chinese table name is required and only allows Chinese characters',
+    'The Chinese table name is required and contains at least one Chinese character',
   'automation.code-gen.form.table_simple_name_zh': 'Table Simple Name (ZH)',
   'automation.code-gen.form.table_simple_name_zh.placeholder':
     'Please enter the short Chinese table name',
   'automation.code-gen.form.table_simple_name_zh.help':
-    'Short Chinese name is required and only allows Chinese characters',
+    'Short Chinese name is required and contains at least one Chinese character',
   'automation.code-gen.form.table_comment': 'Table Description',
   'automation.code-gen.form.table_comment.placeholder':
     'Please enter the table description',
