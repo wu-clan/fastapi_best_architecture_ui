@@ -3,217 +3,240 @@
     <a-layout style="padding: 0 18px">
       <Breadcrumb :items="[$t('menu.admin'), $t('menu.admin.sysUser')]" />
       <a-card :title="$t('menu.admin.sysUser')" class="general-card">
-        <a-row>
-          <a-col :flex="1">
-            <a-form
-              :auto-label-width="true"
-              :model="formModel"
-              label-align="right"
-            >
-              <a-row :gutter="16">
-                <a-col :span="8">
-                  <a-form-item
-                    :label="$t('admin.user.form.username')"
-                    field="leader"
-                  >
-                    <a-input
-                      v-model="formModel.username"
-                      :placeholder="$t('admin.user.form.username.placeholder')"
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                  <a-form-item
-                    :label="$t('admin.user.form.phone')"
-                    field="phone"
-                  >
-                    <a-input
-                      v-model="formModel.phone"
-                      :placeholder="$t('admin.user.form.phone.placeholder')"
-                    />
-                  </a-form-item>
-                </a-col>
-                <a-col :span="8">
-                  <a-form-item
-                    :label="$t('admin.user.form.status')"
-                    field="status"
-                  >
-                    <a-select
-                      v-model="formModel.status"
-                      :options="statusOptions"
-                      :placeholder="$t('admin.user.form.selectDefault')"
-                      allow-clear
-                      @clear="resetStatus"
-                    />
-                  </a-form-item>
-                </a-col>
-              </a-row>
-            </a-form>
-          </a-col>
-          <a-divider direction="vertical" style="height: 30px" />
-          <a-col :span="6">
-            <a-space :size="'medium'" direction="horizontal">
-              <a-button type="primary" @click="search">
-                <template #icon>
-                  <icon-search />
-                </template>
-                {{ $t('admin.user.form.search') }}
-              </a-button>
-              <a-button @click="resetSelect">
-                <template #icon>
-                  <icon-refresh />
-                </template>
-                {{ $t('admin.user.form.reset') }}
-              </a-button>
-            </a-space>
-          </a-col>
-        </a-row>
-        <a-divider />
         <div class="content">
-          <a-card :bordered="false" :style="{ width: '20%', float: 'left' }">
-            <a-input-search
-              v-model="searchDept"
-              :block-node="true"
-              :placeholder="$t('admin.user.form.dept.placeholder')"
-              :style="{ marginBottom: '10px' }"
-            />
-            <a-tree
-              :data="deptTreeData"
-              :field-names="selectDeptTreeFieldNames"
-              :loading="loading"
-              @select="selectDeptUsers"
-            >
-            </a-tree>
-          </a-card>
-          <a-card :bordered="false" :style="{ width: '80%', float: 'right' }">
-            <a-button type="primary" @click="AddUser()">
-              <template #icon>
-                <icon-plus />
-              </template>
-              {{ $t('admin.user.button.add') }}
-            </a-button>
-            <a-alert :type="'warning'" style="margin: 20px 0 20px 0">
-              {{ $t('admin.user.alert.superuser') }}
-            </a-alert>
-            <a-table
-              :bordered="false"
-              :columns="columns"
-              :data="renderData"
-              :loading="loading"
-              :pagination="pagination"
-              :scroll="{ x: 2100 }"
-              :size="'medium'"
-              row-key="id"
-              @page-change="onPageChange"
-              @page-size-change="onPageSizeChange"
-            >
-              <template #dept="{ record }">
-                {{ record.dept?.name }}
-              </template>
-              <template #roles="{ record }">
-                <a-popconfirm
-                  :content="
-                    $t('admin.user.columns.updateUserRoles.placeholder')
-                  "
-                  @ok="updateRole(record.username, record.id)"
+          <a-split
+            default-size="0.18"
+            min="0.18"
+            max="0.3"
+            :style="{
+              height: '693px',
+              width: '100%',
+            }"
+          >
+            <template #first>
+              <div style="margin-right: 10px"
+                ><a-input-search
+                  v-model="searchDept"
+                  :block-node="true"
+                  :placeholder="$t('admin.user.form.dept.placeholder')"
+                  :style="{ marginBottom: '10px' }"
+                />
+                <a-tree
+                  :data="deptTreeData"
+                  :field-names="selectDeptTreeFieldNames"
+                  :loading="loading"
+                  @select="selectDeptUsers"
                 >
-                  <a-input-tag
-                    :model-value="roleNameList(record.roles)"
-                    :readonly="true"
-                  />
-                </a-popconfirm>
-              </template>
-              <template #avatar="{ record }">
-                <a-avatar
-                  v-if="record.avatar"
-                  :image-url="record.avatar"
-                  trigger-type="mask"
-                  @click="updateAvatar(record.username)"
+                </a-tree>
+              </div>
+            </template>
+            <template #second>
+              <div style="margin-left: 10px">
+                <a-row>
+                  <a-col :flex="1">
+                    <a-form
+                      :auto-label-width="true"
+                      :model="formModel"
+                      label-align="right"
+                    >
+                      <a-row :gutter="16">
+                        <a-col :span="8">
+                          <a-form-item
+                            :label="$t('admin.user.form.username')"
+                            field="leader"
+                          >
+                            <a-input
+                              v-model="formModel.username"
+                              :placeholder="
+                                $t('admin.user.form.username.placeholder')
+                              "
+                            />
+                          </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                          <a-form-item
+                            :label="$t('admin.user.form.phone')"
+                            field="phone"
+                          >
+                            <a-input
+                              v-model="formModel.phone"
+                              :placeholder="
+                                $t('admin.user.form.phone.placeholder')
+                              "
+                            />
+                          </a-form-item>
+                        </a-col>
+                        <a-col :span="8">
+                          <a-form-item
+                            :label="$t('admin.user.form.status')"
+                            field="status"
+                          >
+                            <a-select
+                              v-model="formModel.status"
+                              :options="statusOptions"
+                              :placeholder="$t('admin.user.form.selectDefault')"
+                              allow-clear
+                              @clear="resetStatus"
+                            />
+                          </a-form-item>
+                        </a-col>
+                      </a-row>
+                    </a-form>
+                  </a-col>
+                  <a-divider direction="vertical" style="height: 30px" />
+                  <a-col :span="6">
+                    <a-space :size="'medium'" direction="horizontal">
+                      <a-button type="primary" @click="search">
+                        <template #icon>
+                          <icon-search />
+                        </template>
+                        {{ $t('admin.user.form.search') }}
+                      </a-button>
+                      <a-button @click="resetSelect">
+                        <template #icon>
+                          <icon-refresh />
+                        </template>
+                        {{ $t('admin.user.form.reset') }}
+                      </a-button>
+                    </a-space>
+                  </a-col>
+                </a-row>
+                <a-divider />
+                <a-button
+                  type="primary"
+                  style="margin-bottom: 20px"
+                  @click="AddUser()"
                 >
-                  <template #trigger-icon>
-                    <IconEdit />
+                  <template #icon>
+                    <icon-plus />
                   </template>
-                </a-avatar>
-                <a-avatar
-                  v-else
-                  :style="{ backgroundColor: getRandomColor(record.username) }"
-                  trigger-type="mask"
-                  @click="updateAvatar(record.username)"
+                  {{ $t('admin.user.button.add') }}
+                </a-button>
+                <a-table
+                  :bordered="false"
+                  :columns="columns"
+                  :data="renderData"
+                  :loading="loading"
+                  :pagination="pagination"
+                  :scroll="{ x: 2100 }"
+                  :size="'medium'"
+                  row-key="id"
+                  @page-change="onPageChange"
+                  @page-size-change="onPageSizeChange"
                 >
-                  {{ record.username[0] }}
-                  <template #trigger-icon>
-                    <IconEdit />
+                  <template #dept="{ record }">
+                    {{ record.dept?.name }}
                   </template>
-                </a-avatar>
-              </template>
-              <template #status="{ record }">
-                <a-switch
-                  v-model:model-value="record.status"
-                  :checked-text="$t(`admin.user.form.status.${record.status}`)"
-                  :checked-value="1"
-                  :disabled="switchStatus"
-                  :loading="loading"
-                  :unchecked-text="
-                    $t(`admin.user.form.status.${record.status}`)
-                  "
-                  :unchecked-value="0"
-                  @change="changeStatus(record.id)"
-                />
-              </template>
-              <template #is_superuser="{ record }">
-                <a-switch
-                  v-model:model-value="record.is_superuser"
-                  :checked-text="
-                    $t(`admin.user.columns.switch.${record.is_superuser}`)
-                  "
-                  :disabled="switchStatus"
-                  :loading="loading"
-                  :unchecked-text="
-                    $t(`admin.user.columns.switch.${record.is_superuser}`)
-                  "
-                  @change="changeSuper(record.id)"
-                />
-              </template>
-              <template #is_staff="{ record }">
-                <a-switch
-                  v-model:model-value="record.is_staff"
-                  :checked-text="
-                    $t(`admin.user.columns.switch.${record.is_staff}`)
-                  "
-                  :disabled="switchStatus"
-                  :loading="loading"
-                  :unchecked-text="
-                    $t(`admin.user.columns.switch.${record.is_staff}`)
-                  "
-                  @change="changeStaff(record.id)"
-                />
-              </template>
-              <template #is_multi_login="{ record }">
-                <a-switch
-                  v-model:model-value="record.is_multi_login"
-                  :checked-text="
-                    $t(`admin.user.columns.switch.${record.is_multi_login}`)
-                  "
-                  :disabled="switchStatus"
-                  :loading="loading"
-                  :unchecked-text="
-                    $t(`admin.user.columns.switch.${record.is_multi_login}`)
-                  "
-                  @change="changeMultiLogin(record.id)"
-                />
-              </template>
-              <template #operate="{ record }">
-                <a-space>
-                  <a-link @click="EditUser(record.username)">
-                    {{ $t(`admin.user.columns.edit`) }}
-                  </a-link>
-                  <a-link @click="DeleteUser(record.username)">
-                    {{ $t(`admin.user.columns.delete`) }}
-                  </a-link>
-                </a-space>
-              </template>
-            </a-table>
-          </a-card>
+                  <template #roles="{ record }">
+                    <a-popconfirm
+                      :content="
+                        $t('admin.user.columns.updateUserRoles.placeholder')
+                      "
+                      @ok="updateRole(record.username, record.id)"
+                    >
+                      <a-input-tag
+                        :model-value="roleNameList(record.roles)"
+                        :readonly="true"
+                      />
+                    </a-popconfirm>
+                  </template>
+                  <template #avatar="{ record }">
+                    <a-avatar
+                      v-if="record.avatar"
+                      :image-url="record.avatar"
+                      trigger-type="mask"
+                      @click="updateAvatar(record.username)"
+                    >
+                      <template #trigger-icon>
+                        <IconEdit />
+                      </template>
+                    </a-avatar>
+                    <a-avatar
+                      v-else
+                      :style="{
+                        backgroundColor: getRandomColor(record.username),
+                      }"
+                      trigger-type="mask"
+                      @click="updateAvatar(record.username)"
+                    >
+                      {{ record.username[0] }}
+                      <template #trigger-icon>
+                        <IconEdit />
+                      </template>
+                    </a-avatar>
+                  </template>
+                  <template #status="{ record }">
+                    <a-switch
+                      v-model:model-value="record.status"
+                      :checked-text="
+                        $t(`admin.user.form.status.${record.status}`)
+                      "
+                      :checked-value="1"
+                      :disabled="switchStatus"
+                      :loading="loading"
+                      :unchecked-text="
+                        $t(`admin.user.form.status.${record.status}`)
+                      "
+                      :unchecked-value="0"
+                      @change="changeStatus(record.id)"
+                    />
+                  </template>
+                  <template #is_superuser="{ record }">
+                    <a-switch
+                      v-model:model-value="record.is_superuser"
+                      :checked-text="
+                        $t(`admin.user.columns.switch.${record.is_superuser}`)
+                      "
+                      :disabled="switchStatus"
+                      :loading="loading"
+                      :unchecked-text="
+                        $t(`admin.user.columns.switch.${record.is_superuser}`)
+                      "
+                      @change="changeSuper(record.id)"
+                    />
+                  </template>
+                  <template #is_staff="{ record }">
+                    <a-switch
+                      v-model:model-value="record.is_staff"
+                      :checked-text="
+                        $t(`admin.user.columns.switch.${record.is_staff}`)
+                      "
+                      :disabled="switchStatus"
+                      :loading="loading"
+                      :unchecked-text="
+                        $t(`admin.user.columns.switch.${record.is_staff}`)
+                      "
+                      @change="changeStaff(record.id)"
+                    />
+                  </template>
+                  <template #is_multi_login="{ record }">
+                    <a-switch
+                      v-model:model-value="record.is_multi_login"
+                      :checked-text="
+                        $t(`admin.user.columns.switch.${record.is_multi_login}`)
+                      "
+                      :disabled="switchStatus"
+                      :loading="loading"
+                      :unchecked-text="
+                        $t(`admin.user.columns.switch.${record.is_multi_login}`)
+                      "
+                      @change="changeMultiLogin(record.id)"
+                    />
+                  </template>
+                  <template #operate="{ record }">
+                    <a-space>
+                      <a-link @click="EditUser(record.username)">
+                        {{ $t(`admin.user.columns.edit`) }}
+                      </a-link>
+                      <a-link @click="DeleteUser(record.username)">
+                        {{ $t(`admin.user.columns.delete`) }}
+                      </a-link>
+                    </a-space>
+                  </template>
+                </a-table>
+              </div>
+            </template>
+          </a-split>
         </div>
         <div class="content-modal">
           <a-modal

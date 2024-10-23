@@ -3,7 +3,7 @@ export default {
   // form
   'admin.user.form.dept': '部门',
   'admin.user.form.dept.required': '部门是必选项',
-  'admin.user.form.dept.placeholder': '请选择部门',
+  'admin.user.form.dept.placeholder': '请输入部门',
   'admin.user.form.username': '用户名',
   'admin.user.form.username.required': '用户名是必填项',
   'admin.user.form.username.placeholder': '请输入用户名',
@@ -59,6 +59,4 @@ export default {
   'admin.user.columns.add': '添加用户',
   // button
   'admin.user.button.add': '添加用户',
-  // alert
-  'admin.user.alert.superuser': '管理员不受角色权限限制，默认拥有所有权限',
 };

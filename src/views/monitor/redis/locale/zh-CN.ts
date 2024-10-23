@@ -14,9 +14,9 @@ export default {
   'monitor.redis.showData.rejected_connections': '已拒绝连接',
   'monitor.redis.showData.keys_command_stats': '查询次数',
   'monitor.redis.showData.role': '角色',
-  'monitor.redis.showData.used_cpu': 'CPU消耗',
-  'monitor.redis.showData.used_cpu_children': '后台CPU占用',
-  'monitor.redis.showData.keys_num': 'Keys数量',
+  'monitor.redis.showData.used_cpu': 'CPU 消耗',
+  'monitor.redis.showData.used_cpu_children': '后台 CPU 占用',
+  'monitor.redis.showData.keys_num': 'Keys 数量',
   // stats
   'monitor.redis.stats.title.commands': '命令统计',
   'monitor.redis.stats.title.used_memory': '已用内存',
