@@ -36,11 +36,11 @@ export default {
     '确定要删除吗？角色删除没有设置强制检测，删除角色后，用户对应的角色权限将会被清空，可能造成无法挽回的后果，请慎重操作！',
   // drawer
   'admin.role.drawer.menu': '角色菜单',
-  'admin.role.drawer.api': '角色API',
+  'admin.role.drawer.api': '角色 API',
   'admin.role.drawer.menu.button.select': '全选/取消全选',
   'admin.role.drawer.menu.button.collapse': '展开/收起',
   'admin.role.drawer.menu.input.placeholder': '菜单筛选',
-  'admin.role.drawer.api.input.placeholder': 'API筛选',
+  'admin.role.drawer.api.input.placeholder': 'API 筛选',
   // alert
   'admin.role.alert.data_scope':
     '设置数据权限为全部时，将忽略菜单授权或API授权，直接拥有所有权限，请谨慎操作！',

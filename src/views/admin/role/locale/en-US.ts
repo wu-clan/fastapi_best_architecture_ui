@@ -36,7 +36,7 @@ export default {
     'Are you sure you want to delete it? Role deletion does not set forced detection. After the role is deleted, the user’s corresponding role permissions will be cleared, which may cause irreparable consequences. Please operate with caution!',
   // drawer
   'admin.role.drawer.menu': 'Role menu',
-  'admin.role.drawer.api': 'Role api',
+  'admin.role.drawer.api': 'Role API',
   'admin.role.drawer.menu.button.select': 'Select all/Cancel all',
   'admin.role.drawer.menu.button.collapse': 'Expand/Collapse',
   'admin.role.drawer.menu.input.placeholder': 'Menu Filter',

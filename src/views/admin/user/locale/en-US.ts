@@ -3,7 +3,7 @@ export default {
   // form
   'admin.user.form.dept': 'Department',
   'admin.user.form.dept.required': 'Department is required',
-  'admin.user.form.dept.placeholder': 'Please select department',
+  'admin.user.form.dept.placeholder': 'Please input department',
   'admin.user.form.username': 'Username',
   'admin.user.form.username.required': 'Username is required',
   'admin.user.form.username.placeholder': 'Please enter username',
@@ -61,7 +61,4 @@ export default {
   'admin.user.columns.add': 'Add User',
   // button
   'admin.user.button.add': 'Add User',
-  // alert
-  'admin.user.alert.superuser':
-    'Superuser are not limited by role permissions and have all permissions by default',
 };
