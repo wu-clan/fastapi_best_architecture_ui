@@ -32,7 +32,7 @@
               :rules="[
                 {
                   required: true,
-                  match: /^[a-z_]+$/,
+                  match: /^[a-zA-Z_]+$/,
                   lowercase: true,
                   message: $t('automation.code-gen.form.db_name.help'),
                 },
@@ -93,7 +93,7 @@
               :rules="[
                 {
                   required: true,
-                  match: /^[a-z_]+$/,
+                  match: /^[a-zA-Z_]+$/,
                   lowercase: true,
                   message: $t('automation.code-gen.form.app.help'),
                 },
@@ -111,7 +111,7 @@
               :rules="[
                 {
                   required: true,
-                  match: /^[a-z_]+$/,
+                  match: /^[a-zA-Z_]+$/,
                   lowercase: true,
                   message: $t('automation.code-gen.form.db_name.help'),
                 },
@@ -131,7 +131,7 @@
               :rules="[
                 {
                   required: true,
-                  match: /^[a-z_]+$/,
+                  match: /^[a-zA-Z_]+$/,
                   lowercase: true,
                   message: $t('automation.code-gen.form.table_name.help'),
                 },
@@ -218,7 +218,7 @@
               :rules="[
                 {
                   required: true,
-                  match: /^[\u4e00-\u9fa5]+$/,
+                  match: /.*[\u4e00-\u9fa5].*/,
                   message: $t('automation.code-gen.form.table_name_zh.help'),
                 },
               ]"
@@ -236,7 +236,7 @@
               :rules="[
                 {
                   required: true,
-                  match: /^[\u4e00-\u9fa5]+$/,
+                  match: /.*[\u4e00-\u9fa5].*/,
                   message: $t(
                     'automation.code-gen.form.table_simple_name_zh.help'
                   ),
@@ -751,7 +751,8 @@
   const SQLATypeOptions = ref<string[]>([]);
   const getDBForm = reactive<DBTableParams>({ table_schema: '' });
   const getDBButton = () => {
-    return !getDBForm.table_schema;
+    const regex = /^[a-zA-Z_]+$/;
+    return !regex.test(getDBForm.table_schema);
   };
   const DBTables = ref<string[]>([]);
   const DBTablesStatus = ref<boolean>(false);
