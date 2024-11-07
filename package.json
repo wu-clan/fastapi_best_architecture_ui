@@ -92,7 +92,7 @@
     "vue-tsc": "^1.0.14"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.0.0"
   },
   "resolutions": {
     "bin-wrapper": "npm:bin-wrapper-china",
