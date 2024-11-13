@@ -15,8 +15,6 @@ export default {
     '此功能或将弃用，建议优先使用导入功能',
   'automation.code-gen.tooltip.code.copy': '复制代码',
   // button
-  'automation.code-gen.button.getDB': '查询数据库表',
-  'automation.code-gen.button.getDB.req': '查询',
   'automation.code-gen.button.import': '导入',
   'automation.code-gen.button.business': '创建业务表',
   'automation.code-gen.button.model': '创建模型列',
@@ -49,16 +47,16 @@ export default {
   'automation.code-gen.form.db_name.placeholder': '请输入数据库名称',
   'automation.code-gen.form.db_name.help':
     '数据库名是必填项，且仅支持大小写字母和下划线',
-  'automation.code-gen.form.db_name.tooltip': '建议与“获取数据库表”参数相同',
+  'automation.code-gen.form.db_name.tooltip':
+    '仅支持当前系统已连接数据库内已存在的数据库',
   'automation.code-gen.form.app': '应用名',
-  'automation.code-gen.form.app.tooltip': '用于代码生成到指定后端 app',
+  'automation.code-gen.form.app.tooltip': '用于代码生成到指定的后端 app',
   'automation.code-gen.form.app.placeholder': '请输入应用名称',
   'automation.code-gen.form.app.help':
     '应用名称是必填项，且仅支持大小写字母和下划线',
   'automation.code-gen.form.table_name': '数据库表名',
-  'automation.code-gen.form.table_name.tooltip':
-    '通过“获取数据库表”查询到的表名',
-  'automation.code-gen.form.table_name.placeholder': '请输入数据库表名',
+  'automation.code-gen.form.table_name.tooltip': '已输入数据库下的数据库表',
+  'automation.code-gen.form.table_name.placeholder': '请选择数据库表名',
   'automation.code-gen.form.table_name.help':
     '数据库表名是必填项，且仅支持大小写字母和下划线',
   'automation.code-gen.form.name': '名称',
@@ -87,14 +85,14 @@ export default {
   'automation.code-gen.form.app_name.tooltip': '代码将生成到此 app 目录下',
   'automation.code-gen.form.app_name.placeholder': '请输入应用名称',
   'automation.code-gen.form.app_name.help': '应用名称是必填项',
-  'automation.code-gen.form.table_name_en': '表名称（英）',
+  'automation.code-gen.form.table_name_en': '英文表名称',
   'automation.code-gen.form.table_name_en.placeholder': '请输入英文表名称',
   'automation.code-gen.form.table_name_en.help': '英文表名称是必填项',
-  'automation.code-gen.form.table_name_zh': '表名称（中）',
+  'automation.code-gen.form.table_name_zh': '中文表名称',
   'automation.code-gen.form.table_name_zh.placeholder': '请输入中文表名称',
   'automation.code-gen.form.table_name_zh.help':
     '中文表名称是必填项，且至少包含一个中文',
-  'automation.code-gen.form.table_simple_name_zh': '表名称（中简）',
+  'automation.code-gen.form.table_simple_name_zh': '中文简称',
   'automation.code-gen.form.table_simple_name_zh.placeholder':
     '请输入中文简短表名称',
   'automation.code-gen.form.table_simple_name_zh.help':
@@ -118,8 +116,6 @@ export default {
   'automation.code-gen.form.gen_path.placeholder': '请输入生成路径',
   'automation.code-gen.form.remark': '备注',
   'automation.code-gen.form.remark.placeholder': '请输入备注',
-  // list
-  'automation.code-gen.list.header': '数据库表列表',
   // modal
   'automation.code-gen.modal.import': '导入',
   'automation.code-gen.modal.business': '创建业务',
@@ -134,9 +130,6 @@ export default {
   'automation.code-gen.modal.generate.okText': '不怂！就是干！',
   'automation.code-gen.modal.generate.list.header': '代码写入路径',
   'automation.code-gen.modal.generate.submit': '代码生成成功',
-  // alert
-  'automation.code-gen.alert.getDB':
-    '仅支持查询当前系统已连接数据库内已存在的数据库（数据库名非数据库表名）',
   // table
   'automation.code-gen.table.model.empty': '此业务暂无模型数据',
 };

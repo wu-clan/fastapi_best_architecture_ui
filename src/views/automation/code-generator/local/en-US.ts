@@ -19,8 +19,6 @@ export default {
     'This function may be deprecated, it is recommended to use the import function first',
   'automation.code-gen.tooltip.code.copy': 'Copy Code',
   // button
-  'automation.code-gen.button.getDB': 'Query Database Tables',
-  'automation.code-gen.button.getDB.req': 'Query',
   'automation.code-gen.button.import': 'Import',
   'automation.code-gen.button.business': 'Create Business Table',
   'automation.code-gen.button.model': 'Create Model Columns',
@@ -52,11 +50,11 @@ export default {
   // form
   'automation.code-gen.form.db_name': 'Database Name',
   'automation.code-gen.form.db_name.placeholder':
-    'Please enter the database name',
+    'Please input the database name',
   'automation.code-gen.form.db_name.help':
     'Database name is required and only supports uppercase and lowercase letters and underscores',
   'automation.code-gen.form.db_name.tooltip':
-    'It is recommended to be the same as the "Get Database Tables" parameter',
+    'Only supports existing databases within the currently connected system',
   'automation.code-gen.form.app': 'Application Name',
   'automation.code-gen.form.app.tooltip':
     'Used to generate code to the specified backend app',
@@ -66,9 +64,9 @@ export default {
     'Application name is required and only support uppercase and lowercase letters and underscores',
   'automation.code-gen.form.table_name': 'Database Table Name',
   'automation.code-gen.form.table_name.tooltip':
-    'Table name obtained through "Get Database Tables"',
+    'The database table under the database has been entered"',
   'automation.code-gen.form.table_name.placeholder':
-    'Please enter the database table name',
+    'Please select the database table name',
   'automation.code-gen.form.table_name.help':
     'Database table name is required and only support uppercase and lowercase letters and underscores',
   'automation.code-gen.form.name': 'Name',
@@ -104,17 +102,17 @@ export default {
   'automation.code-gen.form.app_name.placeholder':
     'Please enter the application name',
   'automation.code-gen.form.app_name.help': 'Application name is required',
-  'automation.code-gen.form.table_name_en': 'Table Name (EN)',
+  'automation.code-gen.form.table_name_en': 'English table name',
   'automation.code-gen.form.table_name_en.placeholder':
     'Please enter the English table name',
   'automation.code-gen.form.table_name_en.help':
     'English table name is required',
-  'automation.code-gen.form.table_name_zh': 'Table Name (ZH)',
+  'automation.code-gen.form.table_name_zh': 'Chinese table name',
   'automation.code-gen.form.table_name_zh.placeholder':
     'Please enter the Chinese table name',
   'automation.code-gen.form.table_name_zh.help':
     'The Chinese table name is required and contains at least one Chinese character',
-  'automation.code-gen.form.table_simple_name_zh': 'Table Simple Name (ZH)',
+  'automation.code-gen.form.table_simple_name_zh': 'Chinese abbreviation',
   'automation.code-gen.form.table_simple_name_zh.placeholder':
     'Please enter the short Chinese table name',
   'automation.code-gen.form.table_simple_name_zh.help':
@@ -145,8 +143,6 @@ export default {
     'Please enter the generation path',
   'automation.code-gen.form.remark': 'Remark',
   'automation.code-gen.form.remark.placeholder': 'Please enter the remark',
-  // list
-  'automation.code-gen.list.header': 'Database Table List',
   // modal
   'automation.code-gen.modal.import': 'Import',
   'automation.code-gen.modal.business': 'Create Business',
@@ -162,9 +158,6 @@ export default {
   'automation.code-gen.modal.generate.okText': 'Don’t worry! Just do it!',
   'automation.code-gen.modal.generate.list.header': 'Code Write Path',
   'automation.code-gen.modal.generate.submit': 'Code Generation Successful',
-  // alert
-  'automation.code-gen.alert.getDB':
-    'Only supports querying existing databases within the currently connected system, (database name not database table name)',
   // table
   'automation.code-gen.table.model.empty':
     'No model data for this business yet',
