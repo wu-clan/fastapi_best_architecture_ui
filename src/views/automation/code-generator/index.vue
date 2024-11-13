@@ -11,66 +11,6 @@
         <a-alert :type="'warning'" style="margin-bottom: 20px">
           {{ $t('automation.code-gen.tooltip.import') }}
         </a-alert>
-        <a-button type="primary" style="margin-right: 10px" @click="openGetDB">
-          <template #icon>
-            <icon-search />
-          </template>
-          {{ $t('automation.code-gen.button.getDB') }}
-        </a-button>
-        <a-drawer
-          v-model:visible="getDBDrawer"
-          :footer="false"
-          width="35%"
-          :header="false"
-        >
-          <a-alert type="warning" style="margin-top: 10px">
-            {{ $t('automation.code-gen.alert.getDB') }}
-          </a-alert>
-          <a-form :model="getDBForm" style="margin-top: 20px">
-            <a-form-item
-              :label="$t('automation.code-gen.form.db_name')"
-              :rules="[
-                {
-                  required: true,
-                  match: /^[a-zA-Z_]+$/,
-                  lowercase: true,
-                  message: $t('automation.code-gen.form.db_name.help'),
-                },
-              ]"
-              field="table_schema"
-            >
-              <a-input
-                v-model="getDBForm.table_schema"
-                :placeholder="
-                  $t('automation.code-gen.form.db_name.placeholder')
-                "
-              />
-            </a-form-item>
-          </a-form>
-          <a-button
-            type="primary"
-            :disabled="getDBButton()"
-            style="float: right; margin-bottom: 20px"
-            @click="featDBTables({ ...getDBForm })"
-          >
-            {{ $t('automation.code-gen.button.getDB.req') }}
-          </a-button>
-          <a-list
-            style="margin-top: 55px"
-            :loading="DBTablesStatus"
-            :hoverable="true"
-          >
-            <template #header>
-              {{ $t('automation.code-gen.list.header') }}
-            </template>
-            <a-list-item
-              v-for="(table, index) of DBTables.values()"
-              :key="index"
-            >
-              {{ table }}
-            </a-list-item>
-          </a-list>
-        </a-drawer>
         <a-button type="primary" @click="openImport">
           <template #icon>
             <icon-plus />
@@ -138,11 +78,15 @@
               ]"
               field="table_name"
             >
-              <a-input
+              <a-select
                 v-model="importForm.table_name"
                 :placeholder="
                   $t('automation.code-gen.form.table_name.placeholder')
                 "
+                :allow-clear="true"
+                :allow-search="true"
+                :options="DBTables"
+                @click="featDBTables"
               />
             </a-form-item>
           </a-form>
@@ -749,13 +693,7 @@
   const SQLATypeFN = { value: 'type', label: 'type' };
   const BusinessFN = { value: 'id', label: 'table_name_zh' };
   const SQLATypeOptions = ref<string[]>([]);
-  const getDBForm = reactive<DBTableParams>({ table_schema: '' });
-  const getDBButton = () => {
-    const regex = /^[a-zA-Z_]+$/;
-    return !regex.test(getDBForm.table_schema);
-  };
   const DBTables = ref<string[]>([]);
-  const DBTablesStatus = ref<boolean>(false);
   const operateBusinessRowStatus = (): boolean => {
     return modelList.value.length === 0;
   };
@@ -998,7 +936,6 @@
   const previewCodeTab = ref<string>('api');
 
   // 对话框
-  const getDBDrawer = ref<boolean>(false);
   const importDrawer = ref<boolean>(false);
   const businessDrawer = ref<boolean>(false);
   const modelDrawer = ref<boolean>(false);
@@ -1011,9 +948,6 @@
     t('automation.code-gen.modal.business')
   );
   const generateCodePath = ref<string[]>([]);
-  const openGetDB = () => {
-    getDBDrawer.value = true;
-  };
   const openImport = () => {
     resetForm(importForm, importFormData);
     importDrawer.value = true;
@@ -1093,14 +1027,13 @@
   };
 
   // 请求数据库表
-  const featDBTables = async (params: DBTableParams) => {
-    DBTablesStatus.value = true;
+  const featDBTables = async () => {
     try {
-      DBTables.value = await queryDBTables(params);
+      DBTables.value = await queryDBTables({
+        table_schema: importForm.table_schema,
+      });
     } catch (error) {
       // console.log(error);
-    } finally {
-      DBTablesStatus.value = false;
     }
   };
 
@@ -1110,6 +1043,7 @@
       await importTable(importForm);
       Message.success(t('submit.create.success'));
       importDrawer.value = false;
+      await fetchBusinessList();
     } catch (error) {
       // console.log(error);
     }
@@ -1324,12 +1258,6 @@
   };
 
   // 监控
-  watch(getDBDrawer, (newVal) => {
-    if (newVal) {
-      getDBForm.table_schema = '';
-      DBTables.value = [];
-    }
-  });
   watch(operateBusinessRow, async (newVal, oldVal) => {
     modelForm.gen_business_id = newVal;
     if (newVal !== oldVal && newVal !== 0) {
