@@ -141,21 +141,6 @@
                 <a-input v-model="form.name"></a-input>
               </a-form-item>
               <a-form-item
-                :label="$t('admin.role.columns.data_scope')"
-                :rules="[
-                  {
-                    required: true,
-                    message: $t('admin.role.form.data_scope.help'),
-                  },
-                ]"
-                field="data_scope"
-              >
-                <a-select
-                  v-model="form.data_scope"
-                  :options="dataScopeOptions"
-                ></a-select>
-              </a-form-item>
-              <a-form-item
                 :label="$t('admin.role.columns.status')"
                 field="status"
               >
@@ -216,20 +201,13 @@
                   <a-button :shape="'round'" :type="'outline'" @click="expand">
                     {{ $t('admin.role.drawer.menu.button.collapse') }}
                   </a-button>
-                  <a-input-search
-                    v-model="searchKey"
-                    :placeholder="
-                      $t('admin.role.drawer.menu.input.placeholder')
-                    "
-                    :style="{ width: '360px' }"
-                  />
                 </a-space>
                 <a-scrollbar style="height: 690px; overflow: auto">
                   <a-tree
                     ref="menuTreeDataRef"
                     v-model:checked-keys="menuCheckedKeys"
                     :checkable="true"
-                    :data="filterMenuTreeData"
+                    :data="menuTreeData"
                     :field-names="selectMenuTreeFieldNames"
                     style="margin-left: 20px"
                   ></a-tree>
@@ -248,22 +226,36 @@
                   >
                     {{ $t('admin.role.drawer.menu.button.select') }}
                   </a-button>
-                  <a-input-search
-                    v-model="searchKey"
-                    :placeholder="$t('admin.role.drawer.api.input.placeholder')"
-                    :style="{ width: '360px' }"
-                  />
                 </a-space>
                 <a-scrollbar style="height: 690px; overflow: auto">
                   <a-tree
                     ref="apiDataRef"
                     v-model:checked-keys="apiCheckedKeys"
                     :checkable="true"
-                    :data="filterApiData"
+                    :data="apiData"
                     :field-names="selectApiFieldNames"
                     style="margin-left: 10px"
                   ></a-tree>
                 </a-scrollbar>
+              </a-tab-pane>
+              <a-tab-pane
+                key="dept"
+                :closable="false"
+                :title="$t('admin.role.drawer.dataScope')"
+              >
+                <a-space
+                  :size="'medium'"
+                  :direction="'vertical'"
+                  style="margin: 10px 20px 20px 20px"
+                >
+                  <a-alert type="warning">
+                    {{ $t('admin.role.drawer.dataScope.alert') }}
+                  </a-alert>
+                  <a-select
+                    :style="{ width: '60%' }"
+                    :options="dataScopeOptions"
+                  ></a-select>
+                </a-space>
               </a-tab-pane>
             </a-tabs>
           </a-drawer>
@@ -375,7 +367,6 @@
     await fetchRoleMenuTree();
     menuCheckedKeys.value = [];
     fetchMenuCheckedKeys(menuTreeDataByRole.value);
-    searchKey.value = '';
     openEditPerm.value = true;
   };
   const EditRole = async (pk: number) => {
@@ -400,7 +391,7 @@
       slotName: 'name',
     },
     {
-      title: t('admin.role.columns.data_scope'),
+      title: t('admin.role.data_scope'),
       dataIndex: 'data_scope',
       slotName: 'data_scope',
     },
@@ -446,12 +437,24 @@
   const buttonStatus = ref<string>();
   const dataScopeOptions = computed<SelectOptionData[]>(() => [
     {
-      label: t('admin.role.form.data_scope.1'),
+      label: t('admin.role.data_scope.0'),
+      value: 0,
+    },
+    {
+      label: t('admin.role.data_scope.1'),
       value: 1,
     },
     {
-      label: t('admin.role.form.data_scope.2'),
+      label: t('admin.role.data_scope.2'),
       value: 2,
+    },
+    {
+      label: t('admin.role.data_scope.3'),
+      value: 3,
+    },
+    {
+      label: t('admin.role.data_scope.4'),
+      value: 4,
     },
   ]);
   const switchStatus = ref<boolean>(true);
@@ -462,16 +465,7 @@
   const menuTreeData = ref();
   const apiData = ref();
   const casbinPolicies = ref();
-  const searchKey = ref<string>('');
-  const filterMenuTreeData = computed<any>(() => {
-    if (!searchKey.value) return menuTreeData;
-    return searchMenuTreeData(searchKey.value);
-  });
   const menuTreeDataByRole = ref();
-  const filterApiData = computed<any>(() => {
-    if (!searchKey.value) return apiData;
-    return searchApiData(searchKey.value);
-  });
 
   const selectMenuTreeFieldNames: TreeFieldNames = {
     key: 'id',
@@ -697,42 +691,6 @@
     }
   };
 
-  // 筛选菜单树
-  const searchMenuTreeData = (keyword: string) => {
-    const loop = (data: SysMenuTreeRes[]) => {
-      const result: SysMenuTreeRes[] = [];
-      data.forEach((item: SysMenuTreeRes) => {
-        if (item.title.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-          result.push({ ...item });
-        } else if (item.children) {
-          const filterData = loop(item.children);
-          if (filterData.length) {
-            result.push({
-              ...item,
-              children: filterData,
-            });
-          }
-        }
-      });
-      return result;
-    };
-    return loop(menuTreeData.value);
-  };
-
-  // 筛选API数据
-  const searchApiData = (keyword: string) => {
-    const loop = (data: SysApiRes[]) => {
-      const result: SysApiRes[] = [];
-      data.forEach((item: SysApiRes) => {
-        if (item.name.toLowerCase().indexOf(keyword.toLowerCase()) > -1) {
-          result.push({ ...item });
-        }
-      });
-      return result;
-    };
-    return loop(apiData.value);
-  };
-
   // 遍历选中角色菜单父节点
   const checkedParentNode = (data: SysMenuTreeRes[]) => {
     data.forEach((item: SysMenuTreeRes) => {
@@ -809,10 +767,19 @@
 
   // 数据权限说明
   const dataScopeText = (ds: number) => {
-    if (ds === 1) {
-      return t('admin.role.columns.data_scope.1');
+    if (ds === 0) {
+      return t('admin.role.data_scope.0');
     }
-    return t('admin.role.columns.data_scope.2');
+    if (ds === 1) {
+      return t('admin.role.data_scope.1');
+    }
+    if (ds === 2) {
+      return t('admin.role.data_scope.2');
+    }
+    if (ds === 3) {
+      return t('admin.role.data_scope.3');
+    }
+    return t('admin.role.data_scope.4');
   };
 
   // 重置表单

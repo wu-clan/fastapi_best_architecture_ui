@@ -1,5 +1,13 @@
 export default {
   'menu.admin.sysRole': 'Role Manage',
+  // data scope
+  'admin.role.columns.data_scope': 'Data scope',
+  'admin.role.form.data_scope.0': 'Full data permissions',
+  'admin.role.form.data_scope.1': 'Custom data permissions',
+  'admin.role.form.data_scope.2':
+    'Data permissions of the department and below',
+  'admin.role.form.data_scope.3': 'Data permissions of the department',
+  'admin.role.form.data_scope.4': 'Only yourself data permissions',
   // form
   'admin.role.form.name': 'Menu name',
   'admin.role.form.name.placeholder': 'Please enter a menu name',
@@ -10,9 +18,6 @@ export default {
   'admin.role.form.selectDefault': 'All',
   'admin.role.form.search': 'Search',
   'admin.role.form.reset': 'Reset',
-  'admin.role.form.data_scope.help': 'Data scope is required',
-  'admin.role.form.data_scope.1': 'All data permissions',
-  'admin.role.form.data_scope.2': 'Custom data permissions',
   // button
   'admin.role.button.create': 'Create',
   'admin.role.button.delete': 'Delete',
@@ -21,9 +26,6 @@ export default {
   'admin.role.columns.delete.drawer': 'Delete role',
   'admin.role.columns.edit.drawer': 'Edit role',
   'admin.role.columns.name': 'Role name',
-  'admin.role.columns.data_scope': 'Data scope',
-  'admin.role.columns.data_scope.1': 'All',
-  'admin.role.columns.data_scope.2': 'Custom',
   'admin.role.columns.status': 'Status',
   'admin.role.columns.remark': 'Remark',
   'admin.role.columns.operate': 'Edit',
@@ -36,11 +38,12 @@ export default {
     'Are you sure you want to delete it? Role deletion does not set forced detection. After the role is deleted, the user’s corresponding role permissions will be cleared, which may cause irreparable consequences. Please operate with caution!',
   // drawer
   'admin.role.drawer.menu': 'Role menu',
-  'admin.role.drawer.api': 'Role API',
+  'admin.role.drawer.api': 'Casbin',
+  'admin.role.drawer.dataScope': 'Data perms',
+  'admin.role.drawer.dataScope.alert':
+    "This configuration will affect the user's visibility to the system data, so please proceed with caution!",
   'admin.role.drawer.menu.button.select': 'Select all/Cancel all',
   'admin.role.drawer.menu.button.collapse': 'Expand/Collapse',
-  'admin.role.drawer.menu.input.placeholder': 'Menu Filter',
-  'admin.role.drawer.api.input.placeholder': 'API Filter',
   // alert
   'admin.role.alert.data_scope':
     'When you set the data permissions to all, you will ignore the menu authorization or API authorization and directly have all the permissions, so please be careful!',
