@@ -33,16 +33,6 @@ const SYSTEM: AppRouteRecordRaw = {
       },
     },
     {
-      path: 'sys-api',
-      name: 'SysApi',
-      component: () => import('@/views/admin/api/index.vue'),
-      meta: {
-        locale: 'menu.admin.sysApi',
-        requiresAuth: true,
-        roles: ['*'],
-      },
-    },
-    {
       path: 'sys-role',
       name: 'SysRole',
       component: () => import('@/views/admin/role/index.vue'),
@@ -58,6 +48,26 @@ const SYSTEM: AppRouteRecordRaw = {
       component: () => import('@/views/admin/menu/index.vue'),
       meta: {
         locale: 'menu.admin.sysMenu',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: 'sys-api',
+      name: 'SysApi',
+      component: () => import('@/views/admin/api/index.vue'),
+      meta: {
+        locale: 'menu.admin.sysApi',
+        requiresAuth: true,
+        roles: ['*'],
+      },
+    },
+    {
+      path: 'sys-data-rule',
+      name: 'SysDataRule',
+      component: () => import('@/views/admin/data-rule/index.vue'),
+      meta: {
+        locale: 'menu.admin.sysDataRule',
         requiresAuth: true,
         roles: ['*'],
       },

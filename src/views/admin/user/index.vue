@@ -5,17 +5,16 @@
       <a-card :title="$t('menu.admin.sysUser')" class="general-card">
         <div class="content">
           <a-split
-            default-size="0.18"
-            min="0.18"
-            max="0.3"
+            default-size="0.23"
+            min="0.23"
             :style="{
               height: '693px',
               width: '100%',
             }"
           >
             <template #first>
-              <div style="margin-right: 10px"
-                ><a-input-search
+              <div style="margin-right: 10px">
+                <a-input-search
                   v-model="searchDept"
                   :block-node="true"
                   :placeholder="$t('admin.user.form.dept.placeholder')"
@@ -145,6 +144,7 @@
                       v-if="record.avatar"
                       :image-url="record.avatar"
                       trigger-type="mask"
+                      :size="32"
                       @click="updateAvatar(record.username)"
                     >
                       <template #trigger-icon>
@@ -157,6 +157,7 @@
                         backgroundColor: getRandomColor(record.username),
                       }"
                       trigger-type="mask"
+                      :size="32"
                       @click="updateAvatar(record.username)"
                     >
                       {{ record.username[0] }}
@@ -649,21 +650,6 @@
   };
   const columns = computed<TableColumnData[]>(() => [
     {
-      title: 'UUID',
-      dataIndex: 'uuid',
-      slotName: 'uuid',
-      ellipsis: true,
-      tooltip: true,
-      width: 168,
-    },
-    {
-      title: t('admin.user.columns.avatar'),
-      dataIndex: 'avatar',
-      slotName: 'avatar',
-      align: 'center',
-      width: 100,
-    },
-    {
       title: t('admin.user.columns.username'),
       dataIndex: 'username',
       slotName: 'username',
@@ -678,6 +664,13 @@
       ellipsis: true,
       tooltip: true,
       width: 120,
+    },
+    {
+      title: t('admin.user.columns.avatar'),
+      dataIndex: 'avatar',
+      slotName: 'avatar',
+      align: 'center',
+      width: 100,
     },
     {
       title: t('admin.user.columns.dept'),

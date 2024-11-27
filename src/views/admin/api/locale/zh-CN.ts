@@ -27,4 +27,6 @@ export default {
   'admin.api.columns.method': '请求方式',
   'admin.api.columns.remark': '备注',
   'admin.api.columns.operate': '操作',
+  // alert
+  'admin.api.alert': '此配置仅用于 Casbin 权限',
 };

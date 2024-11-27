@@ -1,5 +1,5 @@
 export default {
-  'menu.monitor.redis': 'Redis监控',
+  'menu.monitor.redis': 'Redis 监控',
   // showData
   'monitor.redis.showData.title': '基础信息',
   'monitor.redis.showData.version': '版本',

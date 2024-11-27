@@ -102,9 +102,6 @@
                 {{ $t(`admin.menu.form.status.${record.status}`) }}
               </a-tag>
             </template>
-            <template #data_scope="{ record }">
-              {{ dataScopeText(record.data_scope) }}
-            </template>
             <template #operate="{ record }">
               <a-space>
                 <a-link @click="EditPerm(record.id)">
@@ -202,7 +199,7 @@
                     {{ $t('admin.role.drawer.menu.button.collapse') }}
                   </a-button>
                 </a-space>
-                <a-scrollbar style="height: 690px; overflow: auto">
+                <a-scrollbar style="height: 530px; overflow: auto">
                   <a-tree
                     ref="menuTreeDataRef"
                     v-model:checked-keys="menuCheckedKeys"
@@ -227,7 +224,7 @@
                     {{ $t('admin.role.drawer.menu.button.select') }}
                   </a-button>
                 </a-space>
-                <a-scrollbar style="height: 690px; overflow: auto">
+                <a-scrollbar style="height: 530px; overflow: auto">
                   <a-tree
                     ref="apiDataRef"
                     v-model:checked-keys="apiCheckedKeys"
@@ -239,23 +236,29 @@
                 </a-scrollbar>
               </a-tab-pane>
               <a-tab-pane
-                key="dept"
+                key="data-rule"
                 :closable="false"
-                :title="$t('admin.role.drawer.dataScope')"
+                :title="$t('admin.role.drawer.dataRule')"
               >
-                <a-space
-                  :size="'medium'"
-                  :direction="'vertical'"
-                  style="margin: 10px 20px 20px 20px"
-                >
-                  <a-alert type="warning">
-                    {{ $t('admin.role.drawer.dataScope.alert') }}
-                  </a-alert>
-                  <a-select
-                    :style="{ width: '60%' }"
-                    :options="dataScopeOptions"
-                  ></a-select>
+                <a-space :size="'medium'" style="margin: 10px 0 20px 20px">
+                  <a-button
+                    :shape="'round'"
+                    :type="'outline'"
+                    @click="checkDataRule"
+                  >
+                    {{ $t('admin.role.drawer.menu.button.select') }}
+                  </a-button>
                 </a-space>
+                <a-scrollbar style="height: 530px; overflow: auto">
+                  <a-tree
+                    ref="DataRuleRef"
+                    v-model:checked-keys="dataRuleCheckedKeys"
+                    :checkable="true"
+                    :data="dataRuleData"
+                    :field-names="selectDataRuleFieldNames"
+                    style="margin-left: 10px"
+                  ></a-tree>
+                </a-scrollbar>
               </a-tab-pane>
             </a-tabs>
           </a-drawer>
@@ -286,10 +289,12 @@
     querySysMenuTreeBySysRole,
     querySysRoleDetail,
     querySysRoleList,
+    querySysRoleRuleBySysRole,
     SysRoleParams,
     SysRoleReq,
     SysRoleRes,
     updateSysRole,
+    updateSysRoleDataRule,
     updateSysRoleMenu,
   } from '@/api/role';
   import { Pagination } from '@/types/global';
@@ -308,6 +313,7 @@
     deleteCasbinPolicies,
     queryCasbinPoliciesByRole,
   } from '@/api/casbin';
+  import { querySysDataRuleAll, SysDataRuleRes } from '@/api/data-rule';
 
   const { t } = useI18n();
   const { loading, setLoading } = useLoading(true);
@@ -391,11 +397,6 @@
       slotName: 'name',
     },
     {
-      title: t('admin.role.data_scope'),
-      dataIndex: 'data_scope',
-      slotName: 'data_scope',
-    },
-    {
       title: t('admin.role.columns.status'),
       dataIndex: 'status',
       slotName: 'status',
@@ -407,6 +408,11 @@
       slotName: 'remark',
       ellipsis: true,
       tooltip: true,
+    },
+    {
+      title: t('admin.role.columns.created_time'),
+      dataIndex: 'created_time',
+      slotName: 'created_time',
     },
     {
       title: t('admin.role.columns.operate'),
@@ -435,35 +441,15 @@
   };
   const form = reactive<SysRoleReq>({ ...formDefaultValues });
   const buttonStatus = ref<string>();
-  const dataScopeOptions = computed<SelectOptionData[]>(() => [
-    {
-      label: t('admin.role.data_scope.0'),
-      value: 0,
-    },
-    {
-      label: t('admin.role.data_scope.1'),
-      value: 1,
-    },
-    {
-      label: t('admin.role.data_scope.2'),
-      value: 2,
-    },
-    {
-      label: t('admin.role.data_scope.3'),
-      value: 3,
-    },
-    {
-      label: t('admin.role.data_scope.4'),
-      value: 4,
-    },
-  ]);
   const switchStatus = ref<boolean>(true);
 
   // 抽屉
   const menuCheckedKeys = ref<number[]>([]);
   const apiCheckedKeys = ref<number[]>([]);
+  const dataRuleCheckedKeys = ref<number[]>([]);
   const menuTreeData = ref();
   const apiData = ref();
+  const dataRuleData = ref();
   const casbinPolicies = ref();
   const menuTreeDataByRole = ref();
 
@@ -478,16 +464,24 @@
     title: 'name',
     children: 'children',
   };
+  const selectDataRuleFieldNames: TreeFieldNames = {
+    key: 'id',
+    title: 'name',
+    children: 'children',
+  };
   const expandAll = ref<boolean>(false);
   const checkAll = ref<boolean>(false);
   const menuTreeDataRef = ref();
   const apiDataRef = ref();
+  const DataRuleRef = ref();
   const activePerm = ref<string>('menu');
   const submitPerms = async () => {
     if (activePerm.value === 'menu') {
       await submitRoleMenu();
     } else if (activePerm.value === 'api') {
       await submitRoleApi();
+    } else if (activePerm.value === 'data-rule') {
+      await submitRoleDataRule();
     }
   };
 
@@ -605,6 +599,15 @@
     }
   };
 
+  // 请求数据规则数据
+  const fetchDataRuleData = async () => {
+    try {
+      dataRuleData.value = await querySysDataRuleAll();
+    } catch (error) {
+      // console.log(error)
+    }
+  };
+
   // 请求Casbin所有P规则
   const fetchCasbinPolicies = async () => {
     try {
@@ -656,7 +659,6 @@
       } else if (policies.length > 1) {
         await submitCasbinPolicies({ ps: policies });
       }
-
       cancelReq();
       Message.success(t('submit.update.success'));
     } catch (error) {
@@ -686,6 +688,22 @@
   const submitDeleteCasbinPolicies = async (data: CasbinPoliciesDel) => {
     try {
       await deleteCasbinPolicies(data);
+    } catch (error) {
+      // console.log(error);
+    }
+  };
+
+  // 更新角色数据规则
+  const submitRoleDataRule = async () => {
+    try {
+      if (menuCheckedKeys.value.length > 0) {
+        checkedParentNode(menuTreeDataRef.value.getCheckedNodes('all'));
+      }
+      await updateSysRoleDataRule(operateRow.value, {
+        rules: dataRuleCheckedKeys.value,
+      });
+      cancelReq();
+      Message.success(t('submit.update.success'));
     } catch (error) {
       // console.log(error);
     }
@@ -732,6 +750,12 @@
     });
   };
 
+  // 获取数据规则选中节点
+  const fetchDataRuleCheckedKeys = async (pk: number) => {
+    const data = await querySysRoleRuleBySysRole(pk);
+    dataRuleCheckedKeys.value.push(...data);
+  };
+
   // 事件: 分页
   const onPageChange = async (current: number) => {
     await fetchRoleList({ page: current, size: pagination.pageSize });
@@ -765,23 +789,6 @@
     return rowSelectKeys.value?.length === 0;
   };
 
-  // 数据权限说明
-  const dataScopeText = (ds: number) => {
-    if (ds === 0) {
-      return t('admin.role.data_scope.0');
-    }
-    if (ds === 1) {
-      return t('admin.role.data_scope.1');
-    }
-    if (ds === 2) {
-      return t('admin.role.data_scope.2');
-    }
-    if (ds === 3) {
-      return t('admin.role.data_scope.3');
-    }
-    return t('admin.role.data_scope.4');
-  };
-
   // 重置表单
   const resetForm = (data: Record<any, any>) => {
     Object.keys(data).forEach((key) => {
@@ -799,6 +806,10 @@
     checkAll.value = !checkAll.value;
     apiDataRef.value.checkAll(checkAll.value);
   };
+  const checkDataRule = () => {
+    checkAll.value = !checkAll.value;
+    DataRuleRef.value.checkAll(checkAll.value);
+  };
 
   // 展开/收起
   const expand = () => {
@@ -808,13 +819,18 @@
 
   // 监听角色API标签选择
   watch(
-    () => activePerm,
+    () => activePerm.value,
     async (val) => {
-      if (val.value === 'api') {
+      if (val === 'api') {
         apiCheckedKeys.value = [];
         await fetchApiData();
         await fetchCasbinPolicies();
         fetchApiCheckedKeys(casbinPolicies.value);
+      }
+      if (val === 'data-rule') {
+        dataRuleCheckedKeys.value = [];
+        await fetchDataRuleData();
+        await fetchDataRuleCheckedKeys(operateRow.value);
       }
     },
     {

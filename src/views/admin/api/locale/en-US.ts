@@ -27,4 +27,6 @@ export default {
   'admin.api.columns.method': 'Method',
   'admin.api.columns.remark': 'Remark',
   'admin.api.columns.operate': 'Operate',
+  // alert
+  'admin.api.alert': 'This configuration is only used for Casbin permissions',
 };

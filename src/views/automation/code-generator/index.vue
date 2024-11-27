@@ -661,7 +661,6 @@
     BusinessRes,
     createBusiness,
     createModel,
-    DBTableParams,
     deleteBusiness,
     deleteModel,
     downloadCode,

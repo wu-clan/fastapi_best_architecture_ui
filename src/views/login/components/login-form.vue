@@ -90,7 +90,7 @@
         <a-button type="text" shape="round" @click="linuxDoOAuth2">
           <template #icon>
             <img
-              src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
+              src="https://double.fkgpt.fun/?name=LDO&size=35"
               width="32"
               height="32"
               title="LinuxDo OAuth"
@@ -114,7 +114,7 @@
         <a-button type="text" shape="round" @click="linuxDoOAuth2">
           <template #icon>
             <img
-              src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
+              src="https://double.fkgpt.fun/?name=LDO&size=35"
               width="32"
               height="32"
               title="LinuxDo OAuth"
@@ -138,7 +138,7 @@
         <a-button type="text" shape="round" @click="linuxDoOAuth2">
           <template #icon>
             <img
-              src="https://cdn.linux.do/user_avatar/linux.do/neo/144/12_2.png"
+              src="https://double.fkgpt.fun/?name=LDO&size=35"
               width="32"
               height="32"
               title="LinuxDo OAuth"

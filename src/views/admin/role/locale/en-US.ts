@@ -1,13 +1,5 @@
 export default {
   'menu.admin.sysRole': 'Role Manage',
-  // data scope
-  'admin.role.columns.data_scope': 'Data scope',
-  'admin.role.form.data_scope.0': 'Full data permissions',
-  'admin.role.form.data_scope.1': 'Custom data permissions',
-  'admin.role.form.data_scope.2':
-    'Data permissions of the department and below',
-  'admin.role.form.data_scope.3': 'Data permissions of the department',
-  'admin.role.form.data_scope.4': 'Only yourself data permissions',
   // form
   'admin.role.form.name': 'Menu name',
   'admin.role.form.name.placeholder': 'Please enter a menu name',
@@ -33,15 +25,14 @@ export default {
   'admin.role.columns.edit': 'Edit',
   'admin.role.columns.delete': 'Delete',
   'admin.role.columns.menus': 'Menus',
+  'admin.role.columns.created_time': 'Created time',
   // modal
   'admin.role.modal.delete':
     'Are you sure you want to delete it? Role deletion does not set forced detection. After the role is deleted, the user’s corresponding role permissions will be cleared, which may cause irreparable consequences. Please operate with caution!',
   // drawer
   'admin.role.drawer.menu': 'Role menu',
   'admin.role.drawer.api': 'Casbin',
-  'admin.role.drawer.dataScope': 'Data perms',
-  'admin.role.drawer.dataScope.alert':
-    "This configuration will affect the user's visibility to the system data, so please proceed with caution!",
+  'admin.role.drawer.dataRule': 'Data Rule',
   'admin.role.drawer.menu.button.select': 'Select all/Cancel all',
   'admin.role.drawer.menu.button.collapse': 'Expand/Collapse',
   // alert

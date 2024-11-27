@@ -81,6 +81,9 @@
             {{ $t('admin.api.button.delete') }}
           </a-button>
         </a-space>
+        <a-alert type="warning" style="margin-top: 20px">
+          {{ $t('admin.api.alert') }}
+        </a-alert>
         <div class="content">
           <a-table
             v-model:selected-keys="rowSelectKeys"
@@ -199,7 +202,7 @@
           </a-modal>
           <a-modal
             :closable="false"
-            :title="`${$t('modal.title.tips')}`"
+            :title="$t('modal.title.tips')"
             :visible="openDelete"
             :width="360"
             @cancel="cancelReq"

@@ -11,16 +11,17 @@ import localeRedisMonitor from '@/views/monitor/redis/locale/zh-CN';
 import localeSysUser from '@/views/admin/user/locale/zh-CN';
 import localeSysRole from '@/views/admin/role/locale/zh-CN';
 import localeGenerator from '@/views/automation/code-generator/local/zh-CN';
+import localeDataRule from '@/views/admin/data-rule/local/zh-CN';
 import localeSettings from './zh-CN/settings';
 
 export default {
   'menu.dashboard': '仪表盘',
   'menu.admin': '系统管理',
   'menu.automation': '系统自动化',
-  'menu.log': '日志',
   'menu.monitor': '系统监控',
+  'menu.log': '日志',
   'menu.arcoWebsite': 'Arco Design',
-  'menu.faq': '常见问题',
+  'menu.site': '官网',
   'menu.github': 'GitHub',
   'menu.sponsor': '赞助',
   'navbar.action.locale': '切换为中文',
@@ -47,4 +48,5 @@ export default {
   ...localeSysUser,
   ...localeSysRole,
   ...localeGenerator,
+  ...localeDataRule,
 };
