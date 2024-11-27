@@ -59,7 +59,7 @@
       ]),
     showIcon: false,
     closable: true,
-    duration: 1000 * 30,
+    duration: 1000 * 10,
   });
 </script>
 

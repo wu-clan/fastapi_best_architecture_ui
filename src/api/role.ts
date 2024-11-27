@@ -13,6 +13,10 @@ export interface SysRoleMenuReq {
   menus: number[];
 }
 
+export interface SysRoleDataRuleReq {
+  rules: number[];
+}
+
 export interface SysRoleRes {
   id: number;
   name: string;
@@ -53,6 +57,10 @@ export function querySysMenuTreeBySysRole(
   return axios.get(`/api/v1/sys/roles/${pk}/menus`);
 }
 
+export function querySysRoleRuleBySysRole(pk: number): Promise<number[]> {
+  return axios.get(`/api/v1/sys/roles/${pk}/rules`);
+}
+
 export function querySysRoleList(
   params: SysRoleParams
 ): Promise<SysRoleListRes> {
@@ -87,4 +95,8 @@ export function deleteSysRole(params: SysRoleDeleteParams) {
 
 export function updateSysRoleMenu(pk: number, data: SysRoleMenuReq) {
   return axios.put(`/api/v1/sys/roles/${pk}/menu`, data);
+}
+
+export function updateSysRoleDataRule(pk: number, data: SysRoleDataRuleReq) {
+  return axios.put(`/api/v1/sys/roles/${pk}/rule`, data);
 }
