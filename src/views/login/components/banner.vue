@@ -65,7 +65,7 @@
     }
 
     &-title {
-      color: var(--color-fill-1);
+      color: var(--color-text-3);
       font-weight: 500;
       font-size: 20px;
       line-height: 28px;
