@@ -71,7 +71,13 @@
           </a-checkbox>
           <a-link>{{ $t('login.form.forgetPassword') }}</a-link>
         </div>
-        <a-button :loading="loading" html-type="submit" long type="primary">
+        <a-button
+          class="login-form-login-btn"
+          :loading="loading"
+          html-type="submit"
+          long
+          type="primary"
+        >
           {{ $t('login.form.login') }}
         </a-button>
         <a-button class="login-form-register-btn" long type="text">
@@ -282,13 +288,17 @@
       justify-content: space-between;
     }
 
+    &-login-btn {
+      height: 40px;
+    }
+
     &-register-btn {
+      height: 40px;
       color: var(--color-text-3) !important;
     }
   }
   .login-input {
     height: 40px;
-    border-radius: 10px;
   }
   ::v-deep(.arco-divider-text) {
     line-height: 0;
@@ -297,15 +307,10 @@
     margin: 11px;
   }
   .captcha-input {
-    width: 62%;
     height: 40px;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
+    width: 60%;
   }
   .captcha-wrapper {
-    height: 40px;
     margin-left: auto;
-    border-top-right-radius: 10px;
-    border-bottom-right-radius: 10px;
   }
 </style>
