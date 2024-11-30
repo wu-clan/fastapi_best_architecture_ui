@@ -2,15 +2,12 @@
   <div class="navbar">
     <div class="left-side">
       <a-space>
-        <img
-          alt="logo"
-          src="//p3-armor.byteimg.com/tos-cn-i-49unhts6dw/dfdba5317c0c20ce20e64fac803d52bc.svg~tplv-49unhts6dw-image.image"
-        />
+        <logImage />
         <a-typography-title
           :heading="5"
           :style="{ margin: 0, fontSize: '18px' }"
         >
-          Arco Pro
+          FBA
         </a-typography-title>
         <icon-menu-fold
           v-if="!topMenu && appStore.device === 'mobile'"
@@ -165,6 +162,7 @@
   import useLocale from '@/hooks/locale';
   import useUser from '@/hooks/user';
   import Menu from '@/components/menu/index.vue';
+  import logImage from '@/assets/logo.svg';
 
   const appStore = useAppStore();
   const userStore = useUserStore();

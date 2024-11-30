@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer class="footer">FBA</a-layout-footer>
+  <a-layout-footer class="footer">FastAPI Best Architecture</a-layout-footer>
 </template>
 
 <script lang="ts" setup></script>
